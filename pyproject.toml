@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "robotframework-heal"
+version = "0.2.0"
+description = ""
+authors = ["Many Kasiriha <many.kasiriha@dbschenker.com>"]
+readme = "README.md"
+packages = [
+    { include = "SelfHealing", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+robotframework-browser = "*"
+beautifulsoup4 = "*"
+robotframework = "*"
+opencv-python-headless = "*"
+python-dotenv = "*"
+pyautogui = "*"
+xmltodict = "*"
+tinydb = "*"
+cssify = "*"
+parsimonious = "*"
+lxml = "*"
+thefuzz = "*"
+robotframework-appiumlibrary = "*"
+jinja2 = "*"
+litellm = "*"
+pillow = "^11.1.0"
+
+
+[tool.poetry.group.dev.dependencies]    
+pytest = "*"
+invoke = "*"
+coverage = "*"
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

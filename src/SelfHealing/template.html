@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .copy-btn {
+            padding: 5px 10px;
+            background-color: #e0e0e0;
+            color: black;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .copy-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .copy-message {
+            display: none;
+            color: green;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Failed Selector</th>
+                <th>Fixed Selector</th>
+                <th>Test Suite</th>
+                <th>Test Case</th>
+                <th>File</th>
+                <th>Line</th>
+                <th>Screenshot</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.broken_locator }}</td>
+                <td>
+                    {{ row.fixed_locator }}
+                    <button class="copy-btn" onclick="copyToClipboard('{{ row.fixed_locator }}')">Copy</button>
+                    <span class="copy-message">Copied!</span>
+                </td>
+                <td>{{ row.suite_name }}</td>
+                <td>{{ row.test_name }}</td>
+                <td>
+                    <a href="vscode://file/{{ row.source }}:{{ row.lineno }}">{{ row.source }}</a>
+                </td>
+                <td>{{ row.lineno }}</td>
+                <td>
+                    {% if row.screenshot %}
+                        <img src="data:image/png;base64,{{ row.screenshot }}" alt="Screenshot" width="100">
+                    {% else %}
+                        No screenshot available
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const message = event.target.nextElementSibling;
+            message.style.display = 'inline';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

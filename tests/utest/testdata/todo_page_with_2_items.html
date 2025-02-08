@@ -1,0 +1,150 @@
+<html lang="en"
+    	data-framework="react">
+	<head>
+		<meta charset="UTF-8">
+			<meta name="description"
+    				content="A TodoMVC written in React.">
+				<meta name="viewport"
+    					content="width=device-width,initial-scale=1">
+					<meta http-equiv="X-UA-Compatible"
+    						content="ie=edge">
+						<title>TodoMVC: React</title>
+						<script type="text/javascript"
+      							async=""
+      							src="https://www.googletagmanager.com/gtag/js?id=G-T3XWXPZX5B&amp;cx=c&amp;_slc=1"/>
+						<script async=""
+      							src="https://www.google-analytics.com/analytics.js"/>
+						<script defer="defer"
+      							src="app.bundle.js"/>
+						<link href="app.css"
+    							rel="stylesheet"></head>
+						<body class="learn-bar">
+							<aside class="learn">
+								<header>
+									<h3>React</h3>
+									<span class="source-links">
+										<h5>React</h5>
+										<a href="https://github.com/tastejs/todomvc/tree/gh-pages/examples/react">Source</a>
+										<h5>TypeScript + React</h5>
+										<a class="demo-link"
+ 											data-type="local"
+ 											href="https://todomvc.com/examples/typescript-react">Demo</a>, <a href="https://github.com/tastejs/todomvc/tree/gh-pages/examples/typescript-react">Source</a>
+									</span>
+								</header>
+								<hr>
+									<blockquote class="quote speech-bubble">
+										<p>React is a JavaScript library for creating user interfaces. Its core principles are declarative code, efficiency, and flexibility. Simply specify what your component looks like and React will keep it up-to-date when the underlying data changes.</p>
+										<footer>
+											<a href="http://facebook.github.io/react">React</a>
+										</footer>
+									</blockquote>
+									<hr>
+										<h4>Official Resources</h4>
+										<ul>
+											<li>
+												<a href="https://react.dev/learn">Quick Start</a>
+											</li>
+											<li>
+												<a href="https://react.dev/reference/react">API Reference</a>
+											</li>
+											<li>
+												<a href="https://petehuntsposts.quora.com/React-Under-the-Hood">Philosophy</a>
+											</li>
+											<li>
+												<a href="https://react.dev/community">React Community</a>
+											</li>
+										</ul>
+										<h4>Community</h4>
+										<ul>
+											<li>
+												<a href="https://stackoverflow.com/questions/tagged/reactjs">ReactJS on Stack Overflow</a>
+											</li>
+										</ul>
+										<footer>
+											<hr>
+												<em>If you have other helpful links to share, or find any of the links above no longer work, please <a href="https://github.com/tastejs/todomvc/issues">let us know</a>.</em>
+											</footer>
+										</aside>
+										<section class="todoapp"
+       											id="root">
+											<header class="header"
+      												data-testid="header">
+												<h1>todos</h1>
+												<div class="input-container">
+													<input class="new-todo"
+     														id="todo-input"
+     														type="text"
+     														data-testid="text-input"
+     														placeholder="What needs to be done?"
+     														value="">
+														<label class="visually-hidden"
+     															for="todo-input">New Todo Input</label>
+													</div>
+												</header>
+												<main class="main"
+    													data-testid="main">
+													<div class="toggle-all-container">
+														<input class="toggle-all"
+     															type="checkbox"
+     															id="toggle-all"
+     															data-testid="toggle-all">
+															<label class="toggle-all-label"
+     																for="toggle-all">Toggle All Input</label>
+														</div>
+														<ul class="todo-list"
+  															data-testid="todo-list">
+															<li class=""
+  																data-testid="todo-item">
+																<div class="view">
+																	<input class="toggle"
+     																		type="checkbox"
+     																		data-testid="todo-item-toggle">
+																		<label data-testid="todo-item-label">Learn Robot Framework</label>
+																		<button class="destroy"
+      																			data-testid="todo-item-button"/>
+																	</div>
+																</li>
+																<li class=""
+  																	data-testid="todo-item">
+																	<div class="view">
+																		<input class="toggle"
+     																			type="checkbox"
+     																			data-testid="todo-item-toggle">
+																			<label data-testid="todo-item-label">Write Tests</label>
+																			<button class="destroy"
+      																				data-testid="todo-item-button"/>
+																		</div>
+																	</li>
+																</ul>
+															</main>
+															<footer class="footer"
+      																data-testid="footer">
+																<span class="todo-count">2 items left!</span>
+																<ul class="filters"
+  																	data-testid="footer-navigation">
+																	<li>
+																		<a class="selected"
+ 																			href="#/">All</a>
+																	</li>
+																	<li>
+																		<a class=""
+ 																			href="#/active">Active</a>
+																	</li>
+																	<li>
+																		<a class=""
+ 																			href="#/completed">Completed</a>
+																	</li>
+																</ul>
+																<button class="clear-completed"
+      																	disabled="">Clear completed</button>
+															</footer>
+														</section>
+														<footer class="info">
+															<p>Double-click to edit a todo</p>
+															<p>Created by the TodoMVC Team</p>
+															<p>Part of <a href="http://todomvc.com">TodoMVC</a>
+															</p>
+														</footer>
+														<script src="./base.js"/>
+													</body>
+												</html>
