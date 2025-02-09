@@ -894,3 +894,30 @@ def filter_locator_list_with_fuzz(dict_list, defined_value, threshold = 50):
                     filtered_items.append(item)
                     break  # No need to check other keys if one already matches
     return filtered_items
+
+
+def filter_locator_list_with_fuzz_median(dict_list, defined_value):
+    """
+    Calculate score for all items
+    Only return the  items with a score above the median score
+    """
+    # Calculate scores for all items
+    scores = []
+    for item in dict_list:
+        for key, value in item["additional_info"].items():
+            if isinstance(value, str):
+                score = fuzz.ratio(value, defined_value)
+                scores.append(score)
+    
+    # Calculate the median score
+    median_score = sum(scores) / len(scores)
+
+    # Filter items with a score above the median score
+    filtered_items = []
+    # iterate over scores and items
+    for score, item in zip(scores, dict_list):
+        if score > median_score:
+            filtered_items.append(item)
+    return filtered_items
+
+

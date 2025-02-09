@@ -4,7 +4,7 @@ import json
 from bs4 import BeautifulSoup
 import re
 from .llm_client import LLM_TEXT_MODEL, LLM_LOCATOR_MODEL, litellm, completion
-from .utils import extract_json_objects, filter_dict, compare_dict, xpath_to_browser, get_xpath_selector, get_simplified_dom_tree, generate_unique_css_selector, generate_unique_xpath_selector, is_leaf_or_lowest, has_parent_dialog_without_open, has_child_dialog_without_open, has_direct_text, is_headline, is_div_in_li, is_p, filter_locator_list_with_fuzz
+from .utils import extract_json_objects, filter_dict, compare_dict, xpath_to_browser, get_xpath_selector, get_simplified_dom_tree, generate_unique_css_selector, generate_unique_xpath_selector, is_leaf_or_lowest, has_parent_dialog_without_open, has_child_dialog_without_open, has_direct_text, is_headline, is_div_in_li, is_p, filter_locator_list_with_fuzz, filter_locator_list_with_fuzz_median
 import xmltodict
 from .locator_db import LocatorDetailsDB
 from tinydb import Query
@@ -322,11 +322,9 @@ class BrowserHealer:
                     if self.browser.get_element_count(retry_selector) == 0:
                         retry_selector = retry_selector.replace("button", "*")
                     if self.browser.get_element_count(retry_selector) == 1:
-                        states = self.browser.get_element_states(retry_selector)
-                        if 'visible' in states:
-                            retry_locator_info = self.get_locator_info(retry_selector, read_clickable_info=self.read_clickable_info)
-                            retry_locator_info = {key: value for key, value in retry_locator_info.items() if key not in ["testsuite"]}
-                            fixed_locators_with_info.append({"index": int(index), "fixed_locator": retry_selector, "additional_info": retry_locator_info})
+                        retry_locator_info = self.get_locator_info(retry_selector, read_clickable_info=self.read_clickable_info)
+                        retry_locator_info = {key: value for key, value in retry_locator_info.items() if key not in ["testsuite"]}
+                        fixed_locators_with_info.append({"index": int(index), "fixed_locator": retry_selector, "additional_info": retry_locator_info})
                     elif self.browser.get_element_count(retry_selector) > 1:
                         if self.browser.get_element_count(f"{retry_selector}:visible") == 1:
                             retry_selector = f"{retry_selector}:visible >> nth=0"
@@ -340,7 +338,7 @@ class BrowserHealer:
                 index += 1
 
             if len(fixed_locators_with_info) > 50:
-                fixed_locators_with_info = filter_locator_list_with_fuzz(fixed_locators_with_info, failed_locator)
+                fixed_locators_with_info = filter_locator_list_with_fuzz_median(fixed_locators_with_info, failed_locator)
 
             try:
                 BuiltIn().set_log_level(old_log_level)
