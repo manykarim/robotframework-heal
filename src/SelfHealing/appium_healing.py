@@ -6,7 +6,6 @@ import re
 from uuid import uuid4
 from .llm_client import LLM_TEXT_MODEL, completion
 from .utils import extract_json_objects, filter_dict, compare_dict, xpath_to_browser, get_xpath_selector, get_simplified_dom_tree, generate_unique_css_selector, generate_unique_xpath_selector, is_leaf_or_lowest, has_parent_dialog_without_open, has_child_dialog_without_open, has_direct_text, is_headline, is_div_in_li, is_p, filter_locator_list_with_fuzz
-import xmltodict
 from .locator_db import LocatorDetailsDB
 from tinydb import Query
 from cssify import cssify
@@ -128,7 +127,7 @@ class AppiumHealer:
                 "You are a xpath locator self-healing tool for Robot Framework.\n"
                 "You will select exactly one fixed_locator and index from a list of Locators Proposals.\n"
                 "Always return the unchanged fixed_locator.\n"
-                "Respond using the following json schema: {'index': 'index of fixed_locator', 'fixed_locator': 'selected fixed_locator'}"
+                'Respond using the following json schema: {"index": "index of fixed_locator", "fixed_locator": "selected fixed_locator"}'
             )
 
             })
@@ -377,8 +376,8 @@ class AppiumHealer:
                 f"Only elements of class {android_widgets} are candidates"
                 "Keywords to fill or enter text  are always related to `android.widget.EditText` elements."
                 "Keywords like `Click` are often  related to 'android.widget.Button','android.widget.CheckBox', 'android.widget.ToggleButton', 'android.widget.RadioButton' or 'android.widget.TextView' elements."
-                "Respond using the following json schema: {'fixed_locators': ['locator1', 'locator2', 'locator3', ... ]}."
-                "Example: {'fixed_locators': ['css=input[id='my_id']', '//*[contains(@text,'Login')]', '//*[@resource-id='android:id/content')', '//android.widget.EditText[@content-desc='password')'}"
+                'Respond using the following json schema: {"fixed_locators": ["locator1", "locator2", "locator3", ... ]}.'
+                'Example: {"fixed_locators": ["css=input[id=\'my_id\']", "//*[contains(@text,\'Login\')]", "//*[@resource-id=\'android:id/content\')", "//android.widget.EditText[@content-desc=\'password\')"}'
             )
 
         messages.append({
