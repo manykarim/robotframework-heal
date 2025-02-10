@@ -297,25 +297,25 @@ def generate_unique_css_selector(element, soup, check_parents = True, check_sibl
         steps.append(id_selector)
             
     if element.get('name'):
-        name_selector = f'[name="{element['name']}"]'
+        name_selector = f'[name="{element["name"]}"]'
         if is_selector_unique(soup, f"{element.name}{name_selector}"):
             return f"{element.name}{name_selector}"
         steps.append(name_selector)
 
     if element.get('type'):
-        type_selector = f'[type="{element['type']}"]'
+        type_selector = f'[type="{element["type"]}"]'
         if is_selector_unique(soup, f"{element.name}{type_selector}"):
             return f"{element.name}{type_selector}"
         steps.append(type_selector)
 
     if element.get('placeholder'):
-        placeholder_selector = f'[placeholder="{element['placeholder']}"]'
+        placeholder_selector = f'[placeholder="{element["placeholder"]}"]'
         if is_selector_unique(soup, f"{element.name}{placeholder_selector}"):
             return f"{element.name}{placeholder_selector}"
         steps.append(placeholder_selector)
 
     if element.get('role'):
-        role_selector = f'[role="{element['role']}"]'
+        role_selector = f'[role="{element["role"]}"]'
         if is_selector_unique(soup, f"{element.name}{role_selector}"):
             return f"{element.name}{role_selector}"
         steps.append(role_selector)
