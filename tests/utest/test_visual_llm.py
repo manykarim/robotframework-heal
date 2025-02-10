@@ -78,6 +78,7 @@ def test_check_ready(mock_replace_variables, testdata_dir):
     response = healer.is_application_still_loading(data=mock_data, result=mock_result, image_as_base64=base64_image)
     assert bool(response["result"]) == False
 
+@pytest.mark.skip(reason="Llama3.2 vision not supported in litellm")
 def test_permission_dialog(testdata_dir):
     image = cv2.imread(f"{testdata_dir}/permission_dialog_001.png")
     # Convert to base64
@@ -88,7 +89,7 @@ def test_permission_dialog(testdata_dir):
     result = healer.is_modal_dialog_open(base64_image)
     assert bool(result) == True
 
-  
+@pytest.mark.skip(reason="Llama3.2 vision not supported in litellm")  
 def test_no_permission_dialog(testdata_dir):
   image = cv2.imread(f"{testdata_dir}/ready_002.png")
   # Convert to base64
