@@ -11,6 +11,11 @@ on:
 
 jobs:
   test:
+    env:
+      LLM_API_KEY: ${{ vars.LLM_API_KEY }}
+      LLM_API_BASE: ${{ vars.LLM_API_BASE }}
+      LLM_TEXT_MODEL: ${{ vars.LLM_TEXT_MODEL }}
+      LLM_LOCATOR_MODEL: ${{ vars.LLM_LOCATOR_MODEL }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
