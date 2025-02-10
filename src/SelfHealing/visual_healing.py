@@ -8,7 +8,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from .utils import extract_json_objects
 try:
     import pyautogui
-except (ImportError, KeyError):
+except:
     _has_pyautogui = False
 else:
     _has_pyautogui= True
