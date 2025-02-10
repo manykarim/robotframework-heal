@@ -34,12 +34,11 @@ def atests(context):
         "-p",
         "-m",
         "robot",
-        "--pythonpath .",
         "--loglevel=TRACE:DEBUG",
         "--listener RobotStackTracer",
         "--exclude appiumORnot_readyORnot_ci"
         "-d results",
-        f"--prerebotmodifier {ROOT}/utilities/xom.XUnitOut:{ROOT}/results/xunit.xml",
+        f"--prerebotmodifier utilities.xom.XUnitOut:results/xunit.xml",
         f"{ROOT}/tests/atest"
     ]
     global atests_completed_process
