@@ -14,12 +14,10 @@ tasks:
     command: |
       docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
       docker exec -it ollama ollama run llama3.2
-  - name: Set Environment variables
-    init: gp sync-await poetry
-    command: |
-      export LLM_API_BASE=http://localhost:11434
-      export LLM_TEXT_MODEL=ollama_chat/llama3.2
-      export LLM_LOCATORT_MODEL=ollama_chat/llama3.2
+env:
+  LLM_API_BASE: http://localhost:11434
+  LLM_TEXT_MODEL: ollama_chat/llama3.2
+  LLM_LOCATOR_MODEL: ollama_chat/llama3.2
 
 ports:
   - port: 6080
