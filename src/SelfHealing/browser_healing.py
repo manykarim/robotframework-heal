@@ -725,7 +725,7 @@ class BrowserHealer:
             # Generate and display unique selectors
             for elem in filtered_elements:
                 with open("locator_stats.csv", "a") as f:
-                    f.write(f"{str(elem).replace('\n', '')};")
+                    f.write(str(elem).replace('\n', '') + ";")
                 start = time.time()
                 locator = get_locator(elem, soup)
                 if locator:
