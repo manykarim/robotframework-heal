@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import re
 from .llm_client import LLM_TEXT_MODEL, LLM_LOCATOR_MODEL, litellm, completion
 from .utils import extract_json_objects, filter_dict, compare_dict, xpath_to_browser, get_xpath_selector, get_simplified_dom_tree, generate_unique_css_selector, generate_unique_xpath_selector, is_leaf_or_lowest, has_parent_dialog_without_open, has_child_dialog_without_open, has_direct_text, is_headline, is_div_in_li, is_p, filter_locator_list_with_fuzz, filter_locator_list_with_fuzz_median
-import xmltodict
 from .locator_db import LocatorDetailsDB
 from tinydb import Query
 from cssify import cssify
@@ -357,7 +356,8 @@ class BrowserHealer:
                 'content': (
                     "You are a xpath and css selector self-healing tool for Robot Framework."
                     "You will select exactly one fixed_locator from a list of Locator Proposals."
-                    "Respond using the following json schema: {'index': 'index of locator', 'fixed_locator': 'locator1'}"
+                    'Respond only using the following json schema: {"index": "index of locator", "fixed_locator": "locator1"}'
+                    "NO COMMENTS. NO DESCRIPTIONS. NO ADDITIONAL INFORMATION."
                 )
 
                 })
@@ -593,8 +593,8 @@ class BrowserHealer:
             "Keywords like 'Check' or 'Uncheck' are often related to 'checkbox' elements.\n"
             "When the 'fixed_locator' is an xpath, always add a xpath= prefix to the locator.\n"
             "When the 'fixed_locator' is an css selector, always add a css= prefix to the locator.\n"
-            "Respond using the following json schema: {'fixed_locators': ['locator1', 'locator2', 'locator3', ... ]}.\n"
-            "Example: {'fixed_locators': ['css=input[id='my_id']', 'xpath=//*[contains(text(),'Login')]', 'xpath=//label[contains(text(),'Speeding')]/..//input', 'xpath=//*[contains(@class, 'submitBtn')]', 'css=button.class1.class2']}\n"
+            'Respond using the following json schema: {"fixed_locators": ["locator1", "locator2", "locator3", ... ]}.\n'
+            'Example: {"fixed_locators": ["css=input[id=\'my_id\']", "xpath=//*[contains(text(),\'Login\')]", "xpath=//label[contains(text(),\'Speeding\')]/..//input", "xpath=//*[contains(@class, \'submitBtn\')]", "css=button.class1.class2"]}\n'
         )
 
 
