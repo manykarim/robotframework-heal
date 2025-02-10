@@ -322,9 +322,11 @@ class BrowserHealer:
                     if self.browser.get_element_count(retry_selector) == 0:
                         retry_selector = retry_selector.replace("button", "*")
                     if self.browser.get_element_count(retry_selector) == 1:
-                        retry_locator_info = self.get_locator_info(retry_selector, read_clickable_info=self.read_clickable_info)
-                        retry_locator_info = {key: value for key, value in retry_locator_info.items() if key not in ["testsuite"]}
-                        fixed_locators_with_info.append({"index": int(index), "fixed_locator": retry_selector, "additional_info": retry_locator_info})
+                        states = self.browser.get_element_states(retry_selector)
+                        if 'visible' in states:
+                            retry_locator_info = self.get_locator_info(retry_selector, read_clickable_info=self.read_clickable_info)
+                            retry_locator_info = {key: value for key, value in retry_locator_info.items() if key not in ["testsuite"]}
+                            fixed_locators_with_info.append({"index": int(index), "fixed_locator": retry_selector, "additional_info": retry_locator_info})
                     elif self.browser.get_element_count(retry_selector) > 1:
                         if self.browser.get_element_count(f"{retry_selector}:visible") == 1:
                             retry_selector = f"{retry_selector}:visible >> nth=0"
