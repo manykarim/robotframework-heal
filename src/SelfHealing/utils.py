@@ -111,7 +111,7 @@ def xpath_to_browser(xpath):
             if isinstance(part.attributes, list) and len(part.attributes) == 1:
                 nth = re.findall(r'\[(\d+)\]', part.attributes[0])
                 if nth:
-                    tag = cssify(f"{part.element.strip("()")}")
+                    tag = cssify(f'{part.element.strip("()")}')
                     converted_parts.append(f"css={tag}")
                     converted_parts.append(f"nth={int(nth[0])-1}") 
                 else:
