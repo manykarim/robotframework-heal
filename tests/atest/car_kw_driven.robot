@@ -1,6 +1,5 @@
 *** Settings ***
 Library    Browser    timeout=5s
-Library    String
 Library    SelfHealing    use_llm_for_locator_proposals=False
 Suite Setup    New Browser    browser=${BROWSER}    headless=${HEADLESS}
 Test Setup    New Context    viewport={'width': 1280, 'height': 720}
