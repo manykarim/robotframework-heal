@@ -55,16 +55,10 @@ jobs:
           results/*.xml
           results/*.prof
           results/*.txt
-    # - name: Test Report
-    #   uses: dorny/test-reporter@main
-    #   if: success() || failure()    # run this step even if previous step failed
-    #   with:
-    #     name: xUnit Tests ${{ matrix.python-version }}            # Name of the check run which will be created
-    #     path: results/pytest.xml,results/xunit.xml    # Path to test results
-    #     reporter: java-junit        # Format of test results
-    - name: Report results
-      if: success() || failure() 
-      run: |
-        poetry shell
-        pip install pytablewriter
-        python utilities/gha_reporter.py utilities/output.xml $GITHUB_STEP_SUMMARY
+    - name: Test Report
+      uses: dorny/test-reporter@main
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: xUnit Tests ${{ matrix.python-version }}            # Name of the check run which will be created
+        path: results/pytest.xml,results/xunit.xml    # Path to test results
+        reporter: java-junit        # Format of test results

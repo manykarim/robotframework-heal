@@ -36,8 +36,9 @@ def atests(context):
         "robot",
         "--loglevel=TRACE:DEBUG",
         "--listener RobotStackTracer",
-        "--exclude appiumORnot_readyORnot_ci"
+        "--exclude appiumORnot_readyORnot_ci",
         "-d results",
+        "--prerebotmodifier utilities.xom.XUnitOut:results/xunit.xml",
         f"{ROOT}/tests/atest"
     ]
     global atests_completed_process
