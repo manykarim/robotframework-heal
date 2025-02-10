@@ -695,7 +695,7 @@ def generate_unique_xpath_selector(element, soup, check_parents = True, check_si
                     parent_selector = generate_unique_xpath_selector(parent, soup, check_children=False, check_siblings=True, check_parents=False, check_text=True, only_return_unique_selectors=False)
                     if parent_selector:
                         parent_selectors.append(parent_selector)
-                        parent_child_selector = f"{"/".join(reversed(parent_selectors))}/{''.join(steps)}"
+                        parent_child_selector = f"{'/'.join(reversed(parent_selectors))}/{''.join(steps)}"
                         current_parent_child_selector = f"{parent_selector}//{''.join(steps)}"
                         if is_selector_unique(soup, current_parent_child_selector):
                             return current_parent_child_selector                        
