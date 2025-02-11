@@ -7,3 +7,4 @@ browser/
 results/*.html
 *.xml
 .vscode/
+site/
