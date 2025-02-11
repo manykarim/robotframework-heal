@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "robotframework-heal"
-version = "0.2.0"
+version = "0.2.1"
 description = "A Robot Framework Listener for library agnostic self-healing and smart recovery of tests"
 authors = ["Many Kasiriha <many.kasiriha@dbschenker.com>"]
 maintainers = ["Many Kasiriha <many.kasiriha@dbschenker.com>"]
@@ -9,6 +9,7 @@ license = "Apache-2.0"
 packages = [
     { include = "SelfHealing", from = "src" }
 ]
+exclude = ["src/SelfHealing/.env"]
 homepage = "https://github.com/manykarim/robotframework-heal"
 
 [tool.poetry.dependencies]
