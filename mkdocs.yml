@@ -1,4 +1,6 @@
 site_name: Robot Framework Heal
+repo_url: https://github.com/manykarim/robotframework-heal
+repo_name: robotframework-heal
 theme:
   name: material
   palette:
