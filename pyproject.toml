@@ -34,6 +34,7 @@ pytest = "*"
 invoke = "*"
 coverage = "*"
 robotframework-stacktrace = "*"
+mkdocs-material = "^9.6.3"
 
 [build-system]
 requires = ["poetry-core"]

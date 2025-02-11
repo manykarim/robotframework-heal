@@ -1,7 +1,6 @@
-# robotframework-heal
-A Robot Framework Listener for library agnostic self-healing and smart recovery of tests
+# Overview  
 
-📙 [Documentation](https://manykarim.github.io/robotframework-heal/) can be found [here](https://manykarim.github.io/robotframework-heal/)
+A Robot Framework Listener for library agnostic self-healing and smart recovery of tests
 
 ## Installation
 ```bash
@@ -12,20 +11,25 @@ pip install robotframework-heal
 
 Add `Library    SelfHealing ` to your Robot Framework test suite `*** Settings ***` section.
 
+```robotframework
+*** Settings ***
+Library    SelfHealing
+```	
+
 Set up the following environment variables to enable the self-healing feature:
 
-- LLM_API_KEY
-- LLM_API_BASE
-- LLM_TEXT_MODEL (model used for picking final locator from proposal list)
-- LLM_LOCATOR_MODEL (model for generating locator proposals from DOM tree)
-- LLM_VISION_MODEL (not working yet)
+* `LLM_API_KEY`
+* `LLM_API_BASE`
+* `LLM_TEXT_MODEL` (model used for picking final locator from proposal list)
+* `LLM_LOCATOR_MODEL` (model for generating locator proposals from DOM tree)
+* `LLM_VISION_MODEL` (not working yet)
 
 Interface with LLMs uses the [LiteLMM](https://docs.litellm.ai) API.  
 Check the list of available [Providers](https://docs.litellm.ai/docs/providers) and how to connect to them.
 
 
 
-```robot
+```robotframework
 *** Settings ***
 Library    Browser    timeout=5s
 Library    SelfHealing    use_llm_for_locator_proposals=True
@@ -55,13 +59,3 @@ Login with valid credentials
 * `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. Default is false.
 * `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
 * `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
-
-## Open the project in Gitpod.io
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/manykarim/robotframework-heal)  
-Try it out in  [Gitpod](https://gitpod.io/#https://github.com/manykarim/robotframework-heal)
-
-## Short URL and QR Code
-
-https://tinyurl.com/robot-heal
-
-![QR Code](QR-Code.png)
