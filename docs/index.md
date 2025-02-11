@@ -59,3 +59,22 @@ Login with valid credentials
 * `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. Default is false.
 * `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
 * `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
+
+## Environment Variables
+
+Example when running with Ollama LLM:
+
+```bash
+LLM_API_BASE=http://localhost:11434
+LLM_TEXT_MODEL=ollama_chat/llama3.1
+LLM_LOCATOR_MODEL=ollama_chat/llama3.1
+LLM_VISION_MODEL=ollama_chat/llama3.2-vision
+```
+
+Example when using OpenAI:
+
+```bash
+LLM_API_KEY=YOUR_OPENAI_API_KEY
+LLM_TEXT_MODEL=gpt-3.5-turbo
+LLM_LOCATOR_MODEL=gpt-3.5-turbo
+```
