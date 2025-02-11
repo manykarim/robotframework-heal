@@ -293,6 +293,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -349,6 +358,15 @@
   <a href="#arguments" class="md-nav__link">
     <span class="md-ellipsis">
       Arguments
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables
     </span>
   </a>
   
@@ -422,6 +440,18 @@ Check the list of available <a href="https://docs.litellm.ai/docs/providers">Pro
 <li><code>heal_assertions</code>: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)</li>
 <li><code>locator_db_file</code>: Specifies the filename for the locator database. Default is "locator_db.json".</li>
 </ul>
+<h2 id="environment-variables">Environment Variables</h2>
+<p>Example when running with Ollama LLM:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">LLM_API_BASE</span><span class="o">=</span>http://localhost:11434
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">LLM_TEXT_MODEL</span><span class="o">=</span>ollama_chat/llama3.1
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">LLM_LOCATOR_MODEL</span><span class="o">=</span>ollama_chat/llama3.1
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">LLM_VISION_MODEL</span><span class="o">=</span>ollama_chat/llama3.2-vision
+</span></code></pre></div>
+<p>Example when using OpenAI:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">LLM_API_KEY</span><span class="o">=</span>YOUR_OPENAI_API_KEY
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">LLM_TEXT_MODEL</span><span class="o">=</span>gpt-3.5-turbo
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">LLM_LOCATOR_MODEL</span><span class="o">=</span>gpt-3.5-turbo
+</span></code></pre></div>
 
 
 
