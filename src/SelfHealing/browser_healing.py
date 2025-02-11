@@ -112,7 +112,7 @@ class BrowserHealer:
                 model = LLM_TEXT_MODEL,
                 messages = messages,
                 temperature = 0.1,
-                top_k = 1, 
+                # top_k = 1, 
                 response_format =  { "type": "json_object" }
             )
             solution_text = response['choices'][0]['message']['content']
@@ -430,7 +430,7 @@ class BrowserHealer:
                 model = LLM_TEXT_MODEL,
                 messages = messages,
                 temperature = 0.1,
-                top_k = 10,
+                # top_k = 10,
                 response_format =  { "type": "json_object" }
             )
             solution_text = response['choices'][0]['message']['content']
@@ -630,7 +630,7 @@ class BrowserHealer:
                         model = LLM_TEXT_MODEL,
                         messages = messages,
                         temperature = 0.1,
-                        top_k = 10,
+                        # top_k = 10,
                         response_format =  { "type": "json_object" }
                     )
                     
