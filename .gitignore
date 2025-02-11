@@ -8,3 +8,4 @@ results/*.html
 *.xml
 .vscode/
 site/
+dist/
