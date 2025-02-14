@@ -56,7 +56,7 @@ Login with valid credentials
 * `fix`: Specifies the mode of operation, set to "realtime" for real-time healing. Default is "realtime".
 * `collect_locator_info`: Boolean flag to enable or disable the collection of locator information. Default is false.
 * `use_locator_db`: Boolean flag to enable or disable the use of a locator database. Default is false.
-* `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. Default is false.
+* `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. If true, locator proposals will be identified from DOM Tree via LLM. If set to false, locator proposals are generated via CSS/XPATH generator. Default is false.
 * `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
 * `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
 
