@@ -51,3 +51,23 @@ That behavior can be enabled by setting `use_locator_db` to `True`.
 * `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. If true, locator proposals will be identified from DOM Tree via LLM. If set to false, locator proposals are generated via CSS/XPATH generator. Default is false.
 * `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
 * `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
+
+## Process
+
+``` mermaid
+graph TD
+  A[end_library_keyword] --> B{Status?};
+  B -->|FAIL| C{Broken Locator?};
+  C --> |YES| D[Get Fixed Locator];
+  D --> F{Get Locator proposals via}
+  F --> |LLM| G[Use LLM for Locator Proposals];
+  F --> |CSS/XPATH| H[Use CSS/XPATH Generator];
+  G --> J[Add Details to Locator Proposals];
+  H --> J[Add Details to Locator Proposals];
+  B ----->|PASS| E[Continue with Execution];
+  J --> K{Fixed Locator Found?};
+  K -->|YES| E;
+  K -->|NO| I;
+  C -------> |NO| I[FAIL];
+
+```
