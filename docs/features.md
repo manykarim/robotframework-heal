@@ -52,7 +52,7 @@ That behavior can be enabled by setting `use_locator_db` to `True`.
 * `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
 * `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
 
-## Process
+## Process for Self-Healing
 
 ``` mermaid
 graph TD
@@ -65,7 +65,7 @@ graph TD
   G --> J[Add Details to Locator Proposals];
   H --> J[Add Details to Locator Proposals];
   B ----->|PASS| E[Continue with Execution];
-  J --> K{Fixed Locator Found?};
+  J --> LLM[Send Locator Proposals to LLM] --> K{Fixed Locator Found?};
   K -->|YES| E;
   K -->|NO| I;
   C -------> |NO| I[FAIL];
