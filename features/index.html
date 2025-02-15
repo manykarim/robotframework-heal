@@ -344,9 +344,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#process" class="md-nav__link">
+  <a href="#process-for-self-healing" class="md-nav__link">
     <span class="md-ellipsis">
-      Process
+      Process for Self-Healing
     </span>
   </a>
   
@@ -441,9 +441,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#process" class="md-nav__link">
+  <a href="#process-for-self-healing" class="md-nav__link">
     <span class="md-ellipsis">
-      Process
+      Process for Self-Healing
     </span>
   </a>
   
@@ -508,7 +508,7 @@ That behavior can be enabled by setting <code>use_locator_db</code> to <code>Tru
 <li><code>heal_assertions</code>: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)</li>
 <li><code>locator_db_file</code>: Specifies the filename for the locator database. Default is "locator_db.json".</li>
 </ul>
-<h2 id="process">Process</h2>
+<h2 id="process-for-self-healing">Process for Self-Healing</h2>
 <pre class="mermaid"><code>graph TD
   A[end_library_keyword] --&gt; B{Status?};
   B --&gt;|FAIL| C{Broken Locator?};
@@ -519,7 +519,7 @@ That behavior can be enabled by setting <code>use_locator_db</code> to <code>Tru
   G --&gt; J[Add Details to Locator Proposals];
   H --&gt; J[Add Details to Locator Proposals];
   B -----&gt;|PASS| E[Continue with Execution];
-  J --&gt; K{Fixed Locator Found?};
+  J --&gt; LLM[Send Locator Proposals to LLM] --&gt; K{Fixed Locator Found?};
   K --&gt;|YES| E;
   K --&gt;|NO| I;
   C -------&gt; |NO| I[FAIL];
