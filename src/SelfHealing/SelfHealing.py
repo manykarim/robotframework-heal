@@ -45,7 +45,12 @@ class SelfHealing:
             self.fix_realtime = False
             self.fix_retry = True
         self.locator_info = {}
-        self.locator_db = LocatorDetailsDB(locator_db_file).db
+        try:
+            self.locator_db = LocatorDetailsDB(locator_db_file).db
+        except:
+            pass
+
+
 
     def _start_library_keyword(self, data, implementation, result):
         if self.greedy_fix and data.args:
@@ -70,7 +75,7 @@ class SelfHealing:
 
     def _end_library_keyword(self, data, implementation, result):
         # Check if Keyword belongs to Browser Library
-        if result.owner == 'Browser' and result.failed:
+        if result.owner == 'Browser' and result.failed and data.parent.name != "Run Keyword And Return Status":
             browser = implementation.owner.instance
             logger.info(f"Keyword '{result.full_name}' with arguments '{BuiltIn().replace_variables(data.args)}' used on line {data.lineno} failed.", also_console=True)
             healer = BrowserHealer(implementation.owner.instance, use_llm_for_locator_proposals = self.use_llm_for_locator_proposals)
