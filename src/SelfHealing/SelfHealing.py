@@ -25,6 +25,13 @@ duplicate_test_pattern = re.compile(
     r"Multiple .*? with name '(?P<test>.*?)' executed in.*? suite '(?P<suite>.*?)'."
 )
 
+skip_parent_keywords = [
+    "Run Keyword And Return Status",
+    "Run Keyword And Expect Error",
+    "Run Keyword And Ignore Error",
+    "Run Keyword And Continue On Failure"
+    ]
+
 class SelfHealing:
     ROBOT_LIBRARY_SCOPE = 'SUITE'
     ROBOT_LISTENER_API_VERSION = 3
@@ -75,7 +82,7 @@ class SelfHealing:
 
     def _end_library_keyword(self, data, implementation, result):
         # Check if Keyword belongs to Browser Library
-        if result.owner == 'Browser' and result.failed and data.parent.name != "Run Keyword And Return Status":
+        if result.owner == 'Browser' and result.failed and data.parent.name not in skip_parent_keywords:
             browser = implementation.owner.instance
             logger.info(f"Keyword '{result.full_name}' with arguments '{BuiltIn().replace_variables(data.args)}' used on line {data.lineno} failed.", also_console=True)
             healer = BrowserHealer(implementation.owner.instance, use_llm_for_locator_proposals = self.use_llm_for_locator_proposals)
