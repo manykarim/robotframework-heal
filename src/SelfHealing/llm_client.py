@@ -1,11 +1,17 @@
 import httpx
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import base64
 import litellm
 from litellm import completion
+from robot.api import logger
 
-load_dotenv()
+env_file = find_dotenv()
+if env_file:
+    print(f"Loading .env from: {os.path.abspath(env_file)}")
+    load_dotenv(env_file, override=True)
+else:
+    print("No .env file found in current directory or parent directories")
 
 LLM_API_KEY = os.environ.get('LLM_API_KEY', None)
 LLM_API_BASE = os.environ.get('LLM_API_BASE', None)
