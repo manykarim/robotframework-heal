@@ -20,7 +20,7 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 
 ## 3. Engine and triage
 
-- [ ] 3.1 Implement `SessionDriver` protocol (query/inspect/act primitives) and `BrowserDriver`; port `get_simplified_dom_tree`, unique-selector generation, fuzzy filtering from `SelfHealing/utils.py` with tests
+- [x] 3.1 Implement `SessionDriver` protocol (query/inspect/act primitives) and `BrowserDriver`; port `get_simplified_dom_tree`, unique-selector generation, fuzzy filtering from `SelfHealing/utils.py` with tests (fixed two latent bugs: nth-of-type identity, fuzz-median alignment)
 - [ ] 3.2 Implement evidence collectors (RF metadata, simplified DOM excerpt, screenshot, console/network excerpts, git file history — bounded and cached) and lazy `FailureContext` assembly
 - [ ] 3.3 Implement the engine pipeline (collect → detect → diagnose → plan → act+verify → RCA) with the failure-class plugin registry and suppression rules (skip-parents, re-entrancy guard, budgets)
 - [ ] 3.4 Implement deterministic detectors: element-count-zero, readyState, viewport intersection, open-dialog, required-field state
