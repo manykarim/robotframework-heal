@@ -46,9 +46,9 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 
 ## 6. Remaining failure classes
 
-- [ ] 6.1 Implement `AppiumDriver` (page-source DOM, swipe, visibility) and register with the listener
-- [ ] 6.2 Implement viewport-recovery plugin (scroll into view web / bounded swipe search Appium)
-- [ ] 6.3 Implement overlay-recovery plugin (deterministic dismiss heuristics; LLM choice only among verified candidate controls; post-dismiss verification)
+- [x] 6.1 Implement `AppiumDriver` (page-source XML DOM, bounded swipe search, dismiss candidates) and register with the listener
+- [x] 6.2 Implement viewport-recovery plugin (scroll into view web / bounded swipe search Appium, with single-hop fallthrough to locator-drift when swiping finds nothing)
+- [x] 6.3 Implement overlay-recovery plugin (deterministic dismiss candidates from driver, post-dismiss verification, rerun; no LLM in default path)
 - [ ] 6.4 **[EXPERIMENT]** Vision probe (`experiments/vision-probe/`): screenshot Q&A (loading state, modal presence, form errors) on MiniMax vision-capable model + one OpenRouter cheap vision model; gate 6.5/6.6 on findings
 - [ ] 6.5 Implement form-diagnosis plugin (DOM required/invalid analysis; vision enrichment when available; diagnose-only default, `HEAL_FORM_FILL` opt-in)
 - [ ] 6.6 Implement assertion-healing plugin (drift comparison, semantic-drift guard, verified rerun; `HEAL_ASSERTIONS` opt-in)

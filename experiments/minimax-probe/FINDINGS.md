@@ -77,3 +77,23 @@ validator retry loops" on this backend.
 **Budget default**: `HEAL_MAX_FAILURE_SECONDS=60` is comfortable for prompted-mode
 healing on both reference backends (15s worst observed); reasoning-model native/tool
 modes are the pathological cases and are no longer defaults.
+
+## Probe 5 — vision capability (task 6.4, `probe5_vision.py`)
+
+Synthetic screenshots (loading spinner; checkout form with red empty required
+Email field + "Email is required"): loading-state question (positive+negative)
+and form-validation question, prompted output.
+
+| Backend | Loading + / − | Form errors | Latency |
+|---|---|---|---|
+| MiniMax-M3 | PASS / PASS | correct (Email) | 4–8s |
+| google/gemini-2.5-flash-lite | PASS / PASS | PASS | 1.5–2.6s |
+| openai/gpt-4.1-nano | PASS / PASS | correct (Email) | ~1.2s |
+
+**Gate OPEN for form-diagnosis (6.5) and assertion healing (6.6).** All three
+backends, including the cheapest, identify loading states and name the failing
+field correctly via image input + prompted JSON.
+
+**Schema lesson**: pseudo-boolean string fields ("true"/"false") invite free
+text ("Yes, the form shows…"). Production schemas use real `bool` fields so
+pydantic validation rejects prose and ModelRetry corrects it.
