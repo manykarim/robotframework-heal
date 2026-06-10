@@ -25,8 +25,8 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 - [x] 3.3 Implement the engine pipeline (collect → detect → diagnose → plan → act+verify → RCA) with the failure-class plugin registry and budget suppression (skip-parents + re-entrancy guard live in the listener, task 4.1)
 - [x] 3.4 Implement deterministic detectors: element-count-zero, readyState, viewport intersection, open-dialog (required-field state comes with form plugin, 6.5)
 - [x] 3.5 Implement triage agent (flat `Diagnosis` schema) invoked only on detector ambiguity; unit tests with `FunctionModel` for both paths
-- [ ] 3.6 **[EXPERIMENT]** Threading spike (`experiments/rf-threading/`): persistent healer loop + main-thread driver executor inside a real RF run — prove keyword rerun, return-value assignment, log integrity, timeout unblock; record findings incl. fallback decision (portal/run_sync) if disproven
-- [ ] 3.7 Implement the transaction runtime per 3.6 findings: submit/serve queue, per-failure wall-clock cap, engine-owned re-entrancy flag
+- [x] 3.6 **[EXPERIMENT]** Threading spike (`experiments/rf-threading/`): 4/4 PASS in a real RF run — rerun, return-value assignment, parallel loop work, abandonment unblock all proven; no fallback needed; findings recorded
+- [x] 3.7 Implement the transaction runtime per 3.6 findings: `heal.rf.executor.TransactionRuntime` (submit/serve queue, abandonment with grace, `MainThreadProxy`); re-entrancy flag lives in the listener (4.1)
 
 ## 4. RF listener surface (phase-1 usable increment)
 
