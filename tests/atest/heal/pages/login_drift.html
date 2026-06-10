@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Heal Demo: Login</title></head>
+<body>
+  <h1>Demo Login</h1>
+  <!-- Seeded drift: tests still use id=login-button; the button was renamed. -->
+  <form id="login-form">
+    <label for="user-email">Email</label>
+    <input id="user-email" name="email" type="text" placeholder="you@example.com"/>
+    <label for="user-pass">Password</label>
+    <input id="user-pass" name="password" type="password"/>
+    <button id="signin-btn" type="submit" onclick="document.getElementById('status').innerText='clicked'; return false;">Sign in</button>
+  </form>
+  <p id="status">idle</p>
+</body>
+</html>

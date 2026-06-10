@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Heal Demo: Slow Load</title></head>
+<body>
+  <h1>Slow page</h1>
+  <p id="marker">loading…</p>
+  <!-- A slow-loading sub-resource keeps document.readyState != 'complete'.
+       The /slow endpoint is served by slow_server.py with a delay. -->
+  <img src="/slow.png" alt=""/>
+  <script>
+    document.getElementById('marker').innerText = 'dom-ready';
+    window.addEventListener('load', function () {
+      var btn = document.createElement('button');
+      btn.id = 'late-btn';
+      btn.innerText = 'Late button';
+      btn.onclick = function () { document.getElementById('marker').innerText = 'late-clicked'; };
+      document.body.appendChild(btn);
+    });
+  </script>
+</body>
+</html>
