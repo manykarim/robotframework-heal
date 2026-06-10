@@ -160,6 +160,9 @@ class HealOutcome(BaseModel):
     duration_seconds: float = 0.0
     usage: ModelUsage = Field(default_factory=ModelUsage)
     detail: str = ""
+    #: when UNHEALED, a plugin may hand over to one other failure class
+    #: (single hop, e.g. Appium swipe-search not found -> locator-drift)
+    fallthrough_to: FailureClass | None = None
 
 
 class FixUsageSite(BaseModel):

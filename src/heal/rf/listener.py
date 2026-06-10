@@ -37,9 +37,16 @@ def _make_browser_driver(instance):
     return BrowserDriver(instance)
 
 
+def _make_appium_driver(instance):
+    from ..drivers.appium import AppiumDriver
+
+    return AppiumDriver(instance)
+
+
 #: owning library -> driver factory(library_instance)
 DRIVER_FACTORIES = {
     "Browser": _make_browser_driver,
+    "AppiumLibrary": _make_appium_driver,
 }
 
 

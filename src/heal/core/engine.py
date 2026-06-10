@@ -35,10 +35,12 @@ from .session import HealSession
 
 
 def default_registry() -> PluginRegistry:
-    """Detection order is deliberate: a loading page explains everything, a
-    missing element beats an open dialog, a dialog beats out-of-viewport."""
+    """Detection order is deliberate: a loading page explains everything; a
+    blocking dialog beats out-of-viewport (both need the element present);
+    viewport's mobile branch (absent element, swipe search) runs before
+    locator-drift and falls through to it when swiping finds nothing."""
     return PluginRegistry(
-        [TimingPlugin(), LocatorDriftPlugin(), OverlayPlugin(), ViewportPlugin()]
+        [TimingPlugin(), OverlayPlugin(), ViewportPlugin(), LocatorDriftPlugin()]
     )
 
 
@@ -123,6 +125,20 @@ class HealingEngine:
 
         ctx = builder.context(*plugin.heal_evidence)
         outcome = await plugin.heal(ctx, session, self.runtime, budget, diagnosis)
+
+        # single-hop fallthrough (e.g. viewport swipe-search exhausted -> locator-drift)
+        if outcome.status is OutcomeStatus.UNHEALED and outcome.fallthrough_to is not None:
+            next_plugin = self.registry.for_class(outcome.fallthrough_to)
+            if next_plugin is not None and next_plugin is not plugin:
+                next_diagnosis = Diagnosis(
+                    failure_class=outcome.fallthrough_to,
+                    confidence=diagnosis.confidence,
+                    rationale=f"{diagnosis.rationale} (fallthrough from {plugin.failure_class.value})",
+                )
+                ctx = builder.context(*next_plugin.heal_evidence)
+                next_outcome = await next_plugin.heal(ctx, session, self.runtime, budget, next_diagnosis)
+                next_outcome.attempts = outcome.attempts + next_outcome.attempts
+                return next_outcome
         return outcome
 
     async def _diagnose(

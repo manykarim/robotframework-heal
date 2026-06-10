@@ -140,6 +140,29 @@ class BrowserDriver:
             return "dialog[open]"
         return None
 
+    _DISMISS_TEXTS = ("close", "ok", "okay", "accept", "dismiss", "got it", "agree", "×", "x")
+
+    def find_dismiss_controls(self) -> list[str]:
+        """Deterministic dismiss candidates inside the open dialog, best first."""
+        try:
+            soup = BeautifulSoup(self._browser.get_page_source(), "html.parser")
+        except Exception:
+            return []
+        dialog = soup.find("dialog", {"open": True})
+        if dialog is None:
+            return []
+        candidates: list[str] = []
+        controls = dialog.find_all(["button", "a", "input"])
+        for control in controls:
+            text = (control.get_text() or control.get("value") or "").strip().lower()
+            if any(marker in text for marker in self._DISMISS_TEXTS):
+                selector = f'dialog[open] {control.name}:has-text("{text[:30]}")'
+                candidates.append(selector)
+        # fall back to any single button in the dialog
+        if not candidates and len(controls) == 1:
+            candidates.append(f"dialog[open] {controls[0].name}")
+        return [c for c in candidates if self.count(c) == 1]
+
     def take_screenshot(self) -> bytes | None:
         try:
             import base64

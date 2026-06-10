@@ -50,11 +50,16 @@ def _configure(agent: Agent) -> None:
         deps = ctx.deps
         verdicts: list[str] = []
         verified: list[str] = []
+        viewport_limited = bool(getattr(deps.driver, "dom_covers_viewport_only", False))
         for locator in output.locators[:8]:
             locator = locator.strip()
             if not locator or locator in deps.rejected:
                 continue
             count = await asyncio.to_thread(deps.driver.count, locator)
+            if count == 0 and viewport_limited:
+                # mobile: candidate may be off-screen — swipe search before rejecting
+                if await asyncio.to_thread(deps.driver.scroll_into_view, locator):
+                    count = await asyncio.to_thread(deps.driver.count, locator)
             if count == 0:
                 deps.rejected[locator] = "matched 0 elements"
                 verdicts.append(f"{locator!r}: matched 0 elements")

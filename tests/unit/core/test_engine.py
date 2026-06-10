@@ -57,6 +57,10 @@ class FakeDriver:
     def take_screenshot(self):
         return None
 
+    def scroll_into_view(self, locator):
+        self.in_viewport = True
+        return True
+
 
 class FakeSession:
     def __init__(self, driver, rerun_result="ok", rerun_error=None):
@@ -127,10 +131,11 @@ def test_timing_unhealed_when_rerun_not_supported():
     assert "cannot rerun" in event.outcome.detail
 
 
-def test_viewport_detector():
+def test_viewport_detector_heals_by_scrolling():
     driver = FakeDriver(counts={"id=login": 1}, in_viewport=False)
     event = run(make_engine().handle(make_builder(driver), FakeSession(driver)))
     assert event.outcome.diagnosis.failure_class is FailureClass.VIEWPORT
+    assert event.outcome.status is OutcomeStatus.HEALED
 
 
 def test_overlay_beats_viewport_but_not_missing_element():
