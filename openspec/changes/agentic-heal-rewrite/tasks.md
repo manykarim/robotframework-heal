@@ -30,10 +30,10 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 
 ## 4. RF listener surface (phase-1 usable increment)
 
-- [ ] 4.1 Implement `heal.rf.Listener` (v3): failure qualification by owning library, transaction submission, outcome application (status mutation, assign, log messages)
-- [ ] 4.2 Implement `SelfHealing` deprecation shim mapping legacy kwargs (`fix`, `heal_assertions`, `use_llm_for_locator_proposals`, …) to settings; deprecation warnings
-- [ ] 4.3 Implement locator-healing plugin: proposal agent (tool-tier aware), validator-based live verification (exists/unique/visible/type-compatible), rerun, greedy fixed-locator reuse
-- [ ] 4.4 Implement timing-recovery plugin (wait-until-ready + rerun, no LLM)
+- [x] 4.1 Implement `heal.rf.HealListener` (v3): failure qualification by owning library, transaction submission, outcome application (status mutation, assign, log messages), greedy fixed-locator reuse in start_keyword
+- [x] 4.2 Implement `SelfHealing` deprecation shim mapping legacy kwargs (`fix`, `heal_assertions`, `use_llm_for_locator_proposals`, …) to settings; deprecation warnings
+- [x] 4.3 Implement locator-healing plugin: proposal agent (tool-tier aware), validator-based live verification (exists/unique/visible), rerun with candidate fallback, greedy fixed-locator reuse
+- [x] 4.4 Implement timing-recovery plugin (wait-until-ready + rerun, no LLM) — done as part of 3.3/3.4 (TimingPlugin)
 - [ ] 4.5 Acceptance test suite (atest): demo web app with seeded locator drift + slow loads; run via shim and new listener; assert healed results and events; wire into CI with `TestModel`-backed dry mode and optional live-model mode
 - [ ] 4.6 **[EXPERIMENT]** End-to-end latency/cost measurement of 4.5 against MiniMax and one OpenRouter small model; record per-failure wall-clock; set default `HEAL_MAX_FAILURE_SECONDS` from data
 
