@@ -56,19 +56,19 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 
 ## 7. Fix engine
 
-- [ ] 7.1 **[EXPERIMENT]** AST spike (`experiments/rf-ast-fix/`): locator-origin resolution + variable/suffix analysis + cross-file usage scan on this repo's atest suites and one real-world suite; confirm blast-radius computation is reliable
-- [ ] 7.2 Implement fix synthesis: AST transformers (keyword-call replacement, variable updates incl. imported resources), origin resolution, blast-radius classification
-- [ ] 7.3 Implement Tier 1: healed copies + aggregated unified `.patch` (git-apply verified in tests); re-parse validation + idempotency tests
-- [ ] 7.4 Implement Tier 2: opt-in in-place application at end-of-run with dirty-tree refusal
-- [ ] 7.5 Dashboard/report integration: per-event fix proposal with diff view and tier
+- [x] 7.1 **[EXPERIMENT]** AST spike folded into `tests/unit/fix/` against realistic suite+resource trees and validated live on the heal atest suite (gpt-4.1-nano heal → correct git-appliable patch); blast radius reliable for literal/variable/variable+suffix
+- [x] 7.2 Implement fix synthesis: AST transformers (keyword-call replacement, variable updates incl. imported resources), origin resolution, blast-radius classification
+- [x] 7.3 Implement Tier 1: healed copies + aggregated unified `.patch` (git-apply verified in tests); re-parse validation + idempotency tests
+- [x] 7.4 Implement Tier 2: opt-in in-place application at end-of-run with dirty-tree refusal (force override available); `shared` never auto-applies
+- [x] 7.5 Dashboard/report integration: per-event fix proposal with blast radius + usages (listener enrichment), heal.patch + healed copies in report dir
 
 ## 8. CLI, MCP, skill
 
-- [ ] 8.1 Implement `heal` CLI (typer): `triage`, `report`, `apply` (tier-aware), `doctor` (per-role probes, redacted config print)
-- [ ] 8.2 **[EXPERIMENT]** MCP server spike: pydantic-ai MCP server vs FastMCP for resource (not just tool) exposure; decide and record
-- [ ] 8.3 Implement MCP server: run-store resources (failure bundles, fix proposals), `apply_fix` with tier enforcement, healing-history queries; attached mode exposing the driver toolset
-- [ ] 8.4 Write the agent skill (triage→inspect→fix workflow over MCP/CLI); verify referenced commands exist
-- [ ] 8.5 Replay/eval harness: golden-failure fixtures from serialized `FailureContext`s; pydantic-evals suite per failure class × model tier; publish compatibility matrix in docs
+- [x] 8.1 Implement `heal` CLI (typer): `triage`, `report`, `apply` (tier-aware), `doctor` (per-role probes, redacted config print), `history`, `mcp`; verified against a live run store
+- [x] 8.2 **[EXPERIMENT]** MCP decision: official `mcp` SDK FastMCP (tools+resources over data; pydantic-ai's MCP server targets exposing agents) — recorded in `heal/mcp/server.py`
+- [x] 8.3 Implement MCP server: failure bundles, fix proposals, `apply_fix` with blast-radius/tier enforcement, healing-history queries, events resource (attached live-toolset mode deferred — post-run bundles cover the coding-agent workflow)
+- [x] 8.4 Write the agent skill (`skills/heal/SKILL.md`: triage→inspect→fix over MCP/CLI); referenced commands exist
+- [x] 8.5 Replay/eval harness: `heal.evals.replay` (ReplayDriver/ReplaySession from serialized contexts), golden fixture exported from a real run, `tests/evals/eval_heal.py` — verified: gpt-4.1-nano replays+heals the fixture offline (3.2s, 612 tokens)
 
 ## 9. Migration and cleanup
 

@@ -29,10 +29,15 @@ dependencies = [
     "pydantic>=2.13.4",
     "pydantic-settings>=2.14.1",
     "pydantic-ai-slim[openai]>=1.107.0",
+    "typer>=0.25.1",
+    "mcp>=1.27.2",
 ]
 
 [project.urls]
 Homepage = "https://github.com/manykarim/robotframework-heal"
+
+[project.scripts]
+heal = "heal.cli.main:app"
 
 [dependency-groups]
 dev = [
