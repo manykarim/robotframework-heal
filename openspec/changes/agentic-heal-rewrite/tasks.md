@@ -15,8 +15,8 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 - [x] 2.2 **[EXPERIMENT]** Root-cause the tool-mode failures (probe2) and OpenRouter small-model matrix (probe3) — DONE: root cause is forced `tool_choice` (fix: `openai_supports_tool_choice_required=False`, 311s→14s); per-model matrix in FINDINGS.md; exploration tool loops unreliable on all small models; ModelRetry/prompted passes everywhere reachable
 - [x] 2.3 Implement `ModelFactory`: provider resolution (any OpenAI-compatible base_url + pydantic-ai provider strings), per-role `ModelCapabilities` profile resolution with overrides informed by 2.1/2.2 findings
 - [x] 2.4 Implement `build_agent(role, schema)`: generic output-mode wrapping (native/tool/prompted), strict/tool_choice quirks handled via backend profile presets (pydantic-ai model profiles), schema-derived prompted templates via PromptedOutput
-- [ ] 2.5 Implement `RunLedger` + per-transaction `UsageLimits`; cap-breach degradation to RCA-only; unit tests with `TestModel`
-- [ ] 2.6 Implement endpoint probe library (`heal.core.doctor`): tool-call/strict/JSON/vision probes returning a resolved profile + actionable errors (reuse probe code from experiments)
+- [x] 2.5 Implement `RunLedger` + per-transaction `UsageLimits`; cap-breach degradation to RCA-only; unit tests with `TestModel`
+- [x] 2.6 Implement endpoint probe library (`heal.core.doctor`): tool-call/strict/JSON/vision probes returning a resolved profile + actionable errors — validated live on MiniMax: all probes PASS through the runtime preset (vs tool-transport FAIL on raw defaults); caught+fixed profile-merge bug
 
 ## 3. Engine and triage
 

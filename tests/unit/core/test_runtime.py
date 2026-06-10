@@ -73,6 +73,9 @@ def test_model_building_applies_minimax_profile_fix():
     model = rt.model("triage")
     assert isinstance(model, OpenAIChatModel)
     assert model.profile.openai_supports_tool_choice_required is False
+    # regression: preset must MERGE into the provider-resolved profile, not
+    # replace it — NativeOutput support must survive (live doctor run caught this)
+    assert model.profile.supports_json_schema_output is True
 
 
 def test_model_building_provider_string_passthrough():

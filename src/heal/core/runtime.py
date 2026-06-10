@@ -161,13 +161,16 @@ class AgentRuntime:
                 f"No model configured for role {cfg.role!r}: set HEAL_MODEL or HEAL_{cfg.role.upper()}_MODEL"
             )
         if cfg.base_url:
+            provider = OpenAIProvider(base_url=cfg.base_url, api_key=cfg.api_key)
+            model = OpenAIChatModel(cfg.model, provider=provider)
             preset = find_preset(cfg.base_url)
-            profile = OpenAIModelProfile(**preset.profile_overrides) if preset and preset.profile_overrides else None
-            return OpenAIChatModel(
-                cfg.model,
-                provider=OpenAIProvider(base_url=cfg.base_url, api_key=cfg.api_key),
-                profile=profile,
-            )
+            if preset and preset.profile_overrides:
+                # Merge quirk fixes INTO the provider-resolved profile instead of
+                # replacing it (a bare override profile would e.g. lose
+                # supports_json_schema_output and break NativeOutput).
+                merged = model.profile.update(OpenAIModelProfile(**preset.profile_overrides))
+                model = OpenAIChatModel(cfg.model, provider=provider, profile=merged)
+            return model
         # pydantic-ai provider string, e.g. "openai:gpt-4.1-mini"
         return cfg.model
 
