@@ -38,7 +38,8 @@ def test_find_preset():
 def test_capabilities_minimax_preset():
     rt = AgentRuntime(settings(model="MiniMax-M2.5", base_url="https://api.minimax.io/v1"))
     caps = rt.capabilities("triage")
-    assert caps.structured_output is OutputMode.NATIVE
+    # prompted: the only mode probe-proven reliable under ModelRetry loops (P5)
+    assert caps.structured_output is OutputMode.PROMPTED
     assert caps.tools is ToolSupport.UNRELIABLE
 
 
@@ -61,11 +62,11 @@ def test_explicit_output_mode_wins_over_preset():
         settings(
             model="MiniMax-M2.5",
             base_url="https://api.minimax.io/v1",
-            locator_output_mode=OutputMode.PROMPTED,
+            locator_output_mode=OutputMode.NATIVE,
         )
     )
-    assert rt.capabilities("locator").structured_output is OutputMode.PROMPTED
-    assert rt.capabilities("triage").structured_output is OutputMode.NATIVE
+    assert rt.capabilities("locator").structured_output is OutputMode.NATIVE
+    assert rt.capabilities("triage").structured_output is OutputMode.PROMPTED
 
 
 def test_model_building_applies_minimax_profile_fix():

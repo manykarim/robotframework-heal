@@ -64,7 +64,7 @@ class LocatorDriftPlugin(FailureClassPlugin):
                 detail="No locator proposal survived live verification."
                 + (f" Rejected: {deps.rejected}" if deps.rejected else ""),
             )
-        runtime_usage = result.usage()
+        runtime_usage = result.usage
 
         for locator in result.output.locators:
             attempt = Attempt(

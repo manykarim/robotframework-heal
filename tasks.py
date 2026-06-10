@@ -44,6 +44,37 @@ def atests(context):
     global atests_completed_process
     atests_completed_process = subprocess.run(" ".join(cmd), shell=True, check=False)
 
+@task
+def heal_atests(context, live_llm=False):
+    """Acceptance tests for the heal engine.
+
+    The timing suite is deterministic (no LLM). The locator-drift suite
+    (tag live-llm) needs HEAL_MODEL/HEAL_BASE_URL/HEAL_API_KEY and runs
+    only with --live-llm.
+    """
+    cmd = [
+        "robot",
+        "--outputdir results/heal-atest",
+        f"{ROOT}/tests/atest/heal/heal_timing.robot",
+    ]
+    timing = subprocess.run(" ".join(cmd), shell=True, check=False)
+    drift_rc = 0
+    if live_llm:
+        cmd = [
+            "robot",
+            "--outputdir results/heal-atest-llm",
+            f"{ROOT}/tests/atest/heal/heal_locator_drift.robot",
+        ]
+        drift_rc = subprocess.run(" ".join(cmd), shell=True, check=False).returncode
+    if timing.returncode != 0 or drift_rc != 0:
+        raise Exception("heal atests failed")
+
+@task
+def heal_utests(context):
+    rc = subprocess.run(f"pytest -q {ROOT}/tests/unit", shell=True, check=False).returncode
+    if rc != 0:
+        raise Exception("heal unit tests failed")
+
 @task(utests, atests)
 def tests(context):
     subprocess.run("coverage combine", shell=True, check=False)

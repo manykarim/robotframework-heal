@@ -53,3 +53,27 @@ A=ToolOutput, B=PromptedOutput, C=exploration tool loop, D=ModelRetry/prompted:
 4. **CONFIRMED: exploration tool loops are the least reliable path on every small model tested** — gate exploration tools to `tools: reliable` models (probed, not assumed); default to engine-curated evidence excerpts. Triage/locator agents must work tool-free.
 5. **CONFIRMED: budgets are mandatory.** Latency variance spans 0.7s (flash-lite) to 311s (MiniMax tool baseline) for the *same task*. Per-failure wall-clock caps and per-run ledgers (D5); fast cheap models (nano/flash-lite class) are the right default tier for triage.
 6. **Practical defaults**: triage → small fast model, tool or native transport when probed-OK; locator → prompted+validator floor everywhere; doctor must catch 404/no-tool-endpoint misconfigurations with actionable messages (validated: error bodies are clear and parseable).
+
+## Probe 4 — end-to-end latency in real RF runs (task 4.6, 2026-06-10)
+
+Locator-drift atest (`tests/atest/heal/heal_locator_drift.robot`, real Chromium, via the `SelfHealing` shim):
+
+| Backend | First heal (incl. 3s keyword timeout) | Greedy reuse | Note |
+|---|---|---|---|
+| MiniMax-M2.5 (prompted) | 18.6s | 0.2s, zero LLM calls | suite total 22s |
+| gpt-4.1-nano via OpenRouter (prompted floor) | 6.9s | 0.2s | suite total 10s |
+| MiniMax-M2.5 (native + validator) | FAILED / >60s budget | — | see below |
+
+Timing-class atest (no LLM): healed by waiting 2.0s, deterministic.
+
+**New finding: NativeOutput is NOT reliable under ModelRetry validator loops on
+MiniMax-M2.5** — single-shot native passed (P2) but the locator agent with a
+live-verification validator failed/spent 54–97s per transaction in native mode
+and became fast and reliable (≈15s) in prompted mode. The MiniMax preset now
+resolves `structured_output=prompted`; the reliability statement "prompted is
+the universal floor" extends to "prompted is the only probe-proven mode under
+validator retry loops" on this backend.
+
+**Budget default**: `HEAL_MAX_FAILURE_SECONDS=60` is comfortable for prompted-mode
+healing on both reference backends (15s worst observed); reasoning-model native/tool
+modes are the pathological cases and are no longer defaults.

@@ -60,4 +60,4 @@ async def run_triage(
             ),
             None,
         )
-    return result.output, result.usage()
+    return result.output, result.usage

@@ -141,6 +141,10 @@ class HealListener:
         if event.rca is not None:
             logger.info(f"heal: {event.rca.clean_message}", also_console=True)
         if outcome.status is not OutcomeStatus.HEALED:
+            if outcome.detail:
+                logger.info(f"heal: {outcome.detail}")
+            for attempt in outcome.attempts:
+                logger.info(f"heal attempt: {attempt.action.description} -> {attempt.detail or 'ok'}")
             return
         if outcome.healed_locator and event.context and event.context.failed_locator:
             self.fixed_locators[event.context.failed_locator] = outcome.healed_locator

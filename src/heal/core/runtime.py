@@ -66,7 +66,9 @@ BACKEND_PRESETS: tuple[BackendPreset, ...] = (
         profile_overrides={"openai_supports_tool_choice_required": False},
         capabilities=ModelCapabilities(
             tools=ToolSupport.UNRELIABLE,  # probe: exploration loops unreliable on M2.5
-            structured_output=OutputMode.NATIVE,  # probe: NativeOutput reliable
+            # Prompted is the mode proven reliable WITH validator retry loops
+            # (probe P5); native passed single-shot but not under ModelRetry.
+            structured_output=OutputMode.PROMPTED,
             vision=False,
         ),
     ),

@@ -34,6 +34,12 @@ jobs:
         uv sync
         uv run rfbrowser init
         npx playwright install-deps
+    - name: Run heal unit tests
+      run: |
+        uv run invoke heal-utests
+    - name: Run heal acceptance tests (deterministic)
+      run: |
+        uv run invoke heal-atests
     - name: Run tests
       run: |
         uv run invoke tests
