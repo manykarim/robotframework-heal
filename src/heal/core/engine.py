@@ -89,15 +89,16 @@ class HealingEngine:
                     ),
                     detail=f"Aborted after {self.runtime.settings.max_failure_seconds:.0f}s (HEAL_MAX_FAILURE_SECONDS).",
                 )
+            except ValueError as exc:
+                if "No model configured" in str(exc):
+                    outcome = self._suppressed(
+                        f"Healing skipped: {exc}. Configure it in your .env "
+                        "(loaded automatically) or the environment."
+                    )
+                else:
+                    outcome = self._engine_error(exc)
             except Exception as exc:  # engine errors must never fail the test run harder
-                outcome = HealOutcome(
-                    status=OutcomeStatus.UNHEALED,
-                    diagnosis=Diagnosis(
-                        failure_class=FailureClass.UNKNOWN,
-                        confidence=Confidence.LOW,
-                        rationale=f"Engine error: {type(exc).__name__}: {exc}"[:300],
-                    ),
-                )
+                outcome = self._engine_error(exc)
 
         outcome.duration_seconds = time.monotonic() - started
         self.ledger.record_outcome(outcome.status.value)
@@ -226,6 +227,17 @@ class HealingEngine:
                 "root_cause": draft.root_cause or template.root_cause,
                 "suggested_fix": draft.suggested_fix or template.suggested_fix,
             }
+        )
+
+    @staticmethod
+    def _engine_error(exc: Exception) -> HealOutcome:
+        return HealOutcome(
+            status=OutcomeStatus.UNHEALED,
+            diagnosis=Diagnosis(
+                failure_class=FailureClass.UNKNOWN,
+                confidence=Confidence.LOW,
+                rationale=f"Engine error: {type(exc).__name__}: {exc}"[:300],
+            ),
         )
 
     @staticmethod

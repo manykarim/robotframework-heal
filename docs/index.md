@@ -37,7 +37,11 @@ The legacy `Library    SelfHealing` import keeps working as a deprecated shim; s
 
 ## Configuration
 
-All settings are `HEAL_*` environment variables (or `.env`):
+All settings are `HEAL_*` environment variables. The nearest `.env` file
+(searched from the working directory upwards) is loaded automatically and
+**overrides already-set environment variables**, so the project's `.env` is
+the single source of truth; non-`HEAL_` keys (provider API keys) are exported
+to the process environment too.
 
 | Variable | Default | Purpose |
 |---|---|---|

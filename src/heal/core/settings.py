@@ -40,10 +40,33 @@ class ResolvedModelConfig(BaseModel):
     output_mode: OutputMode = OutputMode.AUTO
 
 
+def autoload_env() -> str | None:
+    """Load the nearest `.env` (cwd upwards) into the process environment.
+
+    Values from `.env` OVERRIDE already-set environment variables, so the
+    project's `.env` is the single source of truth for a run. Returns the
+    loaded path (or None). Also exports non-HEAL_ keys (e.g. provider API
+    keys) so SDK clients see them.
+    """
+    from dotenv import find_dotenv, load_dotenv
+
+    path = find_dotenv(usecwd=True)
+    if not path:
+        return None
+    load_dotenv(path, override=True)
+    return path
+
+
 class HealSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_prefix="HEAL_", env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
+
+    def __init__(self, **values: Any) -> None:
+        # `_env_file=None` (used by tests) opts out of any .env handling
+        if values.get("_env_file", True) is not None:
+            autoload_env()
+        super().__init__(**values)
 
     # --- feature switches ---
     enabled: bool = Field(True, description="Master switch for the healing engine.")

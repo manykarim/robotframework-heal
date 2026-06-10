@@ -32,13 +32,15 @@ Library    Browser    timeout=5s
 Library    heal.rf.HealListener
 ```
 
-Configure the model once (any OpenAI-compatible endpoint — vLLM, Ollama, LiteLLM proxy, MiniMax, OpenRouter — or a pydantic-ai provider string):
+Configure the model once in a `.env` file (any OpenAI-compatible endpoint — vLLM, Ollama, LiteLLM proxy, MiniMax, OpenRouter — or a pydantic-ai provider string):
 
 ```bash
 HEAL_MODEL=MiniMax-M2.5
 HEAL_BASE_URL=https://api.minimax.io/v1
 HEAL_API_KEY=your-key
 ```
+
+The nearest `.env` (searched from the working directory upwards) is loaded automatically and **overrides already-set environment variables** — your project's `.env` is the single source of truth for a run.
 
 Check the setup before a run:
 
