@@ -63,6 +63,11 @@ class RunLedger:
             self.total_tokens += usage.total_tokens or 0
             self.total_requests += usage.requests or 0
 
+    def record_token_counts(self, total_tokens: int, requests: int = 0) -> None:
+        with self._lock:
+            self.total_tokens += total_tokens
+            self.total_requests += requests
+
     def record_outcome(self, status: str) -> None:
         with self._lock:
             if status == "healed":

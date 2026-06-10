@@ -184,27 +184,37 @@ class AgentRuntime:
         system_prompt: str = "",
         tools: Sequence[Callable[..., Any]] = (),
         retries: int | None = None,
+        deps_type: type | None = None,
+        configure: Callable[[Agent], None] | None = None,
     ) -> Agent:
         """Build (or fetch the cached) agent for a role with ANY output schema.
 
         The schema is wrapped in the output mode resolved for the role's
         capabilities. Exploration tools are only attached when the role's
         tool support is RELIABLE — verification belongs in output validators,
-        which work in every mode.
+        which work in every mode. `configure` runs exactly once per cached
+        agent (register output validators there); per-transaction state flows
+        through `deps`.
         """
-        cache_key = (role, schema, system_prompt, tuple(tools))
+        cache_key = (role, schema, system_prompt, tuple(tools), deps_type, configure)
         if cache_key in self._agents:
             return self._agents[cache_key]
 
         caps = self.capabilities(role)
         attach_tools = list(tools) if caps.tools is ToolSupport.RELIABLE else []
+        kwargs: dict[str, Any] = {}
+        if deps_type is not None:
+            kwargs["deps_type"] = deps_type
         agent = Agent(
             self.model(role),
             output_type=self._wrap_output(schema, caps.structured_output),
             system_prompt=system_prompt,
             tools=attach_tools,
             retries=self._settings.agent_retries if retries is None else retries,
+            **kwargs,
         )
+        if configure is not None:
+            configure(agent)
         self._agents[cache_key] = agent
         return agent
 

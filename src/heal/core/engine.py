@@ -89,6 +89,8 @@ class HealingEngine:
 
         outcome.duration_seconds = time.monotonic() - started
         self.ledger.record_outcome(outcome.status.value)
+        if outcome.usage.total_tokens:
+            self.ledger.record_token_counts(outcome.usage.total_tokens, outcome.usage.requests)
 
         ctx = builder.context()
         plugin = self.registry.for_class(outcome.diagnosis.failure_class)
