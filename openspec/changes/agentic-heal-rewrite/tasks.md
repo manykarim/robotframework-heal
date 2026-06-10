@@ -21,10 +21,10 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 ## 3. Engine and triage
 
 - [x] 3.1 Implement `SessionDriver` protocol (query/inspect/act primitives) and `BrowserDriver`; port `get_simplified_dom_tree`, unique-selector generation, fuzzy filtering from `SelfHealing/utils.py` with tests (fixed two latent bugs: nth-of-type identity, fuzz-median alignment)
-- [ ] 3.2 Implement evidence collectors (RF metadata, simplified DOM excerpt, screenshot, console/network excerpts, git file history — bounded and cached) and lazy `FailureContext` assembly
-- [ ] 3.3 Implement the engine pipeline (collect → detect → diagnose → plan → act+verify → RCA) with the failure-class plugin registry and suppression rules (skip-parents, re-entrancy guard, budgets)
-- [ ] 3.4 Implement deterministic detectors: element-count-zero, readyState, viewport intersection, open-dialog, required-field state
-- [ ] 3.5 Implement triage agent (flat `Diagnosis` schema) invoked only on detector ambiguity; unit tests with `FunctionModel` for both paths
+- [x] 3.2 Implement evidence collectors (RF metadata, simplified DOM excerpt, screenshot, git file history — bounded and cached) and lazy `FailureContext` assembly (console/network collectors deferred to driver support)
+- [x] 3.3 Implement the engine pipeline (collect → detect → diagnose → plan → act+verify → RCA) with the failure-class plugin registry and budget suppression (skip-parents + re-entrancy guard live in the listener, task 4.1)
+- [x] 3.4 Implement deterministic detectors: element-count-zero, readyState, viewport intersection, open-dialog (required-field state comes with form plugin, 6.5)
+- [x] 3.5 Implement triage agent (flat `Diagnosis` schema) invoked only on detector ambiguity; unit tests with `FunctionModel` for both paths
 - [ ] 3.6 **[EXPERIMENT]** Threading spike (`experiments/rf-threading/`): persistent healer loop + main-thread driver executor inside a real RF run — prove keyword rerun, return-value assignment, log integrity, timeout unblock; record findings incl. fallback decision (portal/run_sync) if disproven
 - [ ] 3.7 Implement the transaction runtime per 3.6 findings: submit/serve queue, per-failure wall-clock cap, engine-owned re-entrancy flag
 
