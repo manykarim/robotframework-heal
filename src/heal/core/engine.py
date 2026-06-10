@@ -12,8 +12,11 @@ import asyncio
 import itertools
 import time
 
+from .agents.rca import run_rca
 from .agents.triage import run_triage
+from .classes.assertion_drift import AssertionDriftPlugin
 from .classes.base import FailureClassPlugin, PluginRegistry
+from .classes.form_state import FormStatePlugin
 from .classes.locator_drift import LocatorDriftPlugin
 from .classes.overlay import OverlayPlugin
 from .classes.timing import TimingPlugin
@@ -40,7 +43,14 @@ def default_registry() -> PluginRegistry:
     viewport's mobile branch (absent element, swipe search) runs before
     locator-drift and falls through to it when swiping finds nothing."""
     return PluginRegistry(
-        [TimingPlugin(), OverlayPlugin(), ViewportPlugin(), LocatorDriftPlugin()]
+        [
+            TimingPlugin(),
+            OverlayPlugin(),
+            ViewportPlugin(),
+            AssertionDriftPlugin(),
+            FormStatePlugin(),
+            LocatorDriftPlugin(),
+        ]
     )
 
 
@@ -98,6 +108,9 @@ class HealingEngine:
         plugin = self.registry.for_class(outcome.diagnosis.failure_class)
         fix = plugin.synthesize_fix(ctx, outcome) if plugin else None
 
+        rca = self._compose_rca(ctx, outcome)
+        rca = await self._enrich_rca(ctx, outcome, rca, budget)
+
         return HealEvent(
             event_id=f"heal-{next(self._event_counter)}",
             test_name=ctx.test_name,
@@ -107,7 +120,7 @@ class HealingEngine:
             keyword=ctx.keyword,
             context=ctx,
             outcome=outcome,
-            rca=self._compose_rca(ctx, outcome),
+            rca=rca,
             fix_proposal=fix,
         )
 
@@ -187,6 +200,32 @@ class HealingEngine:
             ),
             evidence_refs=sorted(ctx.evidence),
             confidence=diagnosis.confidence,
+        )
+
+    async def _enrich_rca(self, ctx, outcome: HealOutcome, template: RcaRecord, budget) -> RcaRecord:
+        """LLM-enrich the RCA for unhealed failures (template is the fallback)."""
+        if outcome.status is not OutcomeStatus.UNHEALED:
+            return template
+        settings = self.runtime.settings
+        if not (settings.rca_model or settings.model):
+            return template
+        if self.ledger.run_budget_exhausted() or budget.exhausted():
+            return template
+        try:
+            draft = await asyncio.wait_for(
+                run_rca(self.runtime, ctx, outcome, budget.usage_limits),
+                timeout=max(5.0, budget.remaining_seconds()),
+            )
+        except Exception:
+            return template
+        if draft is None:
+            return template
+        return template.model_copy(
+            update={
+                "clean_message": draft.clean_message or template.clean_message,
+                "root_cause": draft.root_cause or template.root_cause,
+                "suggested_fix": draft.suggested_fix or template.suggested_fix,
+            }
         )
 
     @staticmethod

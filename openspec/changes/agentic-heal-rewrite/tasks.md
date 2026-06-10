@@ -49,10 +49,10 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 - [x] 6.1 Implement `AppiumDriver` (page-source XML DOM, bounded swipe search, dismiss candidates) and register with the listener
 - [x] 6.2 Implement viewport-recovery plugin (scroll into view web / bounded swipe search Appium, with single-hop fallthrough to locator-drift when swiping finds nothing)
 - [x] 6.3 Implement overlay-recovery plugin (deterministic dismiss candidates from driver, post-dismiss verification, rerun; no LLM in default path)
-- [ ] 6.4 **[EXPERIMENT]** Vision probe (`experiments/vision-probe/`): screenshot Q&A (loading state, modal presence, form errors) on MiniMax vision-capable model + one OpenRouter cheap vision model; gate 6.5/6.6 on findings
-- [ ] 6.5 Implement form-diagnosis plugin (DOM required/invalid analysis; vision enrichment when available; diagnose-only default, `HEAL_FORM_FILL` opt-in)
-- [ ] 6.6 Implement assertion-healing plugin (drift comparison, semantic-drift guard, verified rerun; `HEAL_ASSERTIONS` opt-in)
-- [ ] 6.7 Implement RCA agent + clean-message composition + git test-change context; RCA record for every transaction incl. suppressed/budget-exhausted
+- [x] 6.4 **[EXPERIMENT]** Vision probe (`experiments/minimax-probe/probe5_vision.py`): MiniMax-M3, gemini-2.5-flash-lite, gpt-4.1-nano all PASS loading/form questions (1–8s); gate opened; bool-schema lesson recorded
+- [x] 6.5 Implement form-diagnosis plugin (DOM required/invalid analysis; vision corroboration when `HEAL_VISION_MODEL` set; diagnose-only default, `HEAL_FORM_FILL` opt-in with recorded values)
+- [x] 6.6 Implement assertion-healing plugin (message parsing, semantic-drift guard incl. numeric magnitude, optional vision check, verified rerun; `HEAL_ASSERTIONS` opt-in)
+- [x] 6.7 Implement RCA agent enriching unhealed transactions (template fallback, budget-capped) + git test-change context in evidence; RCA record for every transaction incl. suppressed
 
 ## 7. Fix engine
 

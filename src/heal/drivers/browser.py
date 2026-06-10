@@ -174,7 +174,30 @@ class BrowserDriver:
         except Exception:
             return None
 
+    def find_form_issues(self) -> list[str]:
+        """Required-but-empty and aria-invalid fields plus visible error texts."""
+        issues: list[str] = []
+        try:
+            soup = BeautifulSoup(self._browser.get_page_source(), "html.parser")
+        except Exception:
+            return issues
+        for field in soup.find_all(["input", "textarea", "select"]):
+            name = field.get("id") or field.get("name") or field.get("placeholder") or field.name
+            required = field.has_attr("required") or field.get("aria-required") == "true"
+            if required and not (field.get("value") or "").strip() and field.name != "select":
+                issues.append(f"required field '{name}' is empty")
+            if field.get("aria-invalid") == "true":
+                issues.append(f"field '{name}' is marked invalid")
+        for alert in soup.find_all(attrs={"role": "alert"}):
+            text = alert.get_text(strip=True)
+            if text:
+                issues.append(f"validation message: '{text[:120]}'")
+        return issues
+
     # ----- act -----
+
+    def fill_text(self, locator: str, value: str) -> None:
+        self._browser.fill_text(locator, value)
 
     def scroll_into_view(self, locator: str) -> bool:
         try:
