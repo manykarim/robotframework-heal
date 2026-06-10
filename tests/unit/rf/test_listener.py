@@ -79,3 +79,15 @@ def test_shim_defaults_emit_single_deprecation_only():
         shim_module.SelfHealing()
     deprecations = [w for w in caught if issubclass(w.category, DeprecationWarning)]
     assert len(deprecations) == 1  # the library-level one; no kwarg noise
+
+
+def test_greedy_fix_skipped_inside_expected_failure_wrappers():
+    listener = make_listener()
+    listener.fixed_locators["id=broken"] = "css=#fixed"
+    data = SimpleNamespace(
+        parent=SimpleNamespace(name="Run Keyword And Return Status"),
+        args=["id=broken"], lineno=1, source=None,
+    )
+    result = SimpleNamespace(failed=False, owner="Browser", name="Fill Text", assign=[], args=["id=broken"])
+    listener._apply_known_fix(data, result)
+    assert data.args == ["id=broken"]  # untouched inside the wrapper

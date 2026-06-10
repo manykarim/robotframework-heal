@@ -181,8 +181,15 @@ class HealListener:
         result.status = "PASS"
 
     def _apply_known_fix(self, data, result):
-        """Greedy reuse: swap a known-broken locator before the keyword runs."""
+        """Greedy reuse: swap a known-broken locator before the keyword runs.
+
+        Honors the same suppression rule as end_keyword: keywords inside
+        expected-failure wrappers must fail authentically, so no proactive
+        substitution there either.
+        """
         if not self.fixed_locators or result.owner not in DRIVER_FACTORIES:
+            return
+        if getattr(getattr(data, "parent", None), "name", None) in SKIP_PARENT_KEYWORDS:
             return
         if not getattr(data, "args", None):
             return
