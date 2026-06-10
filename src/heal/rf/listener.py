@@ -31,6 +31,20 @@ SKIP_PARENT_KEYWORDS = (
 )
 
 
+def _repo_root(file_path: str) -> str | None:
+    import subprocess
+    from pathlib import Path
+
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=str(Path(file_path).parent), capture_output=True, text=True, timeout=5,
+        )
+        return out.stdout.strip() if out.returncode == 0 else None
+    except Exception:
+        return None
+
+
 def _make_browser_driver(instance):
     from ..drivers.browser import BrowserDriver
 
@@ -94,6 +108,7 @@ class HealListener:
         finally:
             self._in_transaction = False
 
+        self._enrich_fix_proposal(event)
         self.events.append(event)
         self._store_event(event)
         self._apply_outcome(event, session, result)
@@ -226,6 +241,31 @@ class HealListener:
                 self._artifact_dir = f"{out}/heal" if out else None
         return self._artifact_dir
 
+    def _enrich_fix_proposal(self, event) -> None:
+        """Resolve real blast radius/usages for the event's fix proposal."""
+        proposal = event.fix_proposal
+        if proposal is None or proposal.kind != "locator" or not proposal.file:
+            return
+        try:
+            from ..core.schemas import BlastRadius, FixUsageSite
+            from ..fix.resolve import resolve_fix
+
+            resolved = resolve_fix(
+                file=proposal.file, lineno=proposal.lineno,
+                old_locator=proposal.old_value, new_locator=proposal.new_value,
+            )
+            if resolved.kind == "unresolved":
+                return
+            proposal.blast_radius = (
+                BlastRadius.SHARED if resolved.blast_radius == "shared" else BlastRadius.LOCAL
+            )
+            proposal.usages = [FixUsageSite(file=f, lineno=line) for f, line in resolved.usages]
+            if resolved.kind != "literal":
+                proposal.kind = "variable"
+                proposal.target = resolved.variable_name
+        except Exception as exc:  # noqa: BLE001
+            logger.debug(f"heal: blast-radius resolution failed: {exc}")
+
     def _store_event(self, event) -> None:
         directory = self._artifacts()
         if directory is None:
@@ -259,4 +299,39 @@ class HealListener:
             logger.warn(f"heal: history update failed: {type(exc).__name__}: {exc}")
         dashboard = render_dashboard(events, Path(directory) / "heal_report.html", hotspots)
         write_summary(events, Path(directory) / "summary.json")
+        self._write_fixes(events, Path(directory))
         logger.info(f"heal: report written to {dashboard}", also_console=True)
+
+    def _write_fixes(self, events, directory) -> None:
+        """End-of-run fix synthesis: healed copies + patch; in-place opt-in."""
+        from ..core.settings import FixTier
+        from ..fix.apply import apply_in_place, synthesize_changes, unified_patch, write_healed_copies
+        from ..fix.resolve import resolve_fix
+
+        if self.settings.fix_tier is FixTier.REPORT:
+            return
+        proposals = [e.fix_proposal for e in events if e.fix_proposal and e.fix_proposal.kind == "locator"]
+        if not proposals:
+            return
+        fixes = [
+            resolve_fix(
+                file=p.file, lineno=p.lineno,
+                old_locator=p.old_value, new_locator=p.new_value,
+            )
+            for p in proposals
+        ]
+        auto = [f for f in fixes if f.blast_radius == "local"]
+        shared = [f for f in fixes if f.blast_radius == "shared"]
+        result = synthesize_changes(auto + shared)
+        write_healed_copies(result, directory / "healed_files")
+        patch = unified_patch(result, repo_root=_repo_root(proposals[0].file))
+        if patch:
+            (directory / "heal.patch").write_text(patch, encoding="utf-8")
+            logger.info(f"heal: fix patch written to {directory / 'heal.patch'}", also_console=True)
+        if self.settings.fix_tier is FixTier.IN_PLACE:
+            safe = synthesize_changes(auto)  # shared blast radius never auto-applies
+            written, refused = apply_in_place(safe)
+            for path in written:
+                logger.info(f"heal: applied fix in place: {path}", also_console=True)
+            for path in refused:
+                logger.warn(f"heal: in-place fix refused (dirty git tree): {path}")
