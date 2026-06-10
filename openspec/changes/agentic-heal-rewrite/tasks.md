@@ -5,8 +5,8 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 ## 1. Foundations (packaging, settings, schemas)
 
 - [x] 1.1 Migrate `pyproject.toml` to PEP 621 with uv (hatchling backend); commit `uv.lock`; keep `SelfHealing` package importable; CI installs via `uv sync`
-- [ ] 1.2 Create `src/heal/` skeleton (`core`, `drivers`, `rf`, `fix`, `report`, `mcp`, `cli`) with import-linting: `core` imports neither `robot` nor driver libs
-- [ ] 1.3 Implement `HealSettings` (pydantic-settings, `HEAL_` prefix): per-role model config, budgets, report paths, feature flags; unit tests incl. legacy-kwarg mapping table
+- [x] 1.2 Create `src/heal/` skeleton (`core`, `drivers`, `rf`, `fix`, `report`, `mcp`, `cli`) with import-linting: `core` imports neither `robot` nor driver libs
+- [x] 1.3 Implement `HealSettings` (pydantic-settings, `HEAL_` prefix): per-role model config, budgets, report paths, feature flags; unit tests incl. legacy-kwarg mapping table
 - [ ] 1.4 Implement core schemas (`FailureContext`, `Diagnosis`, `HealAction`, `HealOutcome`, `FixProposal`, `RcaRecord`, `HealEvent`) — flat agent-facing models per schema-austerity rule; serialization round-trip tests
 
 ## 2. Model runtime (gates everything agentic)
