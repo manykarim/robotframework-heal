@@ -15,14 +15,14 @@ def utests(context):
     cmd = [
         "coverage",
         "run",
-        "--source=src/SelfHealing",
+        "--source=src/heal,src/SelfHealing",
         "-p",
         "-m",
         "pytest",
         "--junitxml=results/pytest.xml",
-        f"{ROOT}/tests/utest",
+        f"{ROOT}/tests/unit",
     ]
-    global utests_completed_process  
+    global utests_completed_process
     utests_completed_process = subprocess.run(" ".join(cmd), shell=True, check=False)
 
 @task
