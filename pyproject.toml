@@ -28,6 +28,7 @@ dependencies = [
     "litellm",
     "pydantic>=2.13.4",
     "pydantic-settings>=2.14.1",
+    "pydantic-ai-slim[openai]>=1.107.0",
 ]
 
 [project.urls]
