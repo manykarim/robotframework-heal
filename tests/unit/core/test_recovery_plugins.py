@@ -138,8 +138,10 @@ def test_overlay_dismiss_and_rerun():
     assert driver.clicked == ['dialog[open] button:has-text("ok")']
 
 
-def test_overlay_without_dismiss_control_fails_safely():
+def test_overlay_without_dismiss_control_falls_through_to_locator():
     driver = WebDriver(counts={"id=item": 1}, in_viewport=True, dialog="dialog[open]", dismissibles=[])
     event, _ = run_failure(driver)
     assert event.outcome.status is OutcomeStatus.UNHEALED
-    assert "No dismiss control" in event.outcome.detail
+    # the dialog may be unrelated -> locator healing gets a go (and fails LLM-less here)
+    assert event.outcome.diagnosis.failure_class is FailureClass.LOCATOR_DRIFT
+    assert "fallthrough from overlay" in event.outcome.diagnosis.rationale

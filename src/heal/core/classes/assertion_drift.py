@@ -26,9 +26,12 @@ from ..schemas import (
 from ..session import HealSession, RerunNotSupported
 from .base import FailureClassPlugin
 
-# RF assertion message shapes: "Text 'a' should be 'b'", "'a' != 'b'", "x (str) should be y (str)"
+# RF assertion message shapes: "Text 'a' (str) should be 'b' (str)",
+# "Text 'a' should be 'b'", "'a' != 'b'", "x (str) should be y (str)"
 _PATTERNS = (
+    re.compile(r"[Tt]ext '(?P<actual>.*?)' \(\w+\) should be '(?P<expected>.*?)' \(\w+\)"),
     re.compile(r"[Tt]ext '(?P<actual>.*?)' should be '(?P<expected>.*)'"),
+    re.compile(r"'(?P<actual>.*?)' \(\w+\) should be '(?P<expected>.*?)' \(\w+\)"),
     re.compile(r"'(?P<actual>.*?)'\s*(?:!=|should be)\s*'(?P<expected>.*)'"),
     re.compile(r"(?P<actual>.+?) \(\w+\) should be (?P<expected>.+?) \(\w+\)"),
 )

@@ -157,3 +157,8 @@ def test_rca_enrichment_replaces_template():
     assert event.rca.clean_message == "The login button was renamed during the redesign."
     assert event.rca.suggested_fix == "Update login.robot:12"
     assert event.rca.failure_class is FailureClass.FORM_STATE  # template fields preserved
+
+
+def test_parse_assertion_rf_typed_message():
+    actual, expected = parse_assertion("Text '1 item left!' (str) should be '0 items left!' (str)")
+    assert (actual, expected) == ("1 item left!", "0 items left!")

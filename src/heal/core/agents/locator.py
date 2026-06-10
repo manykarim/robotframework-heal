@@ -38,8 +38,37 @@ class LocatorDeps:
 
     driver: object  # SessionDriver (duck-typed; main-thread-proxied under RF)
     keyword_name: str = ""
+    keyword_args: list[str] = field(default_factory=list)
     verified: list[str] = field(default_factory=list)
     rejected: dict[str, str] = field(default_factory=dict)
+
+    def expected_option_values(self) -> list[str]:
+        """For select keywords: the option texts/values the keyword will pick.
+
+        `Select Options By    locator    text|label|value    v1    v2 ...`
+        (index-based selection can't be text-checked).
+        """
+        if "select options" not in self.keyword_name.lower() or len(self.keyword_args) < 3:
+            return []
+        if self.keyword_args[1].lower() in ("text", "label", "value"):
+            return [v for v in self.keyword_args[2:] if v]
+        return []
+
+
+#: keyword-name marker -> tag names the target element must have
+_KEYWORD_TAGS: tuple[tuple[tuple[str, ...], frozenset[str]], ...] = (
+    (("select options", "deselect options"), frozenset({"select"})),
+    (("fill", "type text", "type secret", "press keys", "clear text"), frozenset({"input", "textarea"})),
+    (("check checkbox", "uncheck checkbox"), frozenset({"input"})),
+)
+
+
+def required_tags(keyword_name: str) -> frozenset[str] | None:
+    lowered = keyword_name.lower()
+    for markers, tags in _KEYWORD_TAGS:
+        if any(marker in lowered for marker in markers):
+            return tags
+    return None
 
 
 def _configure(agent: Agent) -> None:
@@ -65,14 +94,48 @@ def _configure(agent: Agent) -> None:
                 verdicts.append(f"{locator!r}: matched 0 elements")
                 continue
             if count > 1:
+                # driver-specific refinement (e.g. ':visible >> nth=0' on Browser)
+                refiner = getattr(deps.driver, "disambiguate", None)
+                refined = await asyncio.to_thread(refiner, locator) if refiner else None
+                if refined:
+                    verified.append(refined)
+                    continue
                 deps.rejected[locator] = f"matched {count} elements, need exactly 1"
-                verdicts.append(f"{locator!r}: matched {count} elements, need exactly 1")
+                verdicts.append(
+                    f"{locator!r}: matched {count} elements, need exactly 1 — add nth-of-type, "
+                    "an ancestor with an id, or text refinement"
+                )
                 continue
             visible = await asyncio.to_thread(deps.driver.is_visible, locator)
             if not visible:
                 deps.rejected[locator] = "matches a hidden element"
                 verdicts.append(f"{locator!r}: matches a hidden element")
                 continue
+            tags = required_tags(deps.keyword_name)
+            if tags is not None:
+                info = await asyncio.to_thread(deps.driver.get_element_info, locator)
+                tag = (info.tag_name or "").lower()
+                if tag and tag not in tags:
+                    reason = (
+                        f"matches a <{tag}>, but {deps.keyword_name!r} needs "
+                        f"{' or '.join(sorted(f'<{t}>' for t in tags))}"
+                    )
+                    deps.rejected[locator] = reason
+                    verdicts.append(f"{locator!r}: {reason}")
+                    continue
+                # argument-aware: a <select> must contain the wanted options
+                # (its innerText is the concatenation of option labels)
+                wanted = deps.expected_option_values()
+                if tag == "select" and wanted and info.inner_text:
+                    missing = [v for v in wanted if v not in info.inner_text]
+                    if missing:
+                        reason = (
+                            f"is a <select> but does not contain option(s) {missing} — "
+                            "find the select whose options include them"
+                        )
+                        deps.rejected[locator] = reason
+                        verdicts.append(f"{locator!r}: {reason}")
+                        continue
             verified.append(locator)
         if not verified:
             raise ModelRetry(

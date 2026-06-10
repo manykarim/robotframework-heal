@@ -174,6 +174,23 @@ class BrowserDriver:
         except Exception:
             return None
 
+    def disambiguate(self, locator: str) -> str | None:
+        """Refine a multi-match locator to a single element (legacy-parity trick).
+
+        Prefers the only visible match; falls back to the first visible match.
+        Returns None when no refinement reaches a usable element.
+        """
+        visible = f"{locator}:visible"
+        try:
+            count = self.count(visible)
+            if count == 1:
+                return visible
+            if count > 1:
+                return f"{visible} >> nth=0"
+        except Exception:
+            pass
+        return None
+
     def find_form_issues(self) -> list[str]:
         """Required-but-empty and aria-invalid fields plus visible error texts."""
         issues: list[str] = []

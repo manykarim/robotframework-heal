@@ -52,6 +52,9 @@ class OverlayPlugin(FailureClassPlugin):
             return HealOutcome(
                 status=OutcomeStatus.UNHEALED, diagnosis=diagnosis,
                 detail="No dismiss control could be identified for the open dialog.",
+                # the dialog may be unrelated to the failure — let locator
+                # healing have a go at the original locator
+                fallthrough_to=FailureClass.LOCATOR_DRIFT,
             )
         dismissed = False
         for candidate in candidates:

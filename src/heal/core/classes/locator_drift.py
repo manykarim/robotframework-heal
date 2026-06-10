@@ -34,17 +34,28 @@ class LocatorDriftPlugin(FailureClassPlugin):
     def detect(self, ctx: FailureContext, session: HealSession) -> Diagnosis | None:
         if not ctx.failed_locator or session.driver is None:
             return None
-        if session.driver.count(ctx.failed_locator) == 0:
+        count = session.driver.count(ctx.failed_locator)
+        if count == 0:
             return Diagnosis(
                 failure_class=FailureClass.LOCATOR_DRIFT,
                 confidence=Confidence.HIGH,
                 rationale=f"Locator {ctx.failed_locator!r} matches 0 elements on the live page.",
             )
+        if count > 1 and ("strict mode" in ctx.error_message or "waiting for" in ctx.error_message):
+            return Diagnosis(
+                failure_class=FailureClass.LOCATOR_DRIFT,
+                confidence=Confidence.MEDIUM,
+                rationale=f"Locator {ctx.failed_locator!r} is ambiguous: it matches {count} elements.",
+            )
         return None
 
     async def heal(self, ctx, session, runtime, budget, diagnosis) -> HealOutcome:
         agent = get_locator_agent(runtime)
-        deps = LocatorDeps(driver=session.driver, keyword_name=ctx.keyword.name)
+        deps = LocatorDeps(
+            driver=session.driver,
+            keyword_name=ctx.keyword.name,
+            keyword_args=list(ctx.keyword.args),
+        )
         attempts: list[Attempt] = []
         try:
             result = await agent.run(

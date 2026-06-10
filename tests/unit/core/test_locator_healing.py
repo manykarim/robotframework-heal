@@ -149,3 +149,63 @@ def test_rerun_failure_falls_through_to_next_candidate():
     assert session.reruns == ["css=#login-form button", "css=#signin-btn"]
     assert event.outcome.healed_locator == "css=#signin-btn"
     assert [a.succeeded for a in event.outcome.attempts] == [False, True]
+
+
+def test_ambiguous_locator_detected_and_disambiguated():
+    driver = FakeDriver()
+    driver.counts["id=login"] = 6  # ambiguous now
+    driver.counts["css=.btn:visible"] = 1
+    driver.visible["css=.btn:visible"] = True
+
+    def disambiguate(locator):
+        return f"{locator}:visible" if driver.counts.get(f"{locator}:visible") else None
+
+    driver.disambiguate = disambiguate
+    engine = make_engine()
+    model = proposals_model([{"locators": ["css=.btn"], "rationale": "refinable"}])
+    builder = ContextBuilder(
+        keyword=KeywordCall(name="Click", args=["id=login"], owner_library="Browser", lineno=12, source=None),
+        error_message="Error: strict mode violation: locator('id=login') resolved to 6 elements",
+        failed_locator="id=login",
+        driver=driver,
+    )
+    session = FakeSession(driver)
+    agent = get_locator_agent(engine.runtime)
+    with agent.override(model=model):
+        event = asyncio.run(engine.handle(builder, session))
+    assert event.outcome.diagnosis.failure_class is FailureClass.LOCATOR_DRIFT
+    assert "ambiguous" in event.outcome.diagnosis.rationale
+    assert event.outcome.status is OutcomeStatus.HEALED
+    assert event.outcome.healed_locator == "css=.btn:visible"
+
+
+def test_type_incompatible_proposal_rejected_until_select():
+    driver = FakeDriver()
+    driver.counts.update({"css=label.model": 1, "css=select#model": 1})
+    driver.visible.update({"css=label.model": True, "css=select#model": True})
+    tags = {"css=label.model": "LABEL", "css=select#model": "SELECT"}
+
+    from heal.drivers.protocol import ElementInfo
+
+    driver.get_element_info = lambda loc: ElementInfo(locator=loc, tag_name=tags.get(loc, ""))
+    model = proposals_model(
+        [
+            {"locators": ["css=label.model"], "rationale": "wrong tag"},
+            {"locators": ["css=select#model"], "rationale": "corrected to select"},
+        ]
+    )
+    builder = ContextBuilder(
+        keyword=KeywordCall(
+            name="Select Options By", args=["id=login", "text", "Rassant"], owner_library="Browser"
+        ),
+        error_message="TimeoutError: waiting for locator('id=login')",
+        failed_locator="id=login",
+        driver=driver,
+    )
+    engine = make_engine()
+    session = FakeSession(driver)
+    agent = get_locator_agent(engine.runtime)
+    with agent.override(model=model):
+        event = asyncio.run(engine.handle(builder, session))
+    assert event.outcome.status is OutcomeStatus.HEALED
+    assert event.outcome.healed_locator == "css=select#model"

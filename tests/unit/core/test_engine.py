@@ -141,11 +141,13 @@ def test_viewport_detector_heals_by_scrolling():
 def test_overlay_beats_viewport_but_not_missing_element():
     blocked = FakeDriver(counts={"id=login": 1}, dialog="dialog[open]", in_viewport=False)
     event = run(make_engine().handle(make_builder(blocked), FakeSession(blocked)))
-    assert event.outcome.diagnosis.failure_class is FailureClass.OVERLAY
+    # overlay detected first; without a dismiss control it falls through to locator healing
+    assert "fallthrough from overlay" in event.outcome.diagnosis.rationale
 
     gone = FakeDriver(counts={"id=login": 0}, dialog="dialog[open]")
     event = run(make_engine().handle(make_builder(gone), FakeSession(gone)))
     assert event.outcome.diagnosis.failure_class is FailureClass.LOCATOR_DRIFT
+    assert "fallthrough" not in event.outcome.diagnosis.rationale
 
 
 def triage_responder(failure_class="assertion-drift"):
