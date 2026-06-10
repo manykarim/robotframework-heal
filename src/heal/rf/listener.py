@@ -88,10 +88,16 @@ class HealListener:
             self._in_transaction = False
 
         self.events.append(event)
+        self._store_event(event)
         self._apply_outcome(event, session, result)
 
     def close(self):
-        self.txn_runtime.shutdown()
+        try:
+            self._write_reports()
+        except Exception as exc:  # noqa: BLE001 - reporting must not fail the run
+            logger.warn(f"heal: report generation failed: {type(exc).__name__}: {exc}")
+        finally:
+            self.txn_runtime.shutdown()
 
     # ------------------------------------------------------------------ stages
 
@@ -212,3 +218,38 @@ class HealListener:
                 out = self._variable("${OUTPUT DIR}")
                 self._artifact_dir = f"{out}/heal" if out else None
         return self._artifact_dir
+
+    def _store_event(self, event) -> None:
+        directory = self._artifacts()
+        if directory is None:
+            return
+        try:
+            from ..report.store import RunStore
+
+            RunStore(directory).append(event)
+        except Exception as exc:  # noqa: BLE001
+            logger.warn(f"heal: could not persist event: {type(exc).__name__}: {exc}")
+
+    def _write_reports(self) -> None:
+        directory = self._artifacts()
+        if directory is None or not self.events:
+            return
+        from pathlib import Path
+
+        from ..report.history import HealHistory
+        from ..report.html import render_dashboard
+        from ..report.store import RunStore, merge_events
+        from ..report.summary import write_summary
+
+        events = merge_events(RunStore(directory).load() or self.events)
+        history_path = self.settings.history_db or str(Path(directory) / "history.sqlite")
+        hotspots = []
+        try:
+            history = HealHistory(history_path)
+            history.record(self.events)
+            hotspots = history.hotspots()
+        except Exception as exc:  # noqa: BLE001
+            logger.warn(f"heal: history update failed: {type(exc).__name__}: {exc}")
+        dashboard = render_dashboard(events, Path(directory) / "heal_report.html", hotspots)
+        write_summary(events, Path(directory) / "summary.json")
+        logger.info(f"heal: report written to {dashboard}", also_console=True)

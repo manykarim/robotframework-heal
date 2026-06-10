@@ -39,10 +39,10 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 
 ## 5. Run store and reports
 
-- [ ] 5.1 Implement append-only JSONL run store (`HealEvent` per transaction, written at transaction end); rerun merge + dedupe; crash-safety test (kill -9 mid-run)
-- [ ] 5.2 Implement HTML dashboard renderer (self-contained: summary, class breakdown, drill-down with screenshots/diffs/cost/model tier); healed AND unhealed events
-- [ ] 5.3 Implement `summary.json` + GH annotations output (rewire `utilities/gha_reporter.py`)
-- [ ] 5.4 Implement SQLite healing history (per locator/source location) + dashboard hotspot flagging; replaces tinydb locator_db
+- [x] 5.1 Implement append-only JSONL run store (`HealEvent` per transaction, written at transaction end); rerun merge + dedupe; corrupt-tail tolerance test
+- [x] 5.2 Implement HTML dashboard renderer (self-contained: summary, class breakdown, drill-down with screenshots/attempts/cost/model tier); healed AND unhealed events; verified in live run
+- [x] 5.3 Implement `summary.json` + GH annotations output (`heal.report.summary.gha_annotations`; legacy `utilities/gha_reporter.py` untouched, retired with old flows in 9.1)
+- [x] 5.4 Implement SQLite healing history (per locator/source location) + dashboard hotspot flagging; replaces tinydb locator_db
 
 ## 6. Remaining failure classes
 
