@@ -1,80 +1,56 @@
-# Overview  
+# Overview
 
-A Robot Framework Listener for library agnostic self-healing and smart recovery of tests
+A Robot Framework listener for **failure triage, self-healing and root-cause analysis** of UI tests (Browser/Playwright and Appium).
+
+Every failed keyword is classified into a failure class, healed when possible — and always turned into a clean, enriched error record with evidence, healing attempts and a suggested permanent fix.
 
 ## Installation
+
 ```bash
 pip install robotframework-heal
 ```
 
 ## Usage
 
-Add `Library    SelfHealing ` to your Robot Framework test suite `*** Settings ***` section.
-
-```robotframework
-*** Settings ***
-Library    SelfHealing
-```	
-
-Set up the following environment variables to enable the self-healing feature:
-
-* `LLM_API_KEY`
-* `LLM_API_BASE`
-* `LLM_TEXT_MODEL` (model used for picking final locator from proposal list)
-* `LLM_LOCATOR_MODEL` (model for generating locator proposals from DOM tree)
-* `LLM_VISION_MODEL` (not working yet)
-
-Interface with LLMs uses the [LiteLMM](https://docs.litellm.ai) API.  
-Check the list of available [Providers](https://docs.litellm.ai/docs/providers) and how to connect to them.
-
-
-
 ```robotframework
 *** Settings ***
 Library    Browser    timeout=5s
-Library    SelfHealing    use_llm_for_locator_proposals=True
-Suite Setup    New Browser    browser=${BROWSER}    headless=${HEADLESS}
-Test Setup    New Context    viewport={'width': 1280, 'height': 720}
-Test Teardown    Close Context
-Suite Teardown    Close Browser    ALL
-
-*** Variables ***
-${BROWSER}    chromium
-${HEADLESS}    True
-
-*** Test Cases ***
-Login with valid credentials
-    New Page    https://the-internet.herokuapp.com/login
-    Fill Text    id=user    tomsmith
-    Fill Text    id=pass    SuperSecretPassword!
-    Click    id=loginbutton
-    Get Text    id=flash    *=    You logged into a secure area!
+Library    heal.rf.HealListener
+Suite Setup    New Browser    browser=chromium    headless=True
 ```
 
-## Arguments
-
-* `fix`: Specifies the mode of operation, set to "realtime" for real-time healing. Default is "realtime".
-* `collect_locator_info`: Boolean flag to enable or disable the collection of locator information. Default is false.
-* `use_locator_db`: Boolean flag to enable or disable the use of a locator database. Default is false.
-* `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. If true, locator proposals will be identified from DOM Tree via LLM. If set to false, locator proposals are generated via CSS/XPATH generator. Default is false.
-* `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
-* `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
-
-## Environment Variables
-
-Example when running with Ollama LLM:
+Configure one model for all agent roles (any OpenAI-compatible endpoint — vLLM, Ollama, LiteLLM proxy, MiniMax, OpenRouter — or a pydantic-ai provider string such as `openai:gpt-4.1-mini`):
 
 ```bash
-LLM_API_BASE=http://localhost:11434
-LLM_TEXT_MODEL=ollama_chat/llama3.1
-LLM_LOCATOR_MODEL=ollama_chat/llama3.1
-LLM_VISION_MODEL=ollama_chat/llama3.2-vision
+HEAL_MODEL=MiniMax-M2.5
+HEAL_BASE_URL=https://api.minimax.io/v1
+HEAL_API_KEY=your-key
 ```
 
-Example when using OpenAI:
+Verify the endpoint before a run:
 
 ```bash
-LLM_API_KEY=YOUR_OPENAI_API_KEY
-LLM_TEXT_MODEL=gpt-3.5-turbo
-LLM_LOCATOR_MODEL=gpt-3.5-turbo
+heal doctor --role all
 ```
+
+The legacy `Library    SelfHealing` import keeps working as a deprecated shim; see the README migration table.
+
+## Configuration
+
+All settings are `HEAL_*` environment variables (or `.env`):
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `HEAL_MODEL` / `HEAL_BASE_URL` / `HEAL_API_KEY` | – | default model for all roles |
+| `HEAL_TRIAGE_MODEL`, `HEAL_LOCATOR_MODEL`, `HEAL_VISION_MODEL`, `HEAL_RCA_MODEL` | default model | per-role overrides (+ `_BASE_URL`/`_API_KEY`/`_OUTPUT_MODE`) |
+| `HEAL_OUTPUT_MODE` | `auto` | structured-output transport: `tool` / `native` / `prompted` |
+| `HEAL_MAX_FAILURE_SECONDS` | `60` | wall-clock cap per healing transaction |
+| `HEAL_MAX_FAILURE_TOKENS` | `50000` | token cap per transaction |
+| `HEAL_MAX_RUN_TOKENS` | `2000000` | run-wide cap; breach degrades to RCA-only |
+| `HEAL_READY_TIMEOUT_SECONDS` | `20` | max wait in timing recovery |
+| `HEAL_FIX_TIER` | `report` | `report` / `patch` / `in-place` |
+| `HEAL_HEAL_ASSERTIONS` | `false` | opt-in assertion-drift healing |
+| `HEAL_FORM_FILL` | `false` | opt-in form auto-fill (invents test data) |
+| `HEAL_REPORT_DIR` | `<outputdir>/heal` | report/store location |
+| `HEAL_HISTORY_DB` | `<report dir>/history.sqlite` | cross-run healing history |
+| `HEAL_ENABLED` | `true` | master switch |

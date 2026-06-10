@@ -72,6 +72,6 @@ Experiment-gated phases: tasks marked **[EXPERIMENT]** must complete (with findi
 
 ## 9. Migration and cleanup
 
-- [ ] 9.1 Port/retire old code: delete superseded `browser_healing.py`/`visual_healing.py`/`appium_healing.py` paths once atest passes through the new engine; keep shim
-- [ ] 9.2 Documentation: README rewrite, `HEAL_*` config reference + legacy migration table, model-compatibility matrix, mkdocs update
-- [ ] 9.3 Update process diagrams (`docs/`) to the new pipeline; changelog for 0.4.0 **BREAKING**
+- [x] 9.1 Port/retire old code: deleted superseded healer modules + legacy utests after atest passed through the new engine; shim kept; 8 unused deps removed
+- [x] 9.2 Documentation: README rewrite, `HEAL_*` config reference + legacy migration table, model-compatibility matrix, mkdocs pages updated
+- [x] 9.3 New pipeline diagram (mermaid, docs/features.md); CHANGELOG.md for 0.4.0 **BREAKING**
