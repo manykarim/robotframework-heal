@@ -2,8 +2,8 @@
 
 ## 1. Visual diff renderer
 
-- [ ] 1.1 Implement `heal/report/diff.py`: side-by-side renderer from `difflib.SequenceMatcher` line opcodes with intra-line word highlighting, line numbers, context folding (3 lines, expandable), per-file header (fix mappings + blast-radius badges), shared self-contained CSS; unit tests incl. empty/EOL-less/unicode/large-fold cases
-- [ ] 1.2 Diff index page (`diffs/index.html`) listing changed files with change counts and links
+- [x] 1.1 Implement `heal/report/diff.py`: side-by-side renderer with coalesced intra-line word highlighting, line numbers, context folding, per-file fix header, self-contained CSS; unit tests incl. edge cases
+- [x] 1.2 Diff index page with change counts and links
 
 ## 2. Always-on healed copies + diffs
 
