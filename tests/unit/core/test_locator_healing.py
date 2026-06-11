@@ -69,9 +69,12 @@ def proposals_model(rounds):
     return FunctionModel(respond)
 
 
-def make_engine():
+def make_engine(tiers="generation"):
     settings = HealSettings(
-        _env_file=None, model="openai:gpt-4.1-mini", locator_output_mode=OutputMode.PROMPTED
+        _env_file=None,
+        model="openai:gpt-4.1-mini",
+        locator_output_mode=OutputMode.PROMPTED,
+        locator_tiers=tiers,
     )
     return HealingEngine(AgentRuntime(settings))
 
@@ -240,3 +243,60 @@ def test_blocked_tags_not_generated_as_candidates():
     proposals = generate_proposals(html, ["iframe", "button"])
     assert any("b" in p for p in proposals)
     assert not any("iframe" in p or "#f" in p for p in proposals)
+
+
+def selection_model(picks):
+    """FunctionModel emitting one SelectionPick JSON per validation round."""
+    state = {"i": 0}
+
+    def respond(messages, info: AgentInfo):
+        payload = picks[min(state["i"], len(picks) - 1)]
+        state["i"] += 1
+        return ModelResponse(parts=[TextPart(json.dumps(payload))])
+
+    return FunctionModel(respond)
+
+
+def heal_selection(picks, driver=None, session=None, gen_model=None):
+    from heal.core.agents.locator import get_selection_agent
+    from heal.drivers.protocol import ElementInfo
+
+    driver = driver or FakeDriver()
+    # the deterministic generator emits css=button#signin-btn for the fake DOM
+    driver.counts.setdefault("css=button#signin-btn", 1)
+    driver.visible.setdefault("css=button#signin-btn", True)
+    if not hasattr(driver, "get_element_info"):
+        driver.get_element_info = lambda loc: ElementInfo(locator=loc, tag_name="BUTTON")
+    session = session or FakeSession(driver)
+    engine = make_engine(tiers="selection")
+    sel_agent = get_selection_agent(engine.runtime)
+    gen_agent = get_locator_agent(engine.runtime)
+    with sel_agent.override(model=selection_model(picks)):
+        with gen_agent.override(model=gen_model or proposals_model([{"locators": [], "rationale": "x"}])):
+            event = asyncio.run(engine.handle(make_builder(driver), session))
+    return event, session
+
+
+def test_selection_tier_heals_without_dom_prompt():
+    event, session = heal_selection([{"index": 0, "reason": "the signin button"}])
+    assert event.outcome.status is OutcomeStatus.HEALED
+    assert event.outcome.healed_locator == "css=button#signin-btn"
+    assert session.reruns == ["css=button#signin-btn"]
+
+
+def test_selection_invalid_index_retried():
+    event, session = heal_selection(
+        [{"index": 99, "reason": "bad"}, {"index": 0, "reason": "corrected"}]
+    )
+    assert event.outcome.status is OutcomeStatus.HEALED
+    assert session.reruns == ["css=button#signin-btn"]
+
+
+def test_selection_falls_back_to_generation_when_no_candidates():
+    driver = FakeDriver()
+    driver.get_simplified_dom = lambda: "<body><p>nothing interactable</p></body>"
+    gen = proposals_model([{"locators": ["css=#signin-btn"], "rationale": "from generation"}])
+    event, session = heal_selection([{"index": 0}], driver=driver, gen_model=gen)
+    assert event.outcome.status is OutcomeStatus.HEALED  # via generation fallback
+    assert session.reruns == ["css=#signin-btn"]
+    assert any("tier 1" in a.action.description for a in event.outcome.attempts)

@@ -70,6 +70,11 @@ class HealSettings(BaseSettings):
 
     # --- feature switches ---
     enabled: bool = Field(True, description="Master switch for the healing engine.")
+    locator_tiers: str = Field(
+        "selection",
+        pattern="^(selection|generation)$",
+        description="Locator pipeline: 'selection' (candidates + index pick, default) or 'generation' (DOM prompt).",
+    )
     heal_assertions: bool = Field(False, description="Enable assertion-drift healing (opt-in).")
     form_fill: bool = Field(False, description="Allow form-diagnosis to fill fields (opt-in; diagnose-only by default).")
     fix_tier: FixTier = Field(FixTier.REPORT, description="Highest fix-application tier allowed.")
