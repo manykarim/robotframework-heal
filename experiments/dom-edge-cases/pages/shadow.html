@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html><head><title>Shadow DOM test</title></head>
+<body>
+  <h1>Shadow host page</h1>
+  <my-widget id="outer-widget"></my-widget>
+  <secret-widget id="secret"></secret-widget>
+  <p id="status">idle</p>
+  <script>
+    class MyWidget extends HTMLElement {
+      connectedCallback() {
+        const root = this.attachShadow({mode: 'open'});
+        root.innerHTML = `
+          <div class="wrapper">
+            <inner-form></inner-form>
+          </div>`;
+      }
+    }
+    class InnerForm extends HTMLElement {
+      connectedCallback() {
+        const root = this.attachShadow({mode: 'open'});
+        root.innerHTML = `
+          <label for="user-email">Email</label>
+          <input id="user-email" type="text"/>
+          <button id="shadow-submit">Submit deep</button>`;
+        root.getElementById('shadow-submit').onclick = () =>
+          document.getElementById('status').innerText = 'shadow-clicked';
+      }
+    }
+    class SecretWidget extends HTMLElement {
+      connectedCallback() {
+        const root = this.attachShadow({mode: 'closed'});
+        root.innerHTML = `<button id="closed-btn">Closed button</button>`;
+      }
+    }
+    customElements.define('my-widget', MyWidget);
+    customElements.define('inner-form', InnerForm);
+    customElements.define('secret-widget', SecretWidget);
+  </script>
+</body></html>

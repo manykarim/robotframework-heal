@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html><body>
+  <h2>Inside the frame</h2>
+  <form id="frame-form">
+    <input id="frame-email" type="text" placeholder="email in frame"/>
+    <button id="frame-submit" onclick="document.getElementById('frame-status').innerText='frame-clicked'; return false;">Send</button>
+  </form>
+  <p id="frame-status">idle</p>
+</body></html>
