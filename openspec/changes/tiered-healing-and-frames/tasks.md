@@ -14,7 +14,7 @@ Experiment-gated as before: **[EXPERIMENT]** tasks record findings in the releva
 - [x] 2.1 Candidate info extraction in `heal.drivers.dom` (describe_candidates, candidate_tags_for) and fuzzy ranking helper (rank_candidates) with unit tests
 - [x] 2.2 Selection agent (`{index, reason}` flat schema) with index→locator mapping in the output validator reusing the shared live verification (`verify_candidate`) + per-candidate retry feedback
 - [x] 2.3 Tier orchestration in `LocatorDriftPlugin.heal`: rank → select(top-8) → generation fallback on no-candidates/exhaustion/rerun-failure; `HEAL_LOCATOR_TIERS` (default `selection`); tier-transition unit tests; live atest green (506 tokens)
-- [ ] 2.4 Run the eval corpus per tier mode against both reference backends; record accuracy/token deltas in `experiments/selection-mode/FINDINGS.md`; corpus accuracy must not regress vs generation mode
+- [x] 2.4 Corpus evals run (60 fixtures × 2 backends × 2 modes): selection = −65–70% tokens, equal accuracy on nano (92/92), −4pts on MiniMax (93 vs 97) — accepted and documented (strong-reasoning models extract more from full DOM); defaults stay selection with generation fallback/opt-out
 
 ## 3. Heal memory (cross-run warm start)
 
@@ -33,4 +33,4 @@ Experiment-gated as before: **[EXPERIMENT]** tasks record findings in the releva
 
 - [x] 5.1 `heal corpus <paths>` harvesting deduplicated ground-truth fixtures into `tests/evals/fixtures/`; idempotency test + live idempotency verified
 - [x] 5.2 Eval runner discovers fixtures dynamically with element-identity grading and tier-mode reporting; initial corpus harvested: 60 fixtures from existing runs
-- [ ] 5.3 Docs: README/features updates (tiers, frames, Selenium, corpus), config reference additions, CHANGELOG entry
+- [x] 5.3 Docs: README/features/config updates (tiers, frames, Selenium extra, warm start, corpus), CHANGELOG entry

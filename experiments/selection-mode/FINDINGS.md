@@ -47,3 +47,23 @@ necessary but not sufficient when the wrong element is itself plausible.
 - the keyword's own timeout (3–5s) before failure often exceeds the heal itself;
   greedy reuse already removes it for repeats → warm-starting `fixed_locators`
   from `history.sqlite` would remove it across runs
+
+## Full-pipeline corpus evals (task 2.4, 60-fixture harvested corpus, element-identity grading)
+
+| Backend | Tier mode | Correct element | Diagnosis | Tokens (60 fixtures) |
+|---|---|---|---|---|
+| gpt-4.1-nano | selection | 92% (55/60) | 100% | 33,859 |
+| gpt-4.1-nano | generation | 92% (55/60) | 100% | 111,042 |
+| MiniMax-M2.5 | selection | 93% (56/60) | 100% | 50,137 |
+| MiniMax-M2.5 | generation | **97% (58/60)** | 100% | 140,820 |
+
+- Selection cuts tokens **−65–70%** at equal accuracy on nano and −4pts on
+  MiniMax-M2.5: a strong reasoning model squeezes slightly more out of the
+  full DOM than out of the candidate list. The probe-level result (selection ≥
+  generation per call) holds for small models; at pipeline level on strong
+  models the generation fallback's extra context wins a few hard fixtures.
+- Defaults stay `selection` (cost/small-model floor, fallback retained);
+  accuracy-critical setups on strong models can set
+  `HEAL_LOCATOR_TIERS=generation`. Documented in README/config.
+- Eval-runner note: explicit CLI flags are required to vary models per process
+  because the auto-loaded `.env` overrides process env vars by design.
