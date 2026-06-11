@@ -54,6 +54,13 @@ _IN_VIEWPORT_SCRIPT = """(elem) => {
 
 _INFO_ATTRIBUTES = ("id", "class", "value", "name", "type", "placeholder", "role")
 
+# Frame-evidence defaults settled experimentally (experiments/dom-edge-cases):
+# visible frames >= 20x20px, depth <= 2, top 5 by area, bounded per-frame share.
+FRAME_MIN_SIZE = 20
+FRAME_MAX_COUNT = 5
+FRAME_MAX_DEPTH = 2
+FRAME_CHARS_SHARE = 4  # per-frame cap = MAX_DOM_CHARS / share
+
 
 class BrowserDriver:
     """Wraps a Browser library instance behind the SessionDriver protocol.
@@ -102,7 +109,72 @@ class BrowserDriver:
             return ""
 
     def get_simplified_dom(self) -> str:
-        return simplify_dom(self.get_page_source())
+        """Curated main DOM plus tagged sections for interactable frames.
+
+        Each frame section states its pierce prefix so the locator agent can
+        propose `frame >>> inner` selectors (verified unchanged by count()).
+        """
+        from ..core.evidence import MAX_DOM_CHARS
+
+        parts = [simplify_dom(self.get_page_source())]
+        per_frame_cap = MAX_DOM_CHARS // FRAME_CHARS_SHARE
+        for chain, html in self.frame_sections():
+            parts.append(
+                f'\n<!-- FRAME {chain} : selectors for elements inside this section '
+                f'MUST be prefixed with "{chain} >>> " -->\n'
+                + simplify_dom(html)[:per_frame_cap]
+            )
+        return "".join(parts)
+
+    def frame_sections(self) -> list[tuple[str, str]]:
+        """(pierce-chain, raw frame HTML) for interactable frames, depth-limited."""
+        try:
+            main = self._browser.get_page_source()
+        except Exception:
+            return []
+        sections: list[tuple[str, str, float]] = []
+        self._collect_frames(main, prefix="", depth=1, sections=sections)
+        sections.sort(key=lambda s: -s[2])  # largest frames first
+        return [(chain, html) for chain, html, _ in sections[:FRAME_MAX_COUNT]]
+
+    def _collect_frames(self, source_html: str, prefix: str, depth: int, sections: list) -> None:
+        if depth > FRAME_MAX_DEPTH:
+            return
+        soup = BeautifulSoup(source_html, "html.parser")
+        for frame in soup.find_all(["iframe", "frame"]):
+            selector = self._frame_selector(frame)
+            if selector is None:
+                continue
+            chain = f"{prefix} >>> {selector}" if prefix else selector
+            area = self._frame_area(chain)
+            if area is None:  # hidden or too small -> non-interactable content
+                continue
+            try:
+                html = str(self._browser.evaluate_javascript(f"{chain} >>> css=html", "(el) => el.outerHTML"))
+            except Exception:
+                continue  # unserializable frame: skip, main DOM still notes the element
+            sections.append((chain, html, area))
+            self._collect_frames(html, prefix=chain, depth=depth + 1, sections=sections)
+
+    @staticmethod
+    def _frame_selector(frame) -> str | None:
+        if frame.get("id"):
+            return f"id={frame['id']}"
+        if frame.get("name"):
+            return f'css={frame.name}[name="{frame["name"]}"]'
+        return None  # unaddressable without a stable handle
+
+    def _frame_area(self, chain: str) -> float | None:
+        try:
+            if "visible" not in self._browser.get_element_states(chain):
+                return None
+            bbox = self._browser.get_boundingbox(chain)
+            width, height = float(bbox["width"]), float(bbox["height"])
+        except Exception:
+            return None
+        if width < FRAME_MIN_SIZE or height < FRAME_MIN_SIZE:
+            return None
+        return width * height
 
     def get_element_info(self, locator: str) -> ElementInfo:
         info = ElementInfo(locator=locator)

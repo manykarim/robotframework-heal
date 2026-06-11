@@ -100,3 +100,65 @@ def test_scroll_into_view_reports_resulting_visibility():
     driver = BrowserDriver(fake)
     assert driver.scroll_into_view("id=signin-btn")
     assert fake.scrolled == ["id=signin-btn"]
+
+
+FRAME_PAGE = """<html><body>
+<h1>Host</h1><button id="host-btn">Host</button>
+<iframe id="big" src="a.html" width="600" height="300"></iframe>
+<iframe id="pixel" src="p.html" width="2" height="2"></iframe>
+<iframe id="hidden" src="h.html" style="display:none"></iframe>
+<iframe src="anon.html"></iframe>
+</body></html>"""
+
+FRAME_INNER = """<html><body><button id="inner-btn">Inner</button>
+<iframe id="deep" src="d.html" width="200" height="100"></iframe></body></html>"""
+
+DEEP_INNER = "<html><body><span id='deepest'>deep</span></body></html>"
+
+
+class FrameFakeBrowser(FakeBrowser):
+    def __init__(self):
+        super().__init__(page=FRAME_PAGE)
+        self.frame_html = {
+            "id=big": FRAME_INNER,
+            "id=big >>> id=deep": DEEP_INNER,
+            "id=pixel": "<html><body>px</body></html>",
+            "id=hidden": "<html><body>hidden</body></html>",
+        }
+        self.bboxes = {
+            "id=big": {"width": 600, "height": 300},
+            "id=pixel": {"width": 2, "height": 2},
+            "id=big >>> id=deep": {"width": 200, "height": 100},
+        }
+
+    def get_element_states(self, locator):
+        if locator == "id=hidden":
+            return ["attached", "hidden"]
+        if locator in self.frame_html or locator in self.bboxes:
+            return ["attached", "visible"]
+        return super().get_element_states(locator)
+
+    def get_boundingbox(self, locator):
+        return self.bboxes[locator]
+
+    def evaluate_javascript(self, locator, script):
+        if locator and ">>> css=html" in locator:
+            chain = locator.rsplit(" >>> css=html", 1)[0]
+            return self.frame_html[chain]
+        return super().evaluate_javascript(locator, script)
+
+
+def test_frame_sections_filtered_and_nested():
+    driver = BrowserDriver(FrameFakeBrowser())
+    sections = dict(driver.frame_sections())
+    assert "id=big" in sections and "inner-btn" in sections["id=big"]
+    assert "id=big >>> id=deep" in sections  # two-level chain
+    assert "id=pixel" not in sections  # too small
+    assert "id=hidden" not in sections  # not visible
+
+
+def test_simplified_dom_tags_frame_sections():
+    dom = BrowserDriver(FrameFakeBrowser()).get_simplified_dom()
+    assert 'FRAME id=big : selectors for elements inside this section MUST be prefixed with "id=big >>> "' in dom
+    assert "inner-btn" in dom and "deepest" in dom
+    assert "host-btn" in dom
