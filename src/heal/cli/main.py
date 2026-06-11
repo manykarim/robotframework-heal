@@ -178,6 +178,18 @@ def mcp(
 
 
 @app.command()
+def corpus(
+    paths: list[Path] = typer.Argument(..., help="Run stores or directories containing events.jsonl"),
+    out: Path = typer.Option(Path("tests/evals/fixtures"), help="Fixture output directory"),
+):
+    """Harvest ground-truth eval fixtures from recorded healing runs."""
+    from ..evals.corpus import harvest
+
+    added, skipped = harvest([str(p) for p in paths], out)
+    typer.echo(f"harvested {added} new fixture(s), {skipped} already present, into {out}")
+
+
+@app.command()
 def history(
     db: Path = typer.Argument(..., help="Path to history.sqlite"),
     min_count: int = typer.Option(3),

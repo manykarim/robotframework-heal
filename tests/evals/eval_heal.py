@@ -1,49 +1,55 @@
-"""Healing quality evals over golden failure fixtures (replay, no browser).
+"""Healing-quality evals over the harvested ground-truth corpus (replay, no browser).
 
 Usage (any backend; prefer small/cheap models):
     HEAL_MODEL=... HEAL_BASE_URL=... HEAL_API_KEY=... uv run python tests/evals/eval_heal.py
+    HEAL_LOCATOR_TIERS=generation ... # compare tier modes
 
-Measures per fixture: triage classification accuracy and locator-heal success
-(verified proposal that resolves on the recorded DOM + successful replay
-rerun). This is the per-model row of the compatibility matrix.
+Grading is element-identity: a heal only counts when the produced locator
+resolves to the SAME element as the recorded ground truth in the recorded DOM.
 """
 
 import asyncio
 import json
 import sys
-import time
 from pathlib import Path
+
+from bs4 import BeautifulSoup
 
 from heal.core.engine import HealingEngine
 from heal.core.runtime import AgentRuntime
-from heal.core.schemas import OutcomeStatus
+from heal.core.schemas import EvidenceKind, OutcomeStatus
 from heal.core.settings import HealSettings
-from heal.evals.replay import ReplaySession, builder_from_context, load_fixture
+from heal.evals.corpus import load_corpus, normalize_to_css
+from heal.evals.replay import ReplaySession, builder_from_context
 
 FIXTURES = Path(__file__).parent / "fixtures"
-#: fixture name -> (expected failure class, expect heal?)
-EXPECTATIONS = {
-    "locator_drift_login.json": ("locator-drift", True),
-}
 
 
-async def evaluate(fixture_path: Path, expected_class: str, expect_heal: bool, engine: HealingEngine):
-    ctx = load_fixture(fixture_path)
+async def evaluate(fixture, engine: HealingEngine):
+    ctx = fixture.context
     session = ReplaySession(ctx)
-    start = time.time()
     event = await engine.handle(builder_from_context(ctx), session)
-    elapsed = time.time() - start
-    diagnosis_ok = event.outcome.diagnosis.failure_class.value == expected_class
-    heal_ok = (event.outcome.status is OutcomeStatus.HEALED) == expect_heal
+    outcome = event.outcome
+    healed = outcome.status is OutcomeStatus.HEALED
+    correct = False
+    if healed and outcome.healed_locator:
+        dom = ctx.evidence_of(EvidenceKind.DOM_EXCERPT)
+        soup = BeautifulSoup(dom.excerpt if dom else "", "html.parser")
+        truth = soup.select(fixture.truth_css)
+        css = normalize_to_css(outcome.healed_locator)
+        try:
+            got = soup.select(css) if css else []
+        except Exception:
+            got = []
+        correct = bool(truth and len(got) == 1 and got[0] is truth[0])
     return {
-        "fixture": fixture_path.name,
-        "diagnosis": event.outcome.diagnosis.failure_class.value,
-        "diagnosis_ok": diagnosis_ok,
-        "status": event.outcome.status.value,
-        "heal_ok": heal_ok,
-        "healed_locator": event.outcome.healed_locator,
-        "seconds": round(elapsed, 1),
-        "tokens": event.outcome.usage.total_tokens,
+        "diagnosis": outcome.diagnosis.failure_class.value,
+        "diagnosis_ok": outcome.diagnosis.failure_class.value == fixture.expected_class,
+        "healed": healed,
+        "correct_element": correct,
+        "healed_locator": outcome.healed_locator,
+        "tokens": outcome.usage.total_tokens,
+        "seconds": round(outcome.duration_seconds, 1),
     }
 
 
@@ -52,14 +58,28 @@ async def main():
     if not settings.model:
         print("set HEAL_MODEL (and HEAL_BASE_URL/HEAL_API_KEY) to run evals", file=sys.stderr)
         raise SystemExit(2)
+    corpus = load_corpus(FIXTURES)
+    if not corpus:
+        print(f"no fixtures in {FIXTURES} — run `heal corpus <results-paths>` first", file=sys.stderr)
+        raise SystemExit(2)
     engine = HealingEngine(AgentRuntime(settings))
     results = []
-    for name, (expected_class, expect_heal) in EXPECTATIONS.items():
-        results.append(await evaluate(FIXTURES / name, expected_class, expect_heal, engine))
-        print(json.dumps(results[-1]), flush=True)
-    passed = sum(1 for r in results if r["diagnosis_ok"] and r["heal_ok"])
-    print(f"\n{passed}/{len(results)} fixtures fully passed (model={settings.model})")
-    raise SystemExit(0 if passed == len(results) else 1)
+    for path, fixture in corpus:
+        result = await evaluate(fixture, engine)
+        result["fixture"] = path.name
+        results.append(result)
+        print(json.dumps(result), flush=True)
+
+    n = len(results)
+    correct = sum(1 for r in results if r["correct_element"])
+    diagnosed = sum(1 for r in results if r["diagnosis_ok"])
+    tokens = sum(r["tokens"] for r in results)
+    print(
+        f"\nmodel={settings.model} tiers={settings.locator_tiers}: "
+        f"correct-element {correct}/{n} ({100*correct/n:.0f}%), "
+        f"diagnosis {diagnosed}/{n}, total tokens {tokens}"
+    )
+    raise SystemExit(0 if correct == n else 1)
 
 
 if __name__ == "__main__":

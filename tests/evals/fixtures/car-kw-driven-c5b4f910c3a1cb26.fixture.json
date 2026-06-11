@@ -1,0 +1,29 @@
+{
+ "context": {
+  "keyword": {
+   "name": "Click",
+   "args": [
+    "Login"
+   ],
+   "owner_library": "Browser",
+   "assign": [],
+   "lineno": 19,
+   "source": "/home/many/workspace/robotframework-heal/tests/atest/car_kw_driven.robot"
+  },
+  "error_message": "TimeoutError: locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('Login')\n",
+  "test_name": "Enter New Car",
+  "suite_name": "Car Kw Driven",
+  "failed_locator": "Login",
+  "evidence": {
+   "dom-excerpt": {
+    "kind": "dom-excerpt",
+    "summary": "simplified DOM",
+    "excerpt": "<body>\n<app-root><router-outlet></router-outlet><app-log-in-screen class=\"ng-star-inserted\"><div class=\"pageStyleLogin\"><div class=\"content overflowWrapBreakWord\"><h2>Login</h2></div><div class=\"loginFieldStyle divStyle\"><i class=\"fa fa-user\"></i><mat-form-field class=\"loginInputFieldStyle mat-form-field ng-tns-c2-0 mat-primary mat-form-field-type-mat-input mat-form-field-appearance-legacy mat-form-field-can-float mat-form-field-has-label mat-form-field-hide-placeholder ng-valid mat-form-field-should-float ng-dirty ng-touched\"><div class=\"mat-form-field-wrapper\"><div class=\"mat-form-field-flex\"><!-- --><!-- --><div class=\"mat-form-field-infix\"><input class=\"mat-input-element mat-form-field-autofill-control cdk-text-field-autofill-monitored ng-valid ng-dirty ng-touched\" id=\"input_username\" placeholder=\"username\"/><span class=\"mat-form-field-label-wrapper\"><!-- --><label class=\"mat-form-field-label ng-tns-c2-0 ng-star-inserted\" id=\"mat-form-field-label-1\"><!-- --><!-- -->username<!-- --><!-- --></label></span></div><!-- --></div><!-- --><div class=\"mat-form-field-underline ng-tns-c2-0 ng-star-inserted\"><span class=\"mat-form-field-ripple\"></span></div><div class=\"mat-form-field-subscript-wrapper\"><!-- --><!-- --><div class=\"mat-form-field-hint-wrapper ng-tns-c2-0 ng-trigger ng-trigger-transitionMessages ng-star-inserted\"><!-- --><div class=\"mat-form-field-hint-spacer\"></div></div></div></div></mat-form-field></div><div class=\"loginFieldStyle divStyle\"><i class=\"fa fa-lock\"></i><mat-form-field class=\"loginInputFieldStyle mat-form-field ng-tns-c2-1 mat-primary mat-form-field-type-mat-input mat-form-field-appearance-legacy mat-form-field-can-float mat-form-field-has-label mat-form-field-hide-placeholder ng-untouched ng-valid mat-form-field-should-float mat-focused ng-dirty\"><div class=\"mat-form-field-wrapper\"><div class=\"mat-form-field-flex\"><!-- --><!-- --><div class=\"mat-form-field-infix\"><input class=\"mat-input-element mat-form-field-autofill-control cdk-text-field-autofill-monitored ng-untouched ng-valid ng-dirty\" id=\"input_password\" placeholder=\"password\"/><span class=\"mat-form-field-label-wrapper\"><!-- --><label class=\"mat-form-field-label ng-tns-c2-1 ng-star-inserted\" id=\"mat-form-field-label-3\"><!-- --><!-- -->password<!-- --><!-- --></label></span></div><!-- --></div><!-- --><div class=\"mat-form-field-underline ng-tns-c2-1 ng-star-inserted\"><span class=\"mat-form-field-ripple\"></span></div><div class=\"mat-form-field-subscript-wrapper\"><!-- --><!-- --><div class=\"mat-form-field-hint-wrapper ng-tns-c2-1 ng-trigger ng-trigger-transitionMessages ng-star-inserted\"><!-- --><div class=\"mat-form-field-hint-spacer\"></div></div></div></div></mat-form-field></div><div class=\"paddingLeft paddingRight\"><button class=\"loginButtonStyle mat-raised-button\" id=\"button_login\"><span class=\"mat-button-wrapper\"> login </span><div class=\"mat-button-ripple mat-ripple\"></div><div class=\"mat-button-focus-overlay\"></div></button></div><div><label class=\"switch\"><input type=\"checkbox\"/><span class=\"slider round\"></span></label></div></div></app-log-in-screen></app-root>\n<div class=\"cdk-live-announcer-element cdk-visually-hidden\"></div>\n</body>"
+   }
+  },
+  "collected_at": "2026-06-10T17:34:53.899054Z"
+ },
+ "truth_css": "#button_login",
+ "expected_class": "locator-drift",
+ "source_event": "Car Kw Driven::Enter New Car::heal-3"
+}

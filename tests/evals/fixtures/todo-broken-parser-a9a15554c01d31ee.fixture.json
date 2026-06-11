@@ -1,0 +1,30 @@
+{
+ "context": {
+  "keyword": {
+   "name": "Fill Text",
+   "args": [
+    ".todo",
+    "Learn Robot Framework"
+   ],
+   "owner_library": "Browser",
+   "assign": [],
+   "lineno": 45,
+   "source": "/home/many/workspace/robotframework-heal/tests/atest/todo_broken_parser.robot"
+  },
+  "error_message": "TimeoutError: locator.fill: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('.todo')\n",
+  "test_name": "Add Two ToDos And Check Items",
+  "suite_name": "Atest.Todo Broken Parser",
+  "failed_locator": ".todo",
+  "evidence": {
+   "dom-excerpt": {
+    "kind": "dom-excerpt",
+    "summary": "simplified DOM",
+    "excerpt": "<body class=\"learn-bar\"><aside class=\"learn\"><header> <h3>React</h3> <span class=\"source-links\"> <h5>React</h5> <a>Source</a> <h5>TypeScript + React</h5> <a>Demo</a>, <a>Source</a> </span> </header> <hr/> <blockquote class=\"quote speech-bubble\"> <p>React is a JavaScript library for building user interfaces. You compose UI from function components and describe state with hooks; React handles the rendering and keeps the UI in sync as state changes. The modern ecosystem (createRoot, Suspense, Server Components) builds on the same component model.</p> <footer> <a>React</a> </footer> </blockquote> <hr/> <h4>Official Resources</h4> <ul> <li> <a>Quick Start</a> </li> <li> <a>API Reference</a> </li> <li> <a>Philosophy</a> </li> <li> <a>React Community</a> </li> </ul> <h4>Community</h4> <ul> <li> <a>ReactJS on Stack Overflow</a> </li> </ul> <footer> <hr/> <em>If you have other helpful links to share, or find any of the links above no longer work, please <a>let us know</a>.</em> </footer></aside><section class=\"todoapp\" id=\"root\"><header class=\"header\"><h1>todos</h1><input class=\"new-todo\" placeholder=\"What needs to be done?\" type=\"text\"/></header><main class=\"main\"><div class=\"toggle-all-container\"><input class=\"toggle-all\" id=\"toggle-all\" type=\"checkbox\"/><label class=\"toggle-all-label\">Toggle All Input</label></div><ul class=\"todo-list\"></ul></main><footer class=\"footer\"><span class=\"todo-count\">0 items left!</span><ul class=\"filters\"><li><a>All</a></li><li><a>Active</a></li><li><a>Completed</a></li></ul><button class=\"clear-completed\">Clear completed</button></footer></section><footer class=\"info\"><p>Double-click to edit a todo</p><p>Created by the TodoMVC Team</p><p>Part of <a>TodoMVC</a></p></footer></body>"
+   }
+  },
+  "collected_at": "2026-06-10T17:45:43.008643Z"
+ },
+ "truth_css": ".new-todo",
+ "expected_class": "locator-drift",
+ "source_event": "Atest.Todo Broken Parser::Add Two ToDos And Check Items::heal-19"
+}

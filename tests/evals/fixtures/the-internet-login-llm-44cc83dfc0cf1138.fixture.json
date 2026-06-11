@@ -1,0 +1,29 @@
+{
+ "context": {
+  "keyword": {
+   "name": "Click",
+   "args": [
+    "id=loginbutton"
+   ],
+   "owner_library": "Browser",
+   "assign": [],
+   "lineno": 18,
+   "source": "/home/many/workspace/robotframework-heal/tests/atest/the_internet_login_llm.robot"
+  },
+  "error_message": "TimeoutError: locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('id=loginbutton')\n",
+  "test_name": "Login with valid credentials",
+  "suite_name": "Atest.The Internet Login Llm",
+  "failed_locator": "id=loginbutton",
+  "evidence": {
+   "dom-excerpt": {
+    "kind": "dom-excerpt",
+    "summary": "simplified DOM",
+    "excerpt": "<body>\n<div class=\"row\">\n<div class=\"large-12 columns\" id=\"flash-messages\">\n</div>\n</div>\n<div class=\"row\">\n<a><img/></a>\n<div class=\"large-12 columns\" id=\"content\">\n<div class=\"example\">\n<h2>Login Page</h2>\n<h4 class=\"subheader\">This is where you can log into the secure area. Enter <em>tomsmith</em> for the username and <em>SuperSecretPassword!</em> for the password. If the information is wrong you should see error messages.</h4>\n<form id=\"login\" name=\"login\">\n<div class=\"row\">\n<div class=\"large-6 small-12 columns\">\n<label>Username</label>\n<input id=\"username\" name=\"username\" type=\"text\"/>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"large-6 small-12 columns\">\n<label>Password</label>\n<input id=\"password\" name=\"password\" type=\"password\"/>\n</div>\n</div>\n<button class=\"radius\" type=\"submit\"><i class=\"fa fa-2x fa-sign-in\"> Login</i></button>\n</form>\n</div>\n</div>\n</div>\n<div class=\"row\" id=\"page-footer\">\n<div class=\"large-4 large-centered columns\">\n<hr/>\n<div>Powered by <a>Elemental Selenium</a></div>\n</div>\n</div>\n</body>"
+   }
+  },
+  "collected_at": "2026-06-10T17:44:55.499257Z"
+ },
+ "truth_css": "button[type='submit'] i.fa-sign-in",
+ "expected_class": "locator-drift",
+ "source_event": "Atest.The Internet Login Llm::Login with valid credentials::heal-21"
+}

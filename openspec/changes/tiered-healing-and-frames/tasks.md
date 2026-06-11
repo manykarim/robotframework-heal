@@ -31,6 +31,6 @@ Experiment-gated as before: **[EXPERIMENT]** tasks record findings in the releva
 
 ## 5. Eval corpus
 
-- [ ] 5.1 `heal corpus harvest <paths>` extracting deduplicated ground-truth fixtures (mining logic from the exploration probe) into `tests/evals/fixtures/`; idempotency test
-- [ ] 5.2 Eval runner discovers fixtures dynamically; per-tier-mode reporting; harvest the existing `results/` stores as the initial corpus (~50 cases)
+- [x] 5.1 `heal corpus <paths>` harvesting deduplicated ground-truth fixtures into `tests/evals/fixtures/`; idempotency test + live idempotency verified
+- [x] 5.2 Eval runner discovers fixtures dynamically with element-identity grading and tier-mode reporting; initial corpus harvested: 60 fixtures from existing runs
 - [ ] 5.3 Docs: README/features updates (tiers, frames, Selenium, corpus), config reference additions, CHANGELOG entry
