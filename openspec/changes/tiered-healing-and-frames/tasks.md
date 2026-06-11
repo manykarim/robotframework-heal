@@ -7,7 +7,7 @@ Experiment-gated as before: **[EXPERIMENT]** tasks record findings in the releva
 - [x] 1.1 Interaction-target blocklist (`iframe`/`frame`/`html`/`body`/`head`) in the locator validator and deterministic candidate generation, with explanatory rejection feedback; regression test reproducing the recorded false heal (edge-case page)
 - [x] 1.2 **[EXPERIMENT]** Frame-evidence sizing — DONE: ~0.15s/frame, two-level piercing works, cross-origin serializable via CDP (same-origin filter dropped); defaults: visible ∧ ≥20×20px, depth ≤2, ≤5 frames by area, per-frame cap MAX_DOM_CHARS/4
 - [x] 1.3 `BrowserDriver` frame enumeration + tagged per-frame DOM sections in `get_simplified_dom` (main `get_page_source` semantics preserved for dialog/shadow paths); filters per 1.2; unit tests with fake browser
-- [ ] 1.4 Locator prompt teaches the `frame >>> inner` prefix convention from the evidence tags; atest: `edge_cases.robot` iframe test heals correctly (button inside the frame, not the frame)
+- [x] 1.4 Locator prompt teaches the `frame >>> inner` prefix convention; live atest green: iframe heal lands on the button inside the frame (`css=#content-frame >>> css=#frame-submit`), shadow/closed cases unchanged; suite promoted to tests/atest/heal/heal_dom_edge_cases.robot
 
 ## 2. Tiered locator selection
 

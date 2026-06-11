@@ -1,0 +1,18 @@
+{
+  "transactions": 2,
+  "healed": 2,
+  "unhealed": 0,
+  "suppressed": 0,
+  "by_failure_class": {
+    "locator-drift": 2
+  },
+  "affected_files": [
+    "/home/many/workspace/robotframework-heal/experiments/dom-edge-cases/edge_cases.robot"
+  ],
+  "total_tokens": 1273,
+  "fix_proposals": {
+    "total": 2,
+    "local": 2,
+    "shared": 0
+  }
+}

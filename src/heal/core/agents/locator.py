@@ -28,6 +28,9 @@ SYSTEM_PROMPT = (
     "- 'Fill Text'/'Type'/'Press Keys' keywords target input or textarea elements.\n"
     "- 'Click'/'Check' keywords target button, a, input, label or li elements.\n"
     "- 'Select Options' keywords target select elements.\n"
+    "- Frames/iframes are containers, NEVER targets. When the intended element appears "
+    "inside a section marked `<!-- FRAME <chain> ... -->`, prefix your selector with "
+    "that chain, e.g. `id=content-frame >>> css=#submit`.\n"
     "- Every proposal must match EXACTLY ONE element in the provided DOM."
 )
 
