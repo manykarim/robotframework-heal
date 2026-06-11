@@ -37,6 +37,35 @@ class LocatorTokenReplacer(ModelTransformer):
         return node
 
 
+class CallSiteReplacer(ModelTransformer):
+    """Replace exact argument tokens at known (lineno, old, new) call sites.
+
+    Also covers [Arguments] default-value edits (the Arguments statement's
+    tokens are visited the same way).
+    """
+
+    def __init__(self, edits: list[tuple[int, str, str]]):
+        super().__init__()
+        self.edits = list(edits)
+        self.changed = 0
+
+    def _apply(self, node):
+        for token in node.tokens:
+            if token.type != "ARGUMENT":
+                continue
+            for lineno, old, new in self.edits:
+                if token.lineno == lineno and token.value == old:
+                    token.value = new
+                    self.changed += 1
+        return node
+
+    def visit_KeywordCall(self, node):
+        return self._apply(node)
+
+    def visit_Arguments(self, node):  # noqa: N802 - RF visitor naming
+        return self._apply(node)
+
+
 class VariableValueReplacer(ModelTransformer):
     """Replace the value of one ${variable} definition."""
 
@@ -105,6 +134,12 @@ def synthesize_changes(fixes: list[ResolvedFix]) -> ApplyResult:
         targets: list[tuple[Path, ModelTransformer]] = []
         if fix.kind == "literal":
             targets.append((Path(fix.file), LocatorTokenReplacer(fix.lineno, fix.old_token, fix.new_token)))
+        elif fix.kind == "keyword-argument":
+            by_file: dict[str, list[tuple[int, str, str]]] = {}
+            for edit_file, lineno, old, new in fix.call_site_edits:
+                by_file.setdefault(edit_file, []).append((lineno, old, new))
+            for edit_file, edits in by_file.items():
+                targets.append((Path(edit_file), CallSiteReplacer(edits)))
         else:
             targets.append(
                 (

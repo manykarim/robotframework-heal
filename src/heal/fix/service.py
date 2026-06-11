@@ -40,7 +40,7 @@ def build_fix_artifacts(events: list[HealEvent], directory: str | Path) -> FixAr
     artifacts.proposals = [
         e.fix_proposal
         for e in events
-        if e.fix_proposal and e.fix_proposal.kind in ("locator", "variable")
+        if e.fix_proposal and e.fix_proposal.kind in ("locator", "variable", "argument")
     ]
     if not artifacts.proposals:
         return artifacts
@@ -59,12 +59,16 @@ def build_fix_artifacts(events: list[HealEvent], directory: str | Path) -> FixAr
     write_healed_copies(artifacts.result, directory / "healed_files")
     mappings: dict[str, list[FixMapping]] = {}
     for proposal, fix in zip(artifacts.proposals, artifacts.fixes):
-        target = fix.variable_file if fix.kind.startswith("variable") else fix.file
-        if not target:
-            target = fix.file
-        mappings.setdefault(target, []).append(
-            FixMapping(proposal.old_value, proposal.new_value, fix.blast_radius)
-        )
+        if fix.kind == "keyword-argument":
+            targets = sorted({edit_file for edit_file, _, _, _ in fix.call_site_edits})
+        elif fix.kind.startswith("variable") and fix.variable_file:
+            targets = [fix.variable_file]
+        else:
+            targets = [fix.file]
+        for target in targets:
+            mappings.setdefault(target, []).append(
+                FixMapping(proposal.old_value, proposal.new_value, fix.blast_radius)
+            )
     artifacts.pages = write_diff_pages(artifacts.result.changes, directory / "diffs", mappings)
     artifacts.diff_links = {
         page.source: f"diffs/{page.path.name}" for page in artifacts.pages
@@ -75,7 +79,12 @@ def build_fix_artifacts(events: list[HealEvent], directory: str | Path) -> FixAr
 
     changes_by_path = {c.path: c for c in artifacts.result.changes if c.changed}
     for proposal, fix in zip(artifacts.proposals, artifacts.fixes):
-        target = fix.variable_file if fix.kind.startswith("variable") and fix.variable_file else fix.file
+        if fix.kind == "keyword-argument" and fix.call_site_edits:
+            target = fix.call_site_edits[0][0]
+        elif fix.kind.startswith("variable") and fix.variable_file:
+            target = fix.variable_file
+        else:
+            target = fix.file
         change = changes_by_path.get(target)
         if change is None:
             continue

@@ -369,7 +369,10 @@ class HealListener:
                 BlastRadius.SHARED if resolved.blast_radius == "shared" else BlastRadius.LOCAL
             )
             proposal.usages = [FixUsageSite(file=f, lineno=line) for f, line in resolved.usages]
-            if resolved.kind != "literal":
+            if resolved.kind == "keyword-argument":
+                proposal.kind = "argument"
+                proposal.target = resolved.variable_name
+            elif resolved.kind != "literal":
                 proposal.kind = "variable"
                 proposal.target = resolved.variable_name
         except Exception as exc:  # noqa: BLE001
