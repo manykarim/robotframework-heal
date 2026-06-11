@@ -306,6 +306,80 @@ def generate_proposals(source: str, tag_names: list[str | object]) -> list[str]:
     return locators
 
 
+# ----------------------------------------------------- candidate descriptions
+
+#: keyword-name marker -> element types worth proposing for it (legacy parity)
+_CANDIDATE_TAGS: tuple[tuple[tuple[str, ...], list[str]], ...] = (
+    (("fill", "type text", "type secret", "press keys", "clear text"), ["input", "textarea"]),
+    (("select options", "deselect options"), ["select"]),
+    (("check checkbox", "uncheck checkbox"), ["input", "button"]),
+    (("click", "tap"), ["button", "a", "input", "label", "li"]),
+    (("get text",), ["label", "div", "span", "button", "a"]),
+)
+_DEFAULT_CANDIDATE_TAGS = ["button", "a", "input", "select", "textarea", "label", "li", "span"]
+
+
+def candidate_tags_for(keyword_name: str) -> list[str]:
+    lowered = keyword_name.lower()
+    for markers, tags in _CANDIDATE_TAGS:
+        if any(marker in lowered for marker in markers):
+            return tags
+    return _DEFAULT_CANDIDATE_TAGS
+
+
+def describe_candidates(source: str, candidates: list[str]) -> list[dict]:
+    """Per-candidate element info for selection prompts (index/locator/tag/text/attrs)."""
+    soup = BeautifulSoup(source, "html.parser")
+    infos: list[dict] = []
+    for index, candidate in enumerate(candidates):
+        css = candidate.removeprefix("css=")
+        try:
+            element = soup.select(css)[0]
+        except Exception:
+            continue
+        infos.append(
+            {
+                "index": index,
+                "locator": candidate,
+                "tag": element.name,
+                "text": element.get_text(strip=True)[:60],
+                "attrs": {k: str(v)[:40] for k, v in list(element.attrs.items())[:4]},
+            }
+        )
+    return infos
+
+
+def _normalize_locator_tokens(locator: str) -> str:
+    out = locator
+    for prefix in ("css=", "id=", "xpath="):
+        out = out.removeprefix(prefix)
+    for ch in "_-#.[]'\"=/":
+        out = out.replace(ch, " ")
+    return " ".join(out.split())
+
+
+def rank_candidates(infos: list[dict], failed_locator: str) -> list[dict]:
+    """Order candidate infos by fuzzy similarity to the failed locator's tokens.
+
+    Scores are a RANKING signal only — per the recorded false-heal evidence
+    (experiments/selection-mode), confident scores must never auto-apply.
+    """
+    needle = _normalize_locator_tokens(failed_locator)
+    scored = []
+    for info in infos:
+        hay = " ".join(
+            [info.get("text", "")]
+            + [str(v) for k, v in info.get("attrs", {}).items() if k in ("id", "name", "placeholder", "class", "type")]
+        )
+        score = max(
+            fuzz.token_set_ratio(needle, hay),
+            fuzz.partial_ratio(needle.lower(), hay.lower()),
+        )
+        scored.append((score, info))
+    scored.sort(key=lambda pair: -pair[0])
+    return [dict(info, score=score) for score, info in scored]
+
+
 # -------------------------------------------------------------- fuzzy filtering
 
 

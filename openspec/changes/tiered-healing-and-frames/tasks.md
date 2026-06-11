@@ -11,7 +11,7 @@ Experiment-gated as before: **[EXPERIMENT]** tasks record findings in the releva
 
 ## 2. Tiered locator selection
 
-- [ ] 2.1 Candidate info extraction in `heal.drivers.dom` (per-candidate tag/text/attrs from the recorded DOM) and fuzzy ranking helper (`thefuzz`, normalized failed-locator tokens) with unit tests
+- [x] 2.1 Candidate info extraction in `heal.drivers.dom` (describe_candidates, candidate_tags_for) and fuzzy ranking helper (rank_candidates) with unit tests
 - [ ] 2.2 Selection agent (`{index, reason}` flat schema) with index→locator mapping in the output validator reusing the existing live verification + per-candidate retry feedback
 - [ ] 2.3 Tier orchestration in `LocatorDriftPlugin.heal`: rank → select(top-K) → fallback to generation on no-candidates/miss/exhaustion; `HEAL_LOCATOR_TIERS` setting (default `selection`); unit tests for every tier transition incl. forced generator-miss
 - [ ] 2.4 Run the eval corpus per tier mode against both reference backends; record accuracy/token deltas in `experiments/selection-mode/FINDINGS.md`; corpus accuracy must not regress vs generation mode

@@ -119,3 +119,24 @@ def test_filter_by_fuzz_median_keeps_best_aligned_items():
 
 def test_filter_by_fuzz_median_empty():
     assert filter_by_fuzz_median([], "x") == []
+
+
+def test_describe_and_rank_candidates():
+    from heal.drivers.dom import candidate_tags_for, describe_candidates, rank_candidates
+
+    html = """<body>
+      <input id="user-email" name="email" placeholder="you@example.com"/>
+      <input id="search-box" name="q"/>
+      <button id="signin-btn">Sign in</button></body>"""
+    candidates = ["css=#user-email", "css=#search-box", "css=#signin-btn"]
+    infos = describe_candidates(html, candidates)
+    assert [i["locator"] for i in infos] == candidates
+    assert infos[0]["attrs"]["placeholder"] == "you@example.com"
+
+    ranked = rank_candidates(infos, "id=email_field")
+    assert ranked[0]["locator"] == "css=#user-email"
+    assert ranked[0]["score"] >= ranked[-1]["score"]
+
+    assert candidate_tags_for("Fill Text") == ["input", "textarea"]
+    assert "button" in candidate_tags_for("Click")
+    assert "select" in candidate_tags_for("Select Options By")
