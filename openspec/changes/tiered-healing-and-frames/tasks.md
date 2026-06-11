@@ -24,10 +24,10 @@ Experiment-gated as before: **[EXPERIMENT]** tasks record findings in the releva
 
 ## 4. SeleniumLibrary driver
 
-- [ ] 4.1 **[EXPERIMENT]** Selenium primitive probe (`experiments/selenium-probe/`): count/visibility/innerText/readyState/scroll/screenshot/fill via SeleniumLibrary on the existing demo pages; confirm locator prefix mapping (`css:`/`xpath:`); record findings
-- [ ] 4.2 Implement `heal/drivers/selenium.py` per probe findings (query/inspect/act, dismiss candidates, form issues, JS shadow-DOM serialization best-effort); protocol conformance tests with a fake webdriver
-- [ ] 4.3 Register with the listener; optional-dependency packaging (`robotframework-heal[selenium]`, graceful absence); frame-target failures produce the frame-limitation RCA
-- [ ] 4.4 atest: seeded locator-drift + timing suites running the shared demo pages under SeleniumLibrary (live-llm tag for drift)
+- [x] 4.1 **[EXPERIMENT]** Selenium primitive probe — all primitives confirmed (FINDINGS.md); caveats: `page_source` is a property, no shadow-piercing selectors, no frame piercing
+- [x] 4.2 Implement `heal/drivers/selenium.py` (query/inspect/act, dismiss candidates, form issues, JS shadow serialization, locator translation); protocol conformance tests with fake webdriver
+- [x] 4.3 Registered with the listener; `robotframework-heal[selenium]` extra; frame-limitation note in evidence/RCA
+- [x] 4.4 atest green live: locator drift healed via selection tier + greedy reuse (2/2); timing healed with page_load_strategy=none ("waited 6.1s") — default blocking strategy absorbs document loads itself (recorded)
 
 ## 5. Eval corpus
 
