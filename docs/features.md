@@ -11,7 +11,7 @@ Deterministic detectors run first (no LLM); a single-shot triage agent classifie
 | `viewport` | web: element exists outside the viewport · mobile: element absent from the current screen | scroll into view / bounded swipe search, rerun; on mobile falls through to locator healing when nothing is found |
 | `assertion-drift` | RF assertion message patterns | opt-in: semantic-change guard, optional vision check, rerun with corrected expectation |
 | `form-state` | required-but-empty / `aria-invalid` fields, `role=alert` messages | diagnose-only by default (names the fields the test never filled); auto-fill behind `HEAL_FORM_FILL` |
-| `locator-drift` | locator matches 0 elements | locator agent proposes; every candidate is **live-verified** (exists, unique, visible) inside the agent loop; rerun with fallback through candidates |
+| `locator-drift` | locator matches 0 elements (or is ambiguous) | tiered: deterministic candidates + fuzzy rank → LLM index-pick (top-8) → full-DOM generation fallback; every result is **live-verified** (exists, unique, visible, type-compatible, never a frame/container) before rerun |
 | `unknown` | – | root-cause analysis only |
 
 ## The healing pipeline
@@ -34,6 +34,22 @@ The engine runs on a persistent background event loop; all Robot Framework
 and browser/Appium calls are marshalled to the RF main thread. Per-failure
 wall-clock and token budgets cap every transaction; breaching the run budget
 degrades to RCA-only instead of failing the run.
+
+## Frames and shadow DOM (Browser/Playwright)
+
+Open shadow roots heal out of the box (the DOM serializer flattens them and
+Playwright CSS pierces them). Same-origin and cross-origin iframes are
+serialized into the evidence as tagged sections; healed locators use
+Playwright's pierce syntax (`id=frame >>> css=#button`), nested frames
+included. Frames themselves are never interaction targets. SeleniumLibrary
+has no pierce syntax: frame content is reported as not healable there.
+
+## Heal memory
+
+Healed locators persist in `history.sqlite`; later runs warm-start the
+greedy-reuse map (scoped per source file, staleness-checked live) so repeat
+heals skip both the keyword timeout and the LLM entirely. Disable with
+`HEAL_WARM_START=false`.
 
 ## Capability-tiered model support
 
