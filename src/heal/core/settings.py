@@ -78,6 +78,9 @@ class HealSettings(BaseSettings):
     heal_assertions: bool = Field(False, description="Enable assertion-drift healing (opt-in).")
     form_fill: bool = Field(False, description="Allow form-diagnosis to fill fields (opt-in; diagnose-only by default).")
     fix_tier: FixTier = Field(FixTier.REPORT, description="Highest fix-application tier allowed.")
+    warm_start: bool = Field(
+        True, description="Preload known broken->healed locator mappings from the healing history."
+    )
 
     # --- default model (fallback for all roles) ---
     model: str = Field("", description="Default model name (e.g. 'MiniMax-M2.5' or 'openai:gpt-4.1-mini').")

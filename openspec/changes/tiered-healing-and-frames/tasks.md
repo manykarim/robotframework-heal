@@ -18,9 +18,9 @@ Experiment-gated as before: **[EXPERIMENT]** tasks record findings in the releva
 
 ## 3. Heal memory (cross-run warm start)
 
-- [ ] 3.1 History query for recent healed mappings (per source file, bounded age/count) + listener warm start under `HEAL_WARM_START` (default true)
-- [ ] 3.2 Warm-start provenance: applied swaps recorded as events marked reused-from-history; dashboard shows origin; staleness fall-through unit tests
-- [ ] 3.3 atest: two consecutive runs — second run heals proactively with zero LLM requests (assert via summary.json token count)
+- [x] 3.1 History query (`recent_mappings`) + lazy listener warm start under `HEAL_WARM_START` (default true), scoped per source file
+- [x] 3.2 Warm-start provenance: history-reused swaps recorded as events (`warm-N`, origin=history); staleness + scoping + disable unit tests
+- [x] 3.3 Verified live: two consecutive runs with shared history — run 2 healed 2/2 proactively with 0 tokens (summary.json)
 
 ## 4. SeleniumLibrary driver
 

@@ -83,6 +83,23 @@ class HealHistory:
             ).fetchall()
         return [Hotspot(source=r[0] or "", failed_locator=r[1], heal_count=r[2], last_healed_at=r[3]) for r in rows]
 
+    def recent_mappings(self, *, days: int = 30, limit: int = 500) -> list[tuple[str, str, str]]:
+        """Recent healed (source, failed_locator, healed_locator) mappings,
+        newest first, deduplicated per (source, failed_locator)."""
+        query = """
+            SELECT source, failed_locator, healed_locator, MAX(recorded_at)
+            FROM heal_history
+            WHERE status = ?
+              AND failed_locator IS NOT NULL AND healed_locator IS NOT NULL
+              AND recorded_at >= datetime('now', ?)
+            GROUP BY source, failed_locator
+            ORDER BY MAX(recorded_at) DESC
+            LIMIT ?
+        """
+        with self._connect() as conn:
+            rows = conn.execute(query, (OutcomeStatus.HEALED.value, f"-{days} days", limit)).fetchall()
+        return [(r[0] or "", r[1], r[2]) for r in rows]
+
     def heal_count(self, source: str | None, failed_locator: str) -> int:
         with self._connect() as conn:
             row = conn.execute(

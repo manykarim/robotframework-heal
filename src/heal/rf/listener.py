@@ -79,8 +79,12 @@ class HealListener:
         self.txn_runtime = TransactionRuntime()
         self.events: list[HealEvent] = []
         self.fixed_locators: dict[str, str] = {}
+        #: (source file, broken locator) -> healed locator, loaded from history
+        self.warm_fixes: dict[tuple[str, str], str] = {}
+        self._warm_loaded = False
         self._in_transaction = False
         self._artifact_dir: str | None = None
+        self._event_counter = 0
 
     # ------------------------------------------------------------ RF lifecycle
 
@@ -183,11 +187,13 @@ class HealListener:
     def _apply_known_fix(self, data, result):
         """Greedy reuse: swap a known-broken locator before the keyword runs.
 
-        Honors the same suppression rule as end_keyword: keywords inside
-        expected-failure wrappers must fail authentically, so no proactive
-        substitution there either.
+        Sources: this run's heals, then warm-started mappings from the healing
+        history (scoped to the keyword's source file). Honors the same
+        suppression rule as end_keyword: keywords inside expected-failure
+        wrappers must fail authentically, so no proactive substitution there.
         """
-        if not self.fixed_locators or result.owner not in DRIVER_FACTORIES:
+        self._load_warm_fixes()
+        if not (self.fixed_locators or self.warm_fixes) or result.owner not in DRIVER_FACTORIES:
             return
         if getattr(getattr(data, "parent", None), "name", None) in SKIP_PARENT_KEYWORDS:
             return
@@ -197,7 +203,12 @@ class HealListener:
             first_arg = str(BuiltIn().replace_variables(str(data.args[0])))
         except Exception:
             return
+        source = str(data.source) if getattr(data, "source", None) else ""
         healed = self.fixed_locators.get(first_arg)
+        from_history = False
+        if not healed:
+            healed = self.warm_fixes.get((source, first_arg))
+            from_history = healed is not None
         if not healed:
             return
         driver = self._driver_for(result.owner)
@@ -207,7 +218,80 @@ class HealListener:
             data.args = list(data.args)
             data.args[0] = healed
             result.args = data.args
-            logger.info(f"heal: proactively replaced known-broken locator with {healed!r}", also_console=True)
+            origin = "history" if from_history else "this run"
+            logger.info(
+                f"heal: proactively replaced known-broken locator with {healed!r} (from {origin})",
+                also_console=True,
+            )
+            if from_history:
+                self._record_warm_event(data, result, first_arg, healed)
+
+    def _load_warm_fixes(self):
+        """Lazy warm start from the healing history (task: heal-memory)."""
+        if self._warm_loaded or not self.settings.warm_start:
+            self._warm_loaded = True
+            return
+        self._warm_loaded = True
+        directory = self._artifacts()
+        from pathlib import Path
+
+        history_path = self.settings.history_db or (f"{directory}/history.sqlite" if directory else None)
+        if not history_path or not Path(history_path).is_file():
+            return
+        try:
+            from ..report.history import HealHistory
+
+            for source, failed, healed in HealHistory(history_path).recent_mappings():
+                self.warm_fixes.setdefault((source, failed), healed)
+            if self.warm_fixes:
+                logger.info(f"heal: warm-started {len(self.warm_fixes)} known fix(es) from history")
+        except Exception as exc:  # noqa: BLE001
+            logger.debug(f"heal: warm start failed: {exc}")
+
+    def _record_warm_event(self, data, result, broken: str, healed: str):
+        """Provenance: history-reused swaps appear in reports as heal events."""
+        from ..core.schemas import (
+            ActionType,
+            Attempt,
+            Confidence,
+            Diagnosis,
+            FailureClass,
+            HealAction,
+            HealOutcome,
+            OutcomeStatus,
+        )
+
+        self._event_counter += 1
+        event = HealEvent(
+            event_id=f"warm-{self._event_counter}",
+            test_name=self._variable("${TEST NAME}"),
+            suite_name=self._variable("${SUITE NAME}"),
+            source=str(data.source) if getattr(data, "source", None) else None,
+            lineno=getattr(data, "lineno", None),
+            keyword=self._keyword_call(data, result),
+            outcome=HealOutcome(
+                status=OutcomeStatus.HEALED,
+                diagnosis=Diagnosis(
+                    failure_class=FailureClass.LOCATOR_DRIFT,
+                    confidence=Confidence.HIGH,
+                    rationale=f"Known fix reused from healing history: {broken!r} -> {healed!r}.",
+                ),
+                attempts=[
+                    Attempt(
+                        action=HealAction(
+                            type=ActionType.RELOCATE,
+                            description=f"warm-start reuse from history: {healed!r}",
+                            params={"origin": "history", "broken": broken, "healed": healed},
+                        ),
+                        succeeded=True,
+                    )
+                ],
+                healed_locator=healed,
+                detail="Healed proactively from history before keyword execution (zero LLM calls).",
+            ),
+        )
+        self.events.append(event)
+        self._store_event(event)
 
     # ----------------------------------------------------------------- helpers
 

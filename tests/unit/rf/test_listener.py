@@ -91,3 +91,79 @@ def test_greedy_fix_skipped_inside_expected_failure_wrappers():
     result = SimpleNamespace(failed=False, owner="Browser", name="Fill Text", assign=[], args=["id=broken"])
     listener._apply_known_fix(data, result)
     assert data.args == ["id=broken"]  # untouched inside the wrapper
+
+
+def make_history_with_fix(tmp_path, source="/suites/login.robot", broken="id=old", healed="css=#new"):
+    from heal.report.history import HealHistory
+
+    from ..report.test_store_and_reports import make_event
+
+    history = HealHistory(tmp_path / "history.sqlite")
+    event = make_event("h1", healed=healed, source=source)
+    event.context.failed_locator = broken
+    history.record([event])
+    return tmp_path / "history.sqlite"
+
+
+class GreedyFakeDriver:
+    def __init__(self, counts):
+        self.counts = counts
+
+    def count(self, locator):
+        return self.counts.get(locator, 0)
+
+
+def warm_listener(tmp_path, counts, **settings):
+    db = make_history_with_fix(tmp_path)
+    listener = HealListener(
+        settings=HealSettings(_env_file=None, model="openai:gpt-4.1-mini", history_db=str(db), **settings)
+    )
+    listener._driver_for = lambda owner: GreedyFakeDriver(counts)
+    listener._variable = lambda name: "T"
+    return listener
+
+
+def kw_data(source="/suites/login.robot", args=("id=old",)):
+    data = SimpleNamespace(parent=SimpleNamespace(name=None), args=list(args), lineno=5, source=source)
+    result = SimpleNamespace(failed=False, owner="Browser", name="Click", assign=[], args=list(args))
+    return data, result
+
+
+def test_warm_start_swaps_and_records_provenance(tmp_path, monkeypatch):
+    monkeypatch.setattr("robot.libraries.BuiltIn.BuiltIn.replace_variables", lambda self, v: v, raising=False)
+    listener = warm_listener(tmp_path, {"id=old": 0, "css=#new": 1})
+    data, result = kw_data()
+    listener._apply_known_fix(data, result)
+    assert data.args[0] == "css=#new"
+    assert len(listener.events) == 1
+    event = listener.events[0]
+    assert event.event_id.startswith("warm-")
+    assert event.outcome.attempts[0].action.params["origin"] == "history"
+    assert "history" in event.outcome.detail
+
+
+def test_warm_start_stale_mapping_falls_through(tmp_path, monkeypatch):
+    monkeypatch.setattr("robot.libraries.BuiltIn.BuiltIn.replace_variables", lambda self, v: v, raising=False)
+    # healed locator no longer on the page -> no swap, no event
+    listener = warm_listener(tmp_path, {"id=old": 0, "css=#new": 0})
+    data, result = kw_data()
+    listener._apply_known_fix(data, result)
+    assert data.args[0] == "id=old"
+    assert listener.events == []
+
+
+def test_warm_start_scoped_to_source_file(tmp_path, monkeypatch):
+    monkeypatch.setattr("robot.libraries.BuiltIn.BuiltIn.replace_variables", lambda self, v: v, raising=False)
+    listener = warm_listener(tmp_path, {"id=old": 0, "css=#new": 1})
+    data, result = kw_data(source="/other/suite.robot")
+    listener._apply_known_fix(data, result)
+    assert data.args[0] == "id=old"  # mapping belongs to login.robot
+
+
+def test_warm_start_disabled(tmp_path, monkeypatch):
+    monkeypatch.setattr("robot.libraries.BuiltIn.BuiltIn.replace_variables", lambda self, v: v, raising=False)
+    listener = warm_listener(tmp_path, {"id=old": 0, "css=#new": 1}, warm_start=False)
+    data, result = kw_data()
+    listener._apply_known_fix(data, result)
+    assert data.args[0] == "id=old"
+    assert listener.warm_fixes == {}
