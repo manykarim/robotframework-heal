@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html><head><title>Frame-heavy page</title></head>
+<body>
+  <h1>Host with many frames</h1>
+  <button id="host-btn">Host button</button>
+  <!-- visible content frame -->
+  <iframe id="main-content" src="frame_inner.html" width="600" height="300"></iframe>
+  <!-- tiny tracking-pixel-style frame -->
+  <iframe id="pixel" src="frame_inner.html" width="1" height="1"></iframe>
+  <!-- hidden frame -->
+  <iframe id="hidden-frame" src="frame_inner.html" style="display:none"></iframe>
+  <!-- nested frames: outer contains another iframe -->
+  <iframe id="nested-outer" src="frame_nested.html" width="500" height="250"></iframe>
+  <!-- cross-origin frame (unserializable from file://) -->
+  <iframe id="cross" src="https://example.com/" width="300" height="100"></iframe>
+</body></html>
