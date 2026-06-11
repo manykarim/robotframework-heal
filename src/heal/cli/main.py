@@ -87,7 +87,17 @@ def report(
     from ..report.html import render_dashboard
     from ..report.summary import write_summary
 
-    dashboard = render_dashboard(events, out_dir / "heal_report.html")
+    fix_views = None
+    try:
+        from ..fix.service import build_fix_artifacts
+
+        artifacts = build_fix_artifacts(events, out_dir)
+        fix_views = artifacts.proposal_views or None
+        if artifacts.pages:
+            typer.echo(f"{len(artifacts.pages)} file diff(s) written to {out_dir / 'diffs'}")
+    except Exception as exc:  # sources may be absent on this machine
+        typer.echo(f"diff regeneration skipped: {type(exc).__name__}: {exc}")
+    dashboard = render_dashboard(events, out_dir / "heal_report.html", fix_views=fix_views)
     write_summary(events, out_dir / "summary.json")
     typer.echo(f"report written to {dashboard}")
 

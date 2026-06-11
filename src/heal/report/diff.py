@@ -239,6 +239,21 @@ def render_file_diff(
     return page, stats
 
 
+def inline_changed_rows(original: str, healed: str, max_rows: int = 8) -> str:
+    """Compact changed-lines-only table for embedding in the dashboard."""
+    rows, _ = diff_rows(original, healed)
+    changed = [r for r in rows if r.kind != "equal"]
+    shown = changed[:max_rows]
+    body = "".join(_cell(r) for r in shown)
+    more = (
+        f'<tr><td colspan="4" style="color:#888;font-size:0.75rem;padding:0.2rem 0.6rem">'
+        f"… {len(changed) - len(shown)} more changed line(s) — see the file diff</td></tr>"
+        if len(changed) > len(shown)
+        else ""
+    )
+    return f'<table class="diff">{body}{more}</table>'
+
+
 @dataclass
 class DiffPage:
     source: str

@@ -7,9 +7,9 @@
 
 ## 2. Always-on healed copies + diffs
 
-- [ ] 2.1 Rework `listener._write_fixes`: synthesize once per run regardless of tier; write `healed_files/` + `diffs/` always; `.patch` only at tier `patch`+, in-place unchanged; original-files-untouched regression test
-- [ ] 2.2 Dashboard integration: fix proposals link to diff pages; transaction drill-down embeds changed-lines inline diff; CLI `heal report` regenerates diffs from a store when sources are present (graceful skip otherwise)
-- [ ] 2.3 atest: locator-drift run (live-llm) asserts healed copy exists, original byte-identical, diff page contains the old/new locators word-highlighted
+- [x] 2.1 Fix synthesis extracted to `heal.fix.service.build_fix_artifacts`; copies+diffs always produced; `.patch`/in-place tier-gated; original-untouched regression test
+- [x] 2.2 Dashboard links each proposal to its diff page + embeds inline changed lines; `heal report` regenerates diffs from a store with graceful skip
+- [x] 2.3 Live atest verified: healed copy + diff page + index produced by default, original byte-identical, old/new locators word-highlighted, dashboard linked
 
 ## 3. Advanced variable replacement
 

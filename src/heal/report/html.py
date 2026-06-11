@@ -29,6 +29,12 @@ _TEMPLATE = Template(
   .card .num { font-size: 1.8rem; font-weight: 700; }
   .healed .num { color: #0a7d33; } .unhealed .num { color: #c0392b; } .suppressed .num { color: #8a6d00; }
   table { border-collapse: collapse; width: 100%; margin-top: 0.6rem; }
+  table.diff { border: 1px solid #e8e8ee; font-family: ui-monospace, monospace; font-size: 0.78rem; table-layout: fixed; margin-top: 0; }
+  table.diff td { border: 0; padding: 0.1rem 0.45rem; white-space: pre-wrap; word-break: break-all; }
+  table.diff td.num { width: 3rem; text-align: right; color: #999; background: #f7f7f9; }
+  table.diff tr.del td.line.left { background: #ffecec; } table.diff tr.ins td.line.right { background: #eaffea; }
+  table.diff tr.chg td.line.left { background: #fff5f5; } table.diff tr.chg td.line.right { background: #f2fff2; }
+  span.hl-del { background: #ffb6ba; border-radius: 2px; } span.hl-ins { background: #97e8a9; border-radius: 2px; }
   th, td { border: 1px solid #e2e2e2; padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; font-size: 0.9rem; }
   th { background: #f5f6fa; }
   .badge { display: inline-block; border-radius: 10px; padding: 0.05rem 0.55rem; font-size: 0.78rem; color: #fff; }
@@ -80,9 +86,12 @@ _TEMPLATE = Template(
     {% endfor %}
   {% endif %}
   {% if e.fix_proposal %}
+    {% set view = fix_views.get(e.fix_proposal.file ~ '|' ~ e.fix_proposal.old_value ~ '|' ~ e.fix_proposal.new_value) %}
     <div class="fix"><strong>fix proposal</strong> ({{ e.fix_proposal.blast_radius.value }}):
       <code>{{ e.fix_proposal.old_value }}</code> → <code>{{ e.fix_proposal.new_value }}</code>
       <span class="meta">{{ e.fix_proposal.file }}{% if e.fix_proposal.lineno %}:{{ e.fix_proposal.lineno }}{% endif %}</span>
+      {% if view and view.link %} · <a href="{{ view.link }}">view file diff</a>{% endif %}
+      {% if view and view.inline %}<div style="margin-top:0.4rem">{{ view.inline }}</div>{% endif %}
     </div>
   {% endif %}
   {% if e.context %}
@@ -103,9 +112,15 @@ def render_dashboard(
     events: list[HealEvent],
     path: str | Path,
     hotspots: list[Hotspot] | None = None,
+    fix_views: dict[str, dict] | None = None,
 ) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    html = _TEMPLATE.render(events=events, summary=build_summary(events), hotspots=hotspots or [])
+    html = _TEMPLATE.render(
+        events=events,
+        summary=build_summary(events),
+        hotspots=hotspots or [],
+        fix_views=fix_views or {},
+    )
     path.write_text(html, encoding="utf-8")
     return path
