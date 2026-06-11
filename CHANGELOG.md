@@ -3,6 +3,15 @@
 ## 0.4.0 (unreleased) — tiered healing, frames, Selenium
 
 ### Added
+- **Healed copies + visual diffs as standard report artifacts**: every run with
+  fixes writes `healed_files/` and side-by-side HTML `diffs/` (word-level
+  highlighting, context folding, per-file fix summary) — read-only, originals
+  untouched; the dashboard links and embeds the changed lines. `HEAL_FIX_TIER`
+  now gates only `.patch` and in-place edits.
+- **Advanced variable replacement**: `prefix${VAR}suffix` arguments update the
+  variable definition; locators passed into shared user keywords are traced one
+  hop to the call sites (positional and named), the variable they pass, or the
+  `[Arguments]` default — the keyword body is never broken for other callers.
 - **Frame-aware healing** (Browser): per-frame DOM evidence tagged with pierce
   prefixes, `frame >>> inner` proposals (nested frames supported), and an
   interaction-target blocklist that fixes a demonstrated false heal (the engine

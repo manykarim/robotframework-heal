@@ -63,11 +63,25 @@ After a run, `<outputdir>/heal/` contains:
 
 ## Fixing test files
 
-Tiered for safety (`HEAL_FIX_TIER`):
+Every run with healed locators produces **review artifacts** (read-only — your suites are never touched):
 
-- `report` (default) — proposals shown in the dashboard only
-- `patch` — healed copies + a unified `heal.patch` (`git apply heal.patch`)
-- `in-place` — edits `.robot`/`.resource` files at end of run; refuses on a dirty git tree; **`shared` blast radius** (a variable used at N call sites) is *never* auto-applied
+- `healed_files/` — fixed copies of the affected `.robot`/`.resource` files
+- `diffs/` — side-by-side HTML diffs with word-level highlighting, linked from the dashboard
+
+Where the fix lands is resolved through the RF parsing model (`robot.api.parsing`):
+
+| Locator origin | Fix target |
+|---|---|
+| literal argument | that call site |
+| `${VAR}` / `css=${VAR} li` (prefix/suffix preserved) | the variable definition (incl. imported `.resource`) |
+| user-keyword argument (`Click  ${locator}` in a shared keyword) | the **call site(s)** passing the broken value, the variable they pass, or the `[Arguments]` default — never the keyword body |
+| not covered | variables from Python/YAML variable files, multi-hop keyword chains → reported as unresolved |
+
+Applying fixes to your working tree stays tiered (`HEAL_FIX_TIER`):
+
+- `report` (default) — review artifacts only
+- `patch` — adds a unified `heal.patch` (`git apply heal.patch`)
+- `in-place` — edits source files at end of run; refuses on a dirty git tree; **`shared` blast radius** (used at N call sites) is *never* auto-applied
 
 Or drive it from the CLI / a coding agent:
 

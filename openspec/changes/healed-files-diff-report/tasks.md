@@ -20,4 +20,4 @@
 
 ## 4. Docs
 
-- [ ] 4.1 README/features: diff report section (screenshot-free description), variable-replacement coverage table (literal / var / prefix-var-suffix / keyword-arg one hop / not covered: variable files, multi-hop); CHANGELOG entry
+- [x] 4.1 README fix-target coverage table + artifact docs; CHANGELOG entry
