@@ -13,10 +13,10 @@
 
 ## 3. Advanced variable replacement
 
-- [ ] 3.1 `resolve_fix` prefix support: `prefix${VAR}suffix` single-variable shapes update the variable definition when prefix/suffix are preserved in the healed locator; fall back to call-site literal otherwise; unit tests for all split cases
-- [ ] 3.2 User-keyword argument tracing: identify enclosing keyword + argument position from the AST (`[Arguments]`, lineno span), scan suite tree for call sites (positional + `name=` named args, normalized keyword-name matching, embedded-arg keywords excluded), match by resolved-value equality; `kind="keyword-argument"` with call-site edit list, `shared` when >1 site or variable target, `unresolved` on zero matches; argument-default fixes when no caller overrides
-- [ ] 3.3 `CallSiteReplacer` transformer + multi-edit support in `synthesize_changes`; `FixProposal.usages` carries call sites (dashboard/MCP visible); idempotency + re-parse validation tests on a realistic suite tree (test → resource keyword → broken literal at call site; caller-passes-variable; default-value case)
-- [ ] 3.4 Run the fix-engine test suite + eval-corpus locator fixtures to confirm no resolution regressions; extend `heal_locator_drift` atest pages/suite with a keyword-argument scenario healing end-to-end into a correct healed copy
+- [x] 3.1 `resolve_fix` prefix support: `prefix${VAR}suffix` updates the variable when literals preserved, literal fallback otherwise; unit tests
+- [x] 3.2 User-keyword argument tracing: enclosing-keyword detection, positional+named call sites, caller-passes-variable, [Arguments] default fixes; search root defaults to the git repo root
+- [x] 3.3 `CallSiteReplacer` multi-site edits in `synthesize_changes`; proposal kind/usages enrichment; realistic suite-tree tests
+- [x] 3.4 Fix suite green (166 unit tests); live atest: heal inside resource keyword traced to the test-file call site in the healed copy, keyword body untouched, diff generated
 
 ## 4. Docs
 

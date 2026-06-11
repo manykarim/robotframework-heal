@@ -97,6 +97,24 @@ def _imported_resources(model: File, base: Path) -> list[Path]:
     return paths
 
 
+def default_search_root(file: str | Path) -> Path:
+    """Repo root when available, else the file's directory — call sites and
+    variable usages routinely live outside the failing file's folder."""
+    import subprocess
+
+    parent = Path(file).parent
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=str(parent), capture_output=True, text=True, timeout=5,
+        )
+        if out.returncode == 0 and out.stdout.strip():
+            return Path(out.stdout.strip())
+    except Exception:
+        pass
+    return parent
+
+
 def find_variable_usages(variable_name: str, root: Path) -> list[tuple[str, int]]:
     """All keyword-call usage sites of ${variable_name} under `root`."""
     marker = "${" + variable_name + "}"
@@ -169,14 +187,14 @@ def resolve_fix(
         # not a Variables-section variable: maybe a user-keyword argument
         traced = _trace_keyword_argument(
             model, path, target_token, variable_name, old_locator, new_locator,
-            Path(search_root) if search_root else path.parent,
+            Path(search_root) if search_root else default_search_root(path),
         )
         if traced is not None:
             return traced
         return ResolvedFix(kind="unresolved", file=file, lineno=target_token.lineno, old_token=raw)
     def_file, def_value, _def_lineno = definition
 
-    root = Path(search_root) if search_root else path.parent
+    root = Path(search_root) if search_root else default_search_root(path)
     usages = find_variable_usages(variable_name, root)
 
     # the variable's value portion is what sits between prefix and suffix
