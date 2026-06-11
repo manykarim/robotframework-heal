@@ -104,10 +104,15 @@ def is_p(tag: Tag) -> bool:
     return tag.name == "p"
 
 
+#: never proposed as interaction targets (matches agents.locator.BLOCKED_TARGET_TAGS)
+_BLOCKED_CANDIDATE_TAGS = frozenset({"iframe", "frame", "html", "body", "head"})
+
+
 def is_proposal_candidate(element: Tag) -> bool:
     """Combined filter used when generating locator proposals from the DOM."""
     return (
-        (is_leaf_or_lowest(element) or has_direct_text(element))
+        element.name not in _BLOCKED_CANDIDATE_TAGS
+        and (is_leaf_or_lowest(element) or has_direct_text(element))
         and not has_parent_dialog_without_open(element)
         and not has_child_dialog_without_open(element)
         and not is_headline(element)

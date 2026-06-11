@@ -55,6 +55,11 @@ class LocatorDeps:
         return []
 
 
+#: container/document elements are NEVER valid interaction targets — clicking
+#: an iframe "succeeds" without doing what the test meant (proven false heal,
+#: experiments/dom-edge-cases/FINDINGS.md)
+BLOCKED_TARGET_TAGS = frozenset({"iframe", "frame", "html", "body", "head"})
+
 #: keyword-name marker -> tag names the target element must have
 _KEYWORD_TAGS: tuple[tuple[tuple[str, ...], frozenset[str]], ...] = (
     (("select options", "deselect options"), frozenset({"select"})),
@@ -111,10 +116,22 @@ def _configure(agent: Agent) -> None:
                 deps.rejected[locator] = "matches a hidden element"
                 verdicts.append(f"{locator!r}: matches a hidden element")
                 continue
+            info_fn = getattr(deps.driver, "get_element_info", None)
+            if info_fn is None:
+                verified.append(locator)
+                continue
+            info = await asyncio.to_thread(info_fn, locator)
+            tag = (info.tag_name or "").lower()
+            if tag in BLOCKED_TARGET_TAGS:
+                reason = (
+                    f"resolves to a <{tag}> — frames and document containers are never "
+                    "interaction targets; propose the element INSIDE it instead"
+                )
+                deps.rejected[locator] = reason
+                verdicts.append(f"{locator!r}: {reason}")
+                continue
             tags = required_tags(deps.keyword_name)
             if tags is not None:
-                info = await asyncio.to_thread(deps.driver.get_element_info, locator)
-                tag = (info.tag_name or "").lower()
                 if tag and tag not in tags:
                     reason = (
                         f"matches a <{tag}>, but {deps.keyword_name!r} needs "

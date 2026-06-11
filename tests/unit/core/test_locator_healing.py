@@ -209,3 +209,34 @@ def test_type_incompatible_proposal_rejected_until_select():
         event = asyncio.run(engine.handle(builder, session))
     assert event.outcome.status is OutcomeStatus.HEALED
     assert event.outcome.healed_locator == "css=select#model"
+
+
+def test_iframe_target_rejected_regression():
+    """Regression for the recorded false heal: clicking the iframe element itself."""
+    driver = FakeDriver()
+    driver.counts.update({"css=iframe#content-frame": 1, "css=#content-frame >>> css=#frame-submit": 1})
+    driver.visible.update({"css=iframe#content-frame": True, "css=#content-frame >>> css=#frame-submit": True})
+    tags = {"css=iframe#content-frame": "IFRAME", "css=#content-frame >>> css=#frame-submit": "BUTTON"}
+
+    from heal.drivers.protocol import ElementInfo
+
+    driver.get_element_info = lambda loc: ElementInfo(locator=loc, tag_name=tags.get(loc, ""))
+    model = proposals_model(
+        [
+            {"locators": ["css=iframe#content-frame"], "rationale": "frame matches the name"},
+            {"locators": ["css=#content-frame >>> css=#frame-submit"], "rationale": "the button inside"},
+        ]
+    )
+    event, session = heal(make_engine(), model, driver=driver, session=FakeSession(driver))
+    assert event.outcome.status is OutcomeStatus.HEALED
+    assert event.outcome.healed_locator == "css=#content-frame >>> css=#frame-submit"
+    assert session.reruns == ["css=#content-frame >>> css=#frame-submit"]
+
+
+def test_blocked_tags_not_generated_as_candidates():
+    from heal.drivers.dom import generate_proposals
+
+    html = "<body><iframe id='f' src='x.html'></iframe><button id='b'>Go</button></body>"
+    proposals = generate_proposals(html, ["iframe", "button"])
+    assert any("b" in p for p in proposals)
+    assert not any("iframe" in p or "#f" in p for p in proposals)
