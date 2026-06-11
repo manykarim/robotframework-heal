@@ -1,12 +1,12 @@
 # robotframework-heal
 
-A Robot Framework listener for **failure triage, self-healing and root-cause analysis** of UI tests (Browser/Playwright and Appium).
+A Robot Framework listener for **failure triage, self-healing and root-cause analysis** of UI tests (Browser/Playwright, SeleniumLibrary and Appium).
 
 Every failed keyword is classified into a failure class, healed when possible — and **always** turned into a clean, enriched error record:
 
 | Failure class | What happens |
 |---|---|
-| `locator-drift` | LLM proposes locators, each **verified live** (exists, unique, visible) before the keyword reruns |
+| `locator-drift` | tiered: deterministic candidates → LLM picks (verified live) → full-DOM generation fallback; elements inside same-origin **iframes** heal via `frame >>> inner` selectors |
 | `timing` | waits for page-ready and reruns — no LLM |
 | `viewport` | scrolls (web) or swipe-searches (Appium) the element into view — no LLM |
 | `overlay` | dismisses the blocking dialog/banner, verifies, reruns |
@@ -21,7 +21,8 @@ Healed or not, each transaction produces a typed event: diagnosis, healing attem
 ## Installation
 
 ```bash
-pip install robotframework-heal
+pip install robotframework-heal            # Browser/Playwright + Appium
+pip install robotframework-heal[selenium]  # + SeleniumLibrary support
 ```
 
 ## Quickstart
@@ -86,6 +87,8 @@ heal mcp results/             # MCP server for coding agents (see skills/heal/)
 | `HEAL_MAX_FAILURE_SECONDS` | `60` | wall-clock cap per healing transaction |
 | `HEAL_MAX_RUN_TOKENS` | `2000000` | run cap; breach degrades to RCA-only |
 | `HEAL_FIX_TIER` | `report` | `report` / `patch` / `in-place` |
+| `HEAL_LOCATOR_TIERS` | `selection` | `selection` (candidates + index pick, ~70% fewer tokens) or `generation` (full-DOM prompt) |
+| `HEAL_WARM_START` | `true` | reuse healed locators from previous runs (`history.sqlite`) — repeat heals cost zero tokens |
 | `HEAL_HEAL_ASSERTIONS` | `false` | opt-in assertion-drift healing |
 | `HEAL_FORM_FILL` | `false` | opt-in form auto-fill (invents test data; values are recorded) |
 | `HEAL_ENABLED` | `true` | master switch |

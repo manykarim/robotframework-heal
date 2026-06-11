@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.0 (unreleased) — tiered healing, frames, Selenium
+
+### Added
+- **Frame-aware healing** (Browser): per-frame DOM evidence tagged with pierce
+  prefixes, `frame >>> inner` proposals (nested frames supported), and an
+  interaction-target blocklist that fixes a demonstrated false heal (the engine
+  previously "healed" a locator by clicking the iframe element itself).
+- **Tiered locator selection** (default): deterministic candidates + fuzzy
+  ranking → LLM index-pick over top-8 with element info → full-DOM generation
+  fallback. Corpus-measured: ~70% fewer tokens at equal-or-better accuracy;
+  +27 accuracy points on 8B-class models. `HEAL_LOCATOR_TIERS=generation`
+  restores the previous behavior.
+- **Cross-run heal memory**: known broken→healed mappings warm-start from
+  `history.sqlite` (`HEAL_WARM_START`, default true) — repeat heals on later
+  runs cost zero LLM tokens; events carry reused-from-history provenance.
+- **SeleniumLibrary support** (`pip install robotframework-heal[selenium]`):
+  locator drift, timing, viewport, overlay and form diagnosis; frame content
+  is explicitly not healable on Selenium (no pierce syntax) and is reported.
+- **Self-growing eval corpus**: `heal corpus <results-paths>` harvests
+  ground-truth fixtures from recorded heals; the eval runner grades
+  element-identity per tier mode and backend.
+- `.env` auto-loading (nearest `.env`, overrides environment variables).
+
 ## 0.4.0 (unreleased) — **BREAKING**: agentic rewrite
 
 Ground-up rewrite as a failure-triage and root-cause-analysis engine built on
