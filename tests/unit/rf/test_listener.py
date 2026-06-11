@@ -167,3 +167,21 @@ def test_warm_start_disabled(tmp_path, monkeypatch):
     listener._apply_known_fix(data, result)
     assert data.args[0] == "id=old"
     assert listener.warm_fixes == {}
+
+
+def test_warm_event_keeps_mapping_alive_in_history(tmp_path, monkeypatch):
+    """Reused mappings must re-record with the broken locator (renewal)."""
+    monkeypatch.setattr("robot.libraries.BuiltIn.BuiltIn.replace_variables", lambda self, v: v, raising=False)
+    listener = warm_listener(tmp_path, {"id=old": 0, "css=#new": 1})
+    data, result = kw_data()
+    listener._apply_known_fix(data, result)
+    event = listener.events[0]
+    assert event.context is not None
+    assert event.context.failed_locator == "id=old"
+
+    from heal.report.history import HealHistory
+
+    history = HealHistory(tmp_path / "renewed.sqlite")
+    history.record([event])
+    mappings = history.recent_mappings()
+    assert ("/suites/login.robot", "id=old", "css=#new") in mappings

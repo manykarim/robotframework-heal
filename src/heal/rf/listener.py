@@ -263,19 +263,30 @@ class HealListener:
             Confidence,
             Diagnosis,
             FailureClass,
+            FailureContext,
             HealAction,
             HealOutcome,
             OutcomeStatus,
         )
 
         self._event_counter += 1
+        keyword_call = self._keyword_call(data, result)
         event = HealEvent(
             event_id=f"warm-{self._event_counter}",
             test_name=self._variable("${TEST NAME}"),
             suite_name=self._variable("${SUITE NAME}"),
             source=str(data.source) if getattr(data, "source", None) else None,
             lineno=getattr(data, "lineno", None),
-            keyword=self._keyword_call(data, result),
+            keyword=keyword_call,
+            # context carries the broken locator so history.record keeps the
+            # mapping alive (recent_mappings requires failed_locator)
+            context=FailureContext(
+                keyword=keyword_call,
+                error_message="(not executed: known-broken locator replaced proactively)",
+                test_name=self._variable("${TEST NAME}"),
+                suite_name=self._variable("${SUITE NAME}"),
+                failed_locator=broken,
+            ),
             outcome=HealOutcome(
                 status=OutcomeStatus.HEALED,
                 diagnosis=Diagnosis(
