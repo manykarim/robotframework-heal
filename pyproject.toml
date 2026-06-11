@@ -29,6 +29,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/manykarim/robotframework-heal"
 
+[project.optional-dependencies]
+selenium = ["robotframework-seleniumlibrary"]
+
 [project.scripts]
 heal = "heal.cli.main:app"
 
@@ -39,6 +42,7 @@ dev = [
     "coverage",
     "robotframework-stacktrace",
     "mkdocs-material",
+    "robotframework-seleniumlibrary>=6.9.0",
 ]
 
 [build-system]

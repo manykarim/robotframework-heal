@@ -2049,12 +2049,18 @@ dependencies = [
     { name = "typer" },
 ]
 
+[package.optional-dependencies]
+selenium = [
+    { name = "robotframework-seleniumlibrary" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "coverage" },
     { name = "invoke" },
     { name = "mkdocs-material" },
     { name = "pytest" },
+    { name = "robotframework-seleniumlibrary" },
     { name = "robotframework-stacktrace" },
 ]
 
@@ -2070,9 +2076,11 @@ requires-dist = [
     { name = "robotframework" },
     { name = "robotframework-appiumlibrary" },
     { name = "robotframework-browser" },
+    { name = "robotframework-seleniumlibrary", marker = "extra == 'selenium'" },
     { name = "thefuzz" },
     { name = "typer", specifier = ">=0.25.1" },
 ]
+provides-extras = ["selenium"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -2080,6 +2088,7 @@ dev = [
     { name = "invoke" },
     { name = "mkdocs-material" },
     { name = "pytest" },
+    { name = "robotframework-seleniumlibrary", specifier = ">=6.9.0" },
     { name = "robotframework-stacktrace" },
 ]
 
@@ -2090,6 +2099,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/48/58/dd3fb5cfd3ff1659e778c5fba61c54451eb3c9c1bca5cea1c7925bf163d1/robotframework_pythonlibcore-4.6.0.tar.gz", hash = "sha256:c45acbdf781b35a5cbac8e1c019fedab87d99f34ff29a6c99b774fbd95313f27", size = 14196, upload-time = "2026-05-14T19:27:21.871Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/dc/b5/188f79e1d6ba281880a6817156d2fa8b89a1e034f6be0390425f4fb2969b/robotframework_pythonlibcore-4.6.0-py3-none-any.whl", hash = "sha256:db8d707961a0b83a5497d9c02b8919805e47b73907d0a588c79593518dc133a7", size = 20330, upload-time = "2026-05-14T19:27:20.595Z" },
+]
+
+[[package]]
+name = "robotframework-seleniumlibrary"
+version = "6.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "robotframework" },
+    { name = "robotframework-pythonlibcore" },
+    { name = "selenium" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/30/e0/7a9a4d4f6853a293332cfeb769b11464d308311827dbadab5b59b68ba3fb/robotframework_seleniumlibrary-6.9.0.tar.gz", hash = "sha256:6ff7df0dd9a9ea75f78dd2c7fa2dac0098e96e64f507e69d3bc21f41056e5d56", size = 174546, upload-time = "2026-05-17T15:13:53.621Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/74/60/8e5e20bf5dda4168295b22900d25dac0c464eb73a7e0e032bfb6d8897e40/robotframework_seleniumlibrary-6.9.0-py3-none-any.whl", hash = "sha256:198067f838acb01dd54348b68ee83a7cc53dd533c2171385a7554ab28b5ef33d", size = 105191, upload-time = "2026-05-17T15:13:51.87Z" },
 ]
 
 [[package]]

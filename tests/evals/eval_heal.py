@@ -1,13 +1,15 @@
 """Healing-quality evals over the harvested ground-truth corpus (replay, no browser).
 
 Usage (any backend; prefer small/cheap models):
-    HEAL_MODEL=... HEAL_BASE_URL=... HEAL_API_KEY=... uv run python tests/evals/eval_heal.py
-    HEAL_LOCATOR_TIERS=generation ... # compare tier modes
+    uv run python tests/evals/eval_heal.py [--model M] [--base-url U] [--api-key K] [--tiers selection|generation]
 
-Grading is element-identity: a heal only counts when the produced locator
-resolves to the SAME element as the recorded ground truth in the recorded DOM.
+CLI flags override everything (incl. the auto-loaded .env — which otherwise
+wins over process env vars by design). Grading is element-identity: a heal
+only counts when the produced locator resolves to the SAME element as the
+recorded ground truth in the recorded DOM.
 """
 
+import argparse
 import asyncio
 import json
 import sys
@@ -53,8 +55,18 @@ async def evaluate(fixture, engine: HealingEngine):
     }
 
 
+def parse_overrides() -> dict:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model")
+    parser.add_argument("--base-url", dest="base_url")
+    parser.add_argument("--api-key", dest="api_key")
+    parser.add_argument("--tiers", dest="locator_tiers", choices=["selection", "generation"])
+    args = parser.parse_args()
+    return {k: v for k, v in vars(args).items() if v is not None}
+
+
 async def main():
-    settings = HealSettings()
+    settings = HealSettings(**parse_overrides())
     if not settings.model:
         print("set HEAL_MODEL (and HEAL_BASE_URL/HEAL_API_KEY) to run evals", file=sys.stderr)
         raise SystemExit(2)
