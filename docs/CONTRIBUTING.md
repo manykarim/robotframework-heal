@@ -28,15 +28,13 @@ uv run --group docs mkdocs build --strict
 - **Published release** — additionally `mike deploy --push <tag>` publishes a
   pinned version that appears in the version selector alongside `latest`.
 
-### One-time GitHub Pages setup
+### GitHub Pages
 
-After the first `main` deploy creates the `gh-pages` branch, enable Pages once in
-the repository settings:
-
-> **Settings → Pages → Build and deployment → Source: _Deploy from a branch_ →
-> Branch: `gh-pages` / `(root)`**
-
-The site then serves at `https://manykarim.github.io/robotframework-heal/`.
+Pages is already enabled for this repository, serving from the `gh-pages` branch
+(root) at `https://manykarim.github.io/robotframework-heal/`. The `docs` workflow
+publishes to that branch via `mike`; no further setup is needed. The first
+`mike` deploy converts any pre-existing flat deploy into the versioned layout
+(a root redirect to the default `latest/` version).
 
 ## Refreshing screenshots
 
