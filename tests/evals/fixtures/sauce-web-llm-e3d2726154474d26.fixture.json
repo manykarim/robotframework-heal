@@ -1,0 +1,30 @@
+{
+ "context": {
+  "keyword": {
+   "name": "Fill Text",
+   "args": [
+    "id=pass",
+    "secret_sauce"
+   ],
+   "owner_library": "Browser",
+   "assign": [],
+   "lineno": 17,
+   "source": "/home/many/workspace/robotframework-heal/tests/atest/sauce_web_llm.robot"
+  },
+  "error_message": "TimeoutError: locator.fill: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('id=pass')\n",
+  "test_name": "Login with valid credentials",
+  "suite_name": "Atest.Sauce Web Llm",
+  "failed_locator": "id=pass",
+  "evidence": {
+   "dom-excerpt": {
+    "kind": "dom-excerpt",
+    "summary": "simplified DOM",
+    "excerpt": "<body><noscript>You need to enable JavaScript to run this app.</noscript><div id=\"root\"><div class=\"login_container\"><div class=\"login_logo\">Swag Labs</div><div class=\"login_wrapper\"><div class=\"login_wrapper-inner\"><div class=\"form_column\" id=\"login_button_container\"><div class=\"login-box\"><form><div class=\"form_group\"><input class=\"input_error form_input\" id=\"user-name\" name=\"user-name\" placeholder=\"Username\" type=\"text\" value=\"standard_user\"/></div><div class=\"form_group\"><input class=\"input_error form_input\" id=\"password\" name=\"password\" placeholder=\"Password\" type=\"password\" value=\"\"/></div><div class=\"error-message-container\"></div><input class=\"submit-button btn_action\" id=\"login-button\" name=\"login-button\" type=\"submit\" value=\"Login\"/></form></div></div></div><div class=\"login_credentials_wrap\"><div class=\"login_credentials_wrap-inner\"><div class=\"login_credentials\" id=\"login_credentials\"><h4>Accepted usernames are:</h4>standard_user<br/>locked_out_user<br/>problem_user<br/>performance_glitch_user<br/>error_user<br/>visual_user<br/></div><div class=\"login_password\"><h4>Password for all users:</h4>secret_sauce</div></div></div></div></div></div></body>"
+   }
+  },
+  "collected_at": "2026-06-10T17:24:09.496652Z"
+ },
+ "truth_css": "input#password",
+ "expected_class": "locator-drift",
+ "source_event": "Atest.Sauce Web Llm::Login with valid credentials::heal-16"
+}

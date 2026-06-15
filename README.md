@@ -1,89 +1,154 @@
 # robotframework-heal
-A Robot Framework Listener for library agnostic self-healing and smart recovery of tests
 
-📙 [Documentation](https://manykarim.github.io/robotframework-heal/) can be found [here](https://manykarim.github.io/robotframework-heal/)
+A Robot Framework listener for **failure triage, self-healing and root-cause analysis** of UI tests (Browser/Playwright, SeleniumLibrary and Appium).
 
-## Installation
+Every failed keyword is classified into a failure class, healed when possible — and **always** turned into a clean, enriched error record:
+
+| Failure class | What happens |
+|---|---|
+| `locator-drift` | tiered: deterministic candidates → LLM picks (verified live) → full-DOM fallback; elements inside iframes heal via `frame >>> inner` selectors |
+| `timing` | waits for page-ready and reruns — no LLM |
+| `viewport` | scrolls (web) or swipe-searches (Appium) the element into view — no LLM |
+| `overlay` | dismisses the blocking dialog/banner, verifies, reruns |
+| `form-state` | diagnoses unfilled required / invalid fields (DOM + optional screenshot) |
+| `assertion-drift` | opt-in: verifies UI text drifted and reruns with the corrected expectation |
+| `unknown` | root-cause analysis only |
+
+📙 **[Full documentation](https://manykarim.github.io/robotframework-heal/)** — tutorials, how-to guides, the complete generated `HEAL_*` configuration and CLI reference, and the design/benchmarks behind it.
+
+## Install
+
 ```bash
-pip install robotframework-heal
+pip install robotframework-heal            # Browser/Playwright + Appium
+pip install robotframework-heal[selenium]  # + SeleniumLibrary support
 ```
 
-## Usage
-
-Add `Library    SelfHealing ` to your Robot Framework test suite `*** Settings ***` section.
+## Quickstart
 
 ```robotframework
 *** Settings ***
-Library    SelfHealing
-```	
+Library    Browser    timeout=3s
+Library    Heal
+```
 
-Set up the following environment variables to enable the self-healing feature:
+```bash
+# .env (auto-loaded from the working dir upwards; overrides the environment)
+HEAL_MODEL=openai/gpt-4.1-nano
+HEAL_BASE_URL=https://openrouter.ai/api/v1
+HEAL_API_KEY=sk-...
+```
 
-* `LLM_API_KEY`
-* `LLM_API_BASE`
-* `LLM_TEXT_MODEL` (model used for picking final locator from proposal list)
-* `LLM_LOCATOR_MODEL` (model for generating locator proposals from DOM tree)
-* `LLM_VISION_MODEL` (not working yet)
+```bash
+heal doctor --role locator   # verify the endpoint
+robot -d results suites/     # heal during the run
+```
 
-Interface with LLMs uses the [LiteLMM](https://docs.litellm.ai) API.  
-Check the list of available [Providers](https://docs.litellm.ai/docs/providers) and how to connect to them.  
+Then open `results/heal/heal_report.html`.
+
+### Library import
+
+`Library    Heal` is the canonical import. These also work:
 
 ```robotframework
-*** Settings ***
-Library    Browser    timeout=5s
-Library    SelfHealing    use_llm_for_locator_proposals=True
-Suite Setup    New Browser    browser=${BROWSER}    headless=${HEADLESS}
-Test Setup    New Context    viewport={'width': 1280, 'height': 720}
-Test Teardown    Close Context
-Suite Teardown    Close Browser    ALL
-
-*** Variables ***
-${BROWSER}    chromium
-${HEADLESS}    True
-
-*** Test Cases ***
-Login with valid credentials
-    New Page    https://the-internet.herokuapp.com/login
-    Fill Text    id=user    tomsmith
-    Fill Text    id=pass    SuperSecretPassword!
-    Click    id=loginbutton
-    Get Text    id=flash    *=    You logged into a secure area!
+Library    heal.rf.HealListener   # fully-qualified equivalent
+Library    SelfHealing            # deprecated 0.3 shim (emits a warning)
 ```
 
-## Arguments
+## Configuration
 
-* `fix`: Specifies the mode of operation, set to "realtime" for real-time healing. Default is "realtime".
-* `collect_locator_info`: Boolean flag to enable or disable the collection of locator information. Default is false.
-* `use_locator_db`: Boolean flag to enable or disable the use of a locator database. Default is false.
-* `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. Default is false.
-* `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
-* `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
+All configuration is read from `HEAL_*` environment variables. The nearest
+`.env` (searched from the working directory upwards) is loaded automatically and
+**overrides** already-set environment variables. The tables below cover the
+common settings; the [full reference](https://manykarim.github.io/robotframework-heal/reference/configuration/)
+is generated from the schema and lists every option.
 
-## Environment Variables
+### Model (required)
 
-Example when running with Ollama LLM:
+| Variable | Default | Purpose |
+|---|---|---|
+| `HEAL_MODEL` | – | Model name (e.g. `MiniMax-M2.5`) or a pydantic-ai provider string (e.g. `openai:gpt-4.1-mini`) |
+| `HEAL_BASE_URL` | – | OpenAI-compatible endpoint (vLLM, Ollama, LiteLLM, MiniMax, OpenRouter, …) |
+| `HEAL_API_KEY` | – | API key for the endpoint |
+| `HEAL_OUTPUT_MODE` | `auto` | Structured-output transport: `auto` / `tool` / `native` / `prompted` |
+
+**Per-role overrides** — each agent role can use its own backend; unset values
+fall back to the defaults above:
 
 ```bash
-LLM_API_BASE=http://localhost:11434
-LLM_TEXT_MODEL=ollama_chat/llama3.1
-LLM_LOCATOR_MODEL=ollama_chat/llama3.1
-LLM_VISION_MODEL=ollama_chat/llama3.2-vision
+HEAL_TRIAGE_MODEL=openai/gpt-4.1-nano        # cheap/fast triage
+HEAL_LOCATOR_MODEL=openai/gpt-4.1            # stronger locator healing
+# also: HEAL_<ROLE>_BASE_URL / _API_KEY / _OUTPUT_MODE   (ROLE = TRIAGE|LOCATOR|VISION|RCA)
 ```
 
-Example when using OpenAI:
+### Behaviour / options
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `HEAL_ENABLED` | `true` | Master switch for the healing engine |
+| `HEAL_LOCATOR_TIERS` | `selection` | `selection` (candidates + index pick, ~70% fewer tokens) or `generation` (full-DOM prompt) |
+| `HEAL_FIX_TIER` | `report` | Highest fix-application tier: `report` / `patch` / `in-place` |
+| `HEAL_WARM_START` | `true` | Reuse healed locators from previous runs (`history.sqlite`) — repeat heals cost zero tokens |
+| `HEAL_HEAL_ASSERTIONS` | `false` | Opt-in assertion-drift healing |
+| `HEAL_FORM_FILL` | `false` | Opt-in form auto-fill (invents test data; diagnose-only by default) |
+
+### Budgets
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `HEAL_MAX_FAILURE_SECONDS` | `60` | Wall-clock cap per healing transaction |
+| `HEAL_MAX_FAILURE_TOKENS` | `50000` | Token cap per transaction |
+| `HEAL_MAX_RUN_TOKENS` | `2000000` | Token cap per run; breach degrades to RCA-only |
+| `HEAL_REQUEST_LIMIT` | `8` | Max LLM requests per agent run within a transaction |
+| `HEAL_AGENT_RETRIES` | `3` | Output-validator retries per agent run |
+| `HEAL_READY_TIMEOUT_SECONDS` | `20` | Max wait for page-ready in timing recovery |
+
+### Reporting
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `HEAL_REPORT_DIR` | `<RF output dir>/heal` | Where artifacts are written |
+| `HEAL_HISTORY_DB` | `<report dir>/history.sqlite` | Cross-run healing history (powers warm start) |
+
+## What you get
+
+After a run, the report directory contains:
+
+- `heal_report.html` — self-contained dashboard (healed *and* unhealed failures, evidence, costs, fix proposals)
+- `events.jsonl` — append-only, crash-safe run store
+- `summary.json` — for CI gates (e.g. fail above a heal-count threshold)
+- `healed_files/` + `diffs/` — read-only fixed copies and word-highlighted diffs (your suites are never modified)
+- `heal.patch` — git-appliable fixes (at `HEAL_FIX_TIER=patch`)
+- `history.sqlite` — cross-run memory
+
+## CLI
 
 ```bash
-LLM_API_KEY=YOUR_OPENAI_API_KEY
-LLM_TEXT_MODEL=gpt-3.5-turbo
-LLM_LOCATOR_MODEL=gpt-3.5-turbo
+heal triage results/    # summarize failures, RCAs and fix proposals
+heal report results/    # render dashboard + diffs
+heal apply results/     # apply fixes (--patch / --in-place)
+heal doctor --role all  # probe configured model endpoints
+heal history db.sqlite  # repeat-healing hotspots
+heal mcp results/        # MCP server for coding agents
 ```
 
-## Open the project in Gitpod.io
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/manykarim/robotframework-heal)  
-Try it out in  [Gitpod](https://gitpod.io/#https://github.com/manykarim/robotframework-heal)
+## Documentation
 
-## Short URL and QR Code
+- **[Getting started](https://manykarim.github.io/robotframework-heal/tutorials/getting-started/)** — heal your first suite
+- **[Model providers](https://manykarim.github.io/robotframework-heal/how-to/model-providers/)** — OpenAI, Azure, vLLM, Ollama, MiniMax, OpenRouter, LiteLLM
+- **[Configuration reference](https://manykarim.github.io/robotframework-heal/reference/configuration/)** — every `HEAL_*` setting (generated)
+- **[Fixing test files](https://manykarim.github.io/robotframework-heal/how-to/fixing-files/)** — diffs, patches, blast radius
+- **[Migrating from 0.3](https://manykarim.github.io/robotframework-heal/reference/migration/)**
 
-https://tinyurl.com/robot-heal
+## Development
 
-![QR Code](QR-Code.png)
+```bash
+uv sync
+uv run invoke heal-utests                     # unit tests (no LLM, no browser)
+uv run invoke heal-atests                     # acceptance tests (real browser, no LLM)
+uv run invoke heal-atests --live-llm          # + live healing (needs HEAL_* config)
+uv run --group docs mkdocs serve              # preview the docs site
+```
+
+## License
+
+Apache-2.0.

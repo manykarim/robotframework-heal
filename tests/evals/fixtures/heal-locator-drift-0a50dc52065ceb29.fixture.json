@@ -1,0 +1,29 @@
+{
+ "context": {
+  "keyword": {
+   "name": "Click",
+   "args": [
+    "id=login-button"
+   ],
+   "owner_library": "Browser",
+   "assign": [],
+   "lineno": 17,
+   "source": "/home/many/workspace/robotframework-heal/tests/atest/heal/heal_locator_drift.robot"
+  },
+  "error_message": "TimeoutError: locator.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator('id=login-button')\n",
+  "test_name": "Broken Locator Is Healed At Runtime",
+  "suite_name": "Atest.Heal.Heal Locator Drift",
+  "failed_locator": "id=login-button",
+  "evidence": {
+   "dom-excerpt": {
+    "kind": "dom-excerpt",
+    "summary": "simplified DOM",
+    "excerpt": "<body>\n<h1>Demo Login</h1>\n<!-- Seeded drift: tests still use id=login-button; the button was renamed. -->\n<form id=\"login-form\">\n<label>Email</label>\n<input id=\"user-email\" name=\"email\" placeholder=\"you@example.com\" type=\"text\"/>\n<label>Password</label>\n<input id=\"user-pass\" name=\"password\" type=\"password\"/>\n<button id=\"signin-btn\" type=\"submit\">Sign in</button>\n</form>\n<p id=\"status\">idle</p>\n</body>"
+   }
+  },
+  "collected_at": "2026-06-10T17:22:29.313345Z"
+ },
+ "truth_css": "button#signin-btn",
+ "expected_class": "locator-drift",
+ "source_event": "Atest.Heal.Heal Locator Drift::Broken Locator Is Healed At Runtime::heal-1"
+}

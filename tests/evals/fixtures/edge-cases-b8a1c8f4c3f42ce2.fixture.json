@@ -1,0 +1,29 @@
+{
+ "context": {
+  "keyword": {
+   "name": "Click",
+   "args": [
+    "id=submit-button"
+   ],
+   "owner_library": "Browser",
+   "assign": [],
+   "lineno": 15,
+   "source": "/home/many/workspace/robotframework-heal/experiments/dom-edge-cases/edge_cases.robot"
+  },
+  "error_message": "TimeoutError: locator.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for locator('id=submit-button')\n",
+  "test_name": "Broken Locator Inside Open Shadow DOM",
+  "suite_name": "Edge Cases",
+  "failed_locator": "id=submit-button",
+  "evidence": {
+   "dom-excerpt": {
+    "kind": "dom-excerpt",
+    "summary": "simplified DOM",
+    "excerpt": "<body>\n<h1>Shadow host page</h1>\n<my-widget id=\"outer-widget\">\n<div class=\"wrapper\">\n<inner-form>\n<label>Email</label>\n<input id=\"user-email\" type=\"text\"/>\n<button id=\"shadow-submit\">Submit deep</button></inner-form>\n</div></my-widget>\n<secret-widget id=\"secret\"></secret-widget>\n<p id=\"status\">idle</p>\n\n</body>"
+   }
+  },
+  "collected_at": "2026-06-11T15:29:57.141794Z"
+ },
+ "truth_css": "#shadow-submit",
+ "expected_class": "locator-drift",
+ "source_event": "Edge Cases::Broken Locator Inside Open Shadow DOM::heal-1"
+}

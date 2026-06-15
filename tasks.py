@@ -15,14 +15,14 @@ def utests(context):
     cmd = [
         "coverage",
         "run",
-        "--source=src/SelfHealing",
+        "--source=src/heal,src/SelfHealing",
         "-p",
         "-m",
         "pytest",
         "--junitxml=results/pytest.xml",
-        f"{ROOT}/tests/utest",
+        f"{ROOT}/tests/unit",
     ]
-    global utests_completed_process  
+    global utests_completed_process
     utests_completed_process = subprocess.run(" ".join(cmd), shell=True, check=False)
 
 @task
@@ -43,6 +43,45 @@ def atests(context):
     ]
     global atests_completed_process
     atests_completed_process = subprocess.run(" ".join(cmd), shell=True, check=False)
+
+@task
+def heal_atests(context, live_llm=False):
+    """Acceptance tests for the heal engine (bundled demo pages only).
+
+    Deterministic suites (tag ``heal-atest``: timing recoveries) need no LLM
+    and run always. Live suites (tag ``live-llm``: locator drift, keyword-arg
+    fixing, Selenium, shadow DOM / iframes) need HEAL_MODEL/HEAL_BASE_URL/
+    HEAL_API_KEY and run only with ``--live-llm`` (used by the e2e workflow).
+
+    The external-site demo suites under ``tests/atest/`` are exploratory and
+    are not run here.
+    """
+    pathlib.Path(f"{ROOT}/results").mkdir(parents=True, exist_ok=True)
+    deterministic = subprocess.run(
+        f"robot --outputdir {ROOT}/results/heal-atest --include heal-atest "
+        f"{ROOT}/tests/atest/heal",
+        shell=True, check=False,
+    )
+    live_rc = 0
+    if live_llm:
+        live = subprocess.run(
+            f"robot --outputdir {ROOT}/results/heal-atest-llm --include live-llm "
+            f"{ROOT}/tests/atest/heal",
+            shell=True, check=False,
+        )
+        live_rc = live.returncode
+    if deterministic.returncode != 0 or live_rc != 0:
+        raise Exception("heal atests failed")
+
+@task
+def heal_utests(context):
+    pathlib.Path(f"{ROOT}/results").mkdir(parents=True, exist_ok=True)
+    rc = subprocess.run(
+        f"pytest -q --junitxml={ROOT}/results/pytest.xml {ROOT}/tests/unit",
+        shell=True, check=False,
+    ).returncode
+    if rc != 0:
+        raise Exception("heal unit tests failed")
 
 @task(utests, atests)
 def tests(context):

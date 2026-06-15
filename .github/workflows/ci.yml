@@ -1,5 +1,8 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# This workflow installs dependencies and runs the heal test suite.
+# PR CI runs only what is deterministic without an LLM or external sites:
+# unit tests (no LLM, no browser) and the timing acceptance test (no LLM).
+# Live-LLM acceptance suites (tagged live-llm) need HEAL_* secrets and are
+# not run here; see docs/CONTRIBUTING for running them locally.
 
 name: ci
 
@@ -11,11 +14,6 @@ on:
 
 jobs:
   test:
-    env:
-      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-      LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
-      LLM_TEXT_MODEL: ${{ vars.LLM_TEXT_MODEL }}
-      LLM_LOCATOR_MODEL: ${{ vars.LLM_LOCATOR_MODEL }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -23,42 +21,35 @@ jobs:
         python-version: ["3.11"]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install and configure Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: 1.8.5
-        virtualenvs-create: true
-        virtualenvs-in-project: false
-        virtualenvs-path: ~/.virtualenvs
-        installer-parallel: true
+        enable-cache: true
     - name: Install dependencies
       run: |
-        poetry install
-        poetry run rfbrowser init
+        uv sync --all-extras
+        uv run rfbrowser init
         npx playwright install-deps
-      if: steps.cache.outputs.cache-hit != 'true'
-    - name: Run tests
+    - name: Run heal unit tests
       run: |
-        poetry run invoke tests
+        uv run invoke heal-utests
+    - name: Run heal acceptance tests (deterministic, no LLM)
+      run: |
+        uv run invoke heal-atests
     - name: Store Artifact
       uses: actions/upload-artifact@v4
       if: success() || failure()
       with:
-        name: test-results ${{ matrix.python-version }} # Choose a descriptive name for your artifact
+        name: test-results ${{ matrix.python-version }}
         path: |
-          results/*.html
-          results/*.xml
-          results/*.prof
-          results/*.txt
+          results/**/*.html
+          results/**/*.xml
     - name: Test Report
       uses: dorny/test-reporter@main
-      if: success() || failure()    # run this step even if previous step failed
+      if: success() || failure()
       with:
-        name: xUnit Tests ${{ matrix.python-version }}            # Name of the check run which will be created
-        path: results/pytest.xml,results/xunit.xml    # Path to test results
-        reporter: java-junit        # Format of test results
+        name: unit tests ${{ matrix.python-version }}
+        path: results/pytest.xml
+        reporter: java-junit

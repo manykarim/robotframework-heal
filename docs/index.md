@@ -1,80 +1,69 @@
-# Overview  
+# Robot Framework Heal
 
-A Robot Framework Listener for library agnostic self-healing and smart recovery of tests
+**Failure triage, self-healing and root-cause analysis for Robot Framework UI tests** —
+Browser/Playwright, SeleniumLibrary and Appium.
 
-## Installation
-```bash
-pip install robotframework-heal
-```
+Every failed keyword is classified into a [failure class](reference/failure-classes.md),
+healed when possible, and **always** turned into a clean, enriched error record with
+evidence, the healing attempts, and a suggested permanent fix.
 
-## Usage
+[Get started in 5 minutes :material-arrow-right:](tutorials/getting-started.md){ .md-button .md-button--primary }
+[What you get :material-arrow-right:](what-you-get.md){ .md-button }
 
-Add `Library    SelfHealing ` to your Robot Framework test suite `*** Settings ***` section.
+---
+
+## Why heal
+
+- **Heals more than locators** — timing, viewport, overlays, missing form fields,
+  assertion drift, and locator drift, each with its own strategy.
+- **Verified, never guessed** — every proposed fix is checked against the live page
+  before the keyword reruns.
+- **Runs on any model** — any OpenAI-compatible endpoint (vLLM, Ollama, LiteLLM,
+  MiniMax, OpenRouter) or a pydantic-ai provider string. Capability is
+  [probed, not assumed](explanation/model-tiers.md); small models work via a
+  prompted-JSON floor.
+- **Never edits your suite by surprise** — fixes are read-only copies + diffs by
+  default; applying them to source is opt-in and [blast-radius aware](explanation/rca-and-fixes.md#fix-blast-radius).
+- **Explains every failure** — even unhealable ones get a root-cause record.
+
+## Quickstart
 
 ```robotframework
 *** Settings ***
-Library    SelfHealing
-```	
-
-Set up the following environment variables to enable the self-healing feature:
-
-* `LLM_API_KEY`
-* `LLM_API_BASE`
-* `LLM_TEXT_MODEL` (model used for picking final locator from proposal list)
-* `LLM_LOCATOR_MODEL` (model for generating locator proposals from DOM tree)
-* `LLM_VISION_MODEL` (not working yet)
-
-Interface with LLMs uses the [LiteLMM](https://docs.litellm.ai) API.  
-Check the list of available [Providers](https://docs.litellm.ai/docs/providers) and how to connect to them.
-
-
-
-```robotframework
-*** Settings ***
-Library    Browser    timeout=5s
-Library    SelfHealing    use_llm_for_locator_proposals=True
-Suite Setup    New Browser    browser=${BROWSER}    headless=${HEADLESS}
-Test Setup    New Context    viewport={'width': 1280, 'height': 720}
-Test Teardown    Close Context
-Suite Teardown    Close Browser    ALL
-
-*** Variables ***
-${BROWSER}    chromium
-${HEADLESS}    True
-
-*** Test Cases ***
-Login with valid credentials
-    New Page    https://the-internet.herokuapp.com/login
-    Fill Text    id=user    tomsmith
-    Fill Text    id=pass    SuperSecretPassword!
-    Click    id=loginbutton
-    Get Text    id=flash    *=    You logged into a secure area!
+Library    Browser    timeout=3s
+Library    Heal
 ```
-
-## Arguments
-
-* `fix`: Specifies the mode of operation, set to "realtime" for real-time healing. Default is "realtime".
-* `collect_locator_info`: Boolean flag to enable or disable the collection of locator information. Default is false.
-* `use_locator_db`: Boolean flag to enable or disable the use of a locator database. Default is false.
-* `use_llm_for_locator_proposals`: Boolean flag to enable or disable the use of a language model for generating locator proposals. If true, locator proposals will be identified from DOM Tree via LLM. If set to false, locator proposals are generated via CSS/XPATH generator. Default is false.
-* `heal_assertions`: Boolean flag to enable or disable the healing of assertions. Default is false. (not implemented yet)
-* `locator_db_file`: Specifies the filename for the locator database. Default is "locator_db.json".
-
-## Environment Variables
-
-Example when running with Ollama LLM:
 
 ```bash
-LLM_API_BASE=http://localhost:11434
-LLM_TEXT_MODEL=ollama_chat/llama3.1
-LLM_LOCATOR_MODEL=ollama_chat/llama3.1
-LLM_VISION_MODEL=ollama_chat/llama3.2-vision
+# .env (auto-loaded)
+HEAL_MODEL=openai/gpt-4.1-nano
+HEAL_BASE_URL=https://openrouter.ai/api/v1
+HEAL_API_KEY=sk-...
 ```
-
-Example when using OpenAI:
 
 ```bash
-LLM_API_KEY=YOUR_OPENAI_API_KEY
-LLM_TEXT_MODEL=gpt-3.5-turbo
-LLM_LOCATOR_MODEL=gpt-3.5-turbo
+heal doctor --role locator   # verify the endpoint
+robot -d results suites/     # heal during the run
 ```
+
+See the [getting-started tutorial](tutorials/getting-started.md) for the full walkthrough.
+
+## How it heals
+
+```mermaid
+flowchart LR
+    F[keyword fails] --> D[deterministic detectors]
+    D -->|match| H[heal by class]
+    D -->|silent| T[triage agent] --> H
+    H -->|verified + rerun| P[PASS + fix proposal]
+    H -->|can't heal| R[root-cause record]
+    P --> E[report]
+    R --> E
+```
+
+## Documentation map
+
+- **[Tutorials](tutorials/getting-started.md)** — learn by doing
+- **[How-to guides](how-to/model-providers.md)** — provider setups, Selenium/Appium, CI, fixing files, MCP
+- **[Reference](reference/configuration.md)** — every `HEAL_*` setting, the CLI, failure classes, drivers
+- **[Explanation](explanation/failure-taxonomy.md)** — the design and the benchmarks behind it

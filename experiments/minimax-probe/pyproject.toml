@@ -1,0 +1,13 @@
+[project]
+name = "minimax-probe"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.4.6",
+    "opencv-python-headless>=4.13.0.92",
+    "pydantic-ai-slim[openai]",
+    "python-dotenv",
+]
+
+[tool.uv]
+package = false

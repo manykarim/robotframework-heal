@@ -1,42 +1,67 @@
-[tool.poetry]
+[project]
 name = "robotframework-heal"
-version = "0.3.0dev3"
-description = "A Robot Framework Listener for library agnostic self-healing and smart recovery of tests"
-authors = ["Many Kasiriha <many.kasiriha@dbschenker.com>"]
-maintainers = ["Many Kasiriha <many.kasiriha@dbschenker.com>"]
+version = "0.4.0.dev1"
+description = "A Robot Framework Listener for library agnostic self-healing, failure triage and root cause analysis of tests"
+authors = [
+    { name = "Many Kasiriha", email = "many.kasiriha@dbschenker.com" },
+]
+maintainers = [
+    { name = "Many Kasiriha", email = "many.kasiriha@dbschenker.com" },
+]
 readme = "README.md"
 license = "Apache-2.0"
-packages = [
-    { include = "SelfHealing", from = "src" }
+requires-python = ">=3.10"
+dependencies = [
+    "robotframework",
+    "robotframework-browser",
+    "robotframework-appiumlibrary",
+    "beautifulsoup4",
+    "python-dotenv",
+    "thefuzz",
+    "jinja2",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
+    "pydantic-ai-slim[openai]>=1.107.0",
+    "typer>=0.25.1",
+    "mcp>=1.27.2",
 ]
-exclude = ["src/SelfHealing/.env"]
-homepage = "https://github.com/manykarim/robotframework-heal"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-robotframework-browser = "*"
-beautifulsoup4 = "*"
-robotframework = "*"
-opencv-python-headless = "*"
-python-dotenv = "*"
-pyautogui = "*"
-tinydb = "*"
-cssify = "*"
-parsimonious = "*"
-lxml = "*"
-thefuzz = "*"
-robotframework-appiumlibrary = "*"
-jinja2 = "*"
-litellm = "*"
+[project.urls]
+Homepage = "https://github.com/manykarim/robotframework-heal"
 
+[project.optional-dependencies]
+selenium = ["robotframework-seleniumlibrary"]
 
-[tool.poetry.group.dev.dependencies]    
-pytest = "*"
-invoke = "*"
-coverage = "*"
-robotframework-stacktrace = "*"
-mkdocs-material = "*"
+[project.scripts]
+heal = "heal.cli.main:app"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "invoke",
+    "coverage",
+    "robotframework-stacktrace",
+    "mkdocs-material",
+    "robotframework-seleniumlibrary>=6.9.0",
+]
+docs = [
+    "mike>=2.2.0",
+    "mkdocs-gen-files>=0.6.1",
+    "mkdocs-material>=9.7.6",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/SelfHealing", "src/heal"]
+force-include = { "src/Heal.py" = "Heal.py" }
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "src/SelfHealing/.env",
+]
+
+[tool.uv]
+package = true

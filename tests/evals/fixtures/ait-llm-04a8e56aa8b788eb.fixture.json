@@ -1,0 +1,31 @@
+{
+ "context": {
+  "keyword": {
+   "name": "Select Options By",
+   "args": [
+    "id=usergender",
+    "label",
+    "Male"
+   ],
+   "owner_library": "Browser",
+   "assign": [],
+   "lineno": 19,
+   "source": "/home/many/workspace/robotframework-heal/tests/atest/ait_llm.robot"
+  },
+  "error_message": "TimeoutError: locator.selectOption: Timeout 1000ms exceeded.\nCall log:\n  - waiting for locator('id=usergender')\n",
+  "test_name": "Login with valid credentials",
+  "suite_name": "Ait Llm & Run Keywork Tests.Ait Llm",
+  "failed_locator": "id=usergender",
+  "evidence": {
+   "dom-excerpt": {
+    "kind": "dom-excerpt",
+    "summary": "simplified DOM",
+    "excerpt": "<body>\n\n<div class=\"container\">\n<div class=\"info\">\n<div class=\"row\">\n<div class=\"col-sm-2\"></div>\n<div class=\"col-sm-8\">\n<h1 class=\"info-title\">Selenium Test Page</h1>\n</div>\n<div class=\"col-sm-2\"></div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12 content\">\n<p>This is a page that facilitates my <a>Selenium course</a></p>\n<h2>Test Form</h2>\n<form id=\"contactus\" name=\"contactform\">\n<div class=\"row\">\n<div class=\"col-sm-12\">\n<label>First name\n        <br/>\n<input id=\"firstname\" placeholder=\"Enter your first name\" type=\"text\"/>\n</label>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12\">\n<label>Surname\n        <br/>\n<input id=\"surname\" placeholder=\"Enter your surname\" type=\"text\"/>\n</label>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12\">\n<label>Gender\n        <br/>\n<select class=\"gender\" id=\"gender\">\n<option value=\"\"> -- select an option -- </option>\n<option value=\"male\">Male</option>\n<option value=\"female\">Female</option>\n<option value=\"my_business\">My Business!</option>\n</select>\n</label>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-6\">\n<label>Choose Your Favorite</label>\n<br/>\n<input id=\"red\" name=\"colour\" type=\"radio\" value=\"Red\"/><label>Red</label>\n<input id=\"blue\" name=\"colour\" type=\"radio\" value=\"Blue\"/><label>Blue</label>\n</div>\n<div class=\"col-sm-6\">\n<label>Contact me - <a>Our Policy</a></label>\n<br/>\n<input id=\"checkbox1\" type=\"checkbox\"/><label> Email</label>\n<input id=\"checkbox2\" type=\"checkbox\"/><label> SMS</label>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12\">\n<label>Tell me more!\n        <br/>\n<textarea placeholder=\"Tell us some fun stuff!\"></textarea>\n</label>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12\">\n<label>Which continents have you visited?\n        <br/>\n<select id=\"continent\">\n<option value=\"asia\">Asia</option>\n<option value=\"africa\">Africa</option>\n<option value=\"north_america\">North America</option>\n<option value=\"south_america\">South America</option>\n<option value=\"antarctica\">Antarctica</option>\n<option value=\"europe\">Europe</option>\n<option value=\"australia\">Australia</option>\n</select>\n</label>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12\">\n<button class=\"btn btn-primary\" id=\"submitbutton\">I do nothing!</button>\n</div>\n</div>\n</form>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12 share-divider\"></div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12 share-icons\">\n<a>\n<i class=\"fab fa-twitter\"></i>\n</a>\n<a>\n<i class=\"fab fa-facebook\"></i>\n</a>\n<a>\n<i class=\"fab fa-google-plus\"></i>\n</a>\n</div>\n</div>\n</div>\n</div>\n<footer class=\"page-footer custom-footer pt-4\">\n<div class=\"container text-center text-md-left\">\n<div class=\"row\">\n<div class=\"col-md-4\">\n<h3 class=\"footer-header\">Site map</h3>\n<ul class=\"list-unstyled\">\n<li>\n<a>Home</a>\n</li>\n<li>\n<a>About</a>\n</li>\n<li>\n<a>Training</a>\n</li>\n<li>\n<a>Public Training</a>\n</li>\n<li>\n<a>Online Courses</a>\n</li>\n<li>\n<a>Support Us</a>\n</li>\n<li>\n<a>AiT Online</a>\n</li>\n</ul>\n</div>\n<div class=\"col-md-4\">\n<h3 class=\"footer-header\">Social media</h3>\n<ul class=\"list-unstyled\">\n<li>\n<p>Richard Bradshaw: \n                                <a><i class=\"fab fa-twitter\"></i><span>@friendlytester</span></a>\n<a><i class=\"fab fa-linkedin\"></i> <span>FriendlyTester</span></a>\n<a><i class=\"fab fa-github\"></i> <span>FriendlyTester</span></a></p>\n</li>\n<li>\n<p>Mark Winteringham: \n                                <a><i class=\"fab fa-twitter\"></i> <span>@2bittester</span></a>\n<a><i class=\"fab fa-linkedin\"></i> <span>markwinteringham</span></a>\n<a><i class=\"fab fa-github\"></i> <span>mwinteringham</span></a></p>\n</li>\n</ul>\n</div>\n<div class=\"col-md-4\">\n<h3 class=\"footer-header\">Contact</h3>\n<ul class=\"list-unstyled\">\n<li>\n<p><i class=\"fa fa-envelope\"></i> <a>richardbradshaw@gmail.com</a></p>\n<p><i class=\"fa fa-envelope\"></i> <a>mark@mwtestconsultancy.co.uk</a></p>\n</li>\n</ul>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-12 text-center\">\n<p>All content copyright <a>Richard Bradshaw and Mark Winteringham</a> \u00a9 2024 \u2022 All rights reserved.</p>\n</div>\n</div>\n</div>\n</footer>\n\n\n\n</body>"
+   }
+  },
+  "collected_at": "2026-06-10T17:48:26.625383Z"
+ },
+ "truth_css": "select#gender",
+ "expected_class": "locator-drift",
+ "source_event": "Ait Llm & Run Keywork Tests.Ait Llm::Login with valid credentials::heal-3"
+}
