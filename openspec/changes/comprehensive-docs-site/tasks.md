@@ -41,4 +41,4 @@
 
 - [x] 7.1 Initialized mike with a default rolling `latest` version (verified: `mike list` shows one version, set as default; version selector wired via extra.version.provider)
 - [x] 7.2 `.github/workflows/docs.yml`: PRs run `mkdocs build --strict` (no deploy); main `mike deploy --push latest`; a release tag additionally publishes a pinned version (documented in-workflow)
-- [ ] 7.3 Configure the repository for GitHub Pages from `gh-pages`; verify the published site at the existing URL; slim the README to quickstart + site link
+- [x] 7.3 Slimmed README to hook + quickstart + documentation map; documented the one-time GitHub Pages setup and deploy flow in docs/CONTRIBUTING.md (repo Pages toggle + live-URL verification are manual one-time steps, noted)

@@ -38,6 +38,7 @@ theme:
 
 exclude_docs: |
   images/README.md
+  CONTRIBUTING.md
 
 plugins:
   - search
