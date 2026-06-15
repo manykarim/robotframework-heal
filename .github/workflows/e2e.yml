@@ -20,15 +20,11 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
-  pull_request:            # TEMPORARY: validate the MiniMax sweep on this PR; revert before merge
-    branches: ["main"]
   schedule:
     - cron: "0 6 * * 1"   # Mondays 06:00 UTC
 
 jobs:
   live-heal:
-    # don't run the generic job on PRs (its model config validation is separate)
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -85,7 +81,7 @@ jobs:
   minimax:
     # MiniMax provider sweep across model versions. Schedule/manual only to
     # control token cost (not on every push to main).
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
