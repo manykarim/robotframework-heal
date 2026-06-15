@@ -20,7 +20,7 @@
 
 ## 4. Content — Tutorials and How-to
 
-- [ ] 4.1 Getting-started tutorial: install, add the listener, configure one model, run a suite with a seeded broken locator, read the report
+- [x] 4.1 Getting-started tutorial: install, listener, configure a model, run with a seeded broken locator, read the report
 - [ ] 4.2 Provider how-to guides: OpenAI/Azure, MiniMax, OpenRouter, vLLM, Ollama, LiteLLM proxy — each with the exact `HEAL_*` settings and a `heal doctor` check
 - [ ] 4.3 Library how-to guides: SeleniumLibrary (`[selenium]` extra, frame limitation), Appium (swipe search)
 - [ ] 4.4 Workflow how-to guides: CI gating on `summary.json`; fixing files (report/patch/in-place tiers, blast radius, reviewing diffs); warm start across runs; MCP server + coding-agent skill
