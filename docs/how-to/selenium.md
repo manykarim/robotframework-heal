@@ -13,7 +13,7 @@ pip install robotframework-heal[selenium]
 ```robotframework
 *** Settings ***
 Library    SeleniumLibrary
-Library    heal.rf.HealListener
+Library    Heal
 Suite Teardown    Close All Browsers
 
 *** Test Cases ***

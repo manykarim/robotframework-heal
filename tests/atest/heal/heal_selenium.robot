@@ -2,7 +2,7 @@
 Documentation     SeleniumLibrary healing parity: locator drift on the shared demo page.
 ...               Requires HEAL_MODEL/HEAL_BASE_URL/HEAL_API_KEY (live LLM).
 Library           SeleniumLibrary
-Library           SelfHealing
+Library           Heal
 Suite Teardown    Close All Browsers
 Force Tags        live-llm
 

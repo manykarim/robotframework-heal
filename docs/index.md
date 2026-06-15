@@ -31,7 +31,7 @@ evidence, the healing attempts, and a suggested permanent fix.
 ```robotframework
 *** Settings ***
 Library    Browser    timeout=3s
-Library    heal.rf.HealListener
+Library    Heal
 ```
 
 ```bash

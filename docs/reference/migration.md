@@ -12,8 +12,11 @@ deprecation shim that routes to the new engine, but configuration moved from
 Library    SelfHealing
 
 # preferred:
-Library    heal.rf.HealListener
+Library    Heal
 ```
+
+`Library    Heal` is the short, canonical form; `Library    heal.rf.HealListener`
+is the equivalent fully-qualified import.
 
 ## Configuration
 

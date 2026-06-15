@@ -34,7 +34,7 @@ heal doctor --role locator
 ```robotframework
 *** Settings ***
 Library    Browser    timeout=3s
-Library    heal.rf.HealListener
+Library    Heal
 Suite Setup       New Browser    chromium    headless=True
 Suite Teardown    Close Browser    ALL
 

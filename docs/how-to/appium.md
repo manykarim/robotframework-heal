@@ -7,7 +7,7 @@ heal supports AppiumLibrary out of the box (no extra needed).
 ```robotframework
 *** Settings ***
 Library    AppiumLibrary
-Library    heal.rf.HealListener
+Library    Heal
 ```
 
 ## Mobile specifics

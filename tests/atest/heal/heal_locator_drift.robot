@@ -1,8 +1,8 @@
 *** Settings ***
-Documentation     Locator-drift healing end-to-end through the SelfHealing shim.
+Documentation     Locator-drift healing end-to-end through the Heal listener.
 ...               Requires HEAL_MODEL/HEAL_BASE_URL/HEAL_API_KEY (live LLM).
 Library           Browser    timeout=3s
-Library           SelfHealing
+Library           Heal
 Suite Setup       New Browser    chromium    headless=True
 Suite Teardown    Close Browser    ALL
 Test Setup        Open Demo Page

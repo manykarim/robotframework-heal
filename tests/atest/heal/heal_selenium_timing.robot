@@ -3,7 +3,7 @@ Documentation     Timing-class healing on SeleniumLibrary (no LLM): keyword fail
 ...               while the page is loading; the engine waits for ready and reruns.
 Library           SeleniumLibrary
 Library           Process
-Library           SelfHealing
+Library           Heal
 Suite Setup       Start Slow Server
 Suite Teardown    Run Keywords    Close All Browsers    AND    Stop Slow Server
 Force Tags        heal-atest

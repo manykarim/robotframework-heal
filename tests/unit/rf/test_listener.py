@@ -185,3 +185,16 @@ def test_warm_event_keeps_mapping_alive_in_history(tmp_path, monkeypatch):
     history.record([event])
     mappings = history.recent_mappings()
     assert ("/suites/login.robot", "id=old", "css=#new") in mappings
+
+
+def test_heal_entry_point_is_a_valid_listener():
+    """`Library    Heal` must resolve to a working listener (docs use this form)."""
+    import Heal
+
+    assert issubclass(Heal.Heal, HealListener)
+    # RF requires the module to expose a class matching the module name
+    assert Heal.Heal.__name__ == "Heal"
+    instance = Heal.Heal()
+    assert instance.ROBOT_LISTENER_API_VERSION == 3
+    assert instance.ROBOT_LIBRARY_SCOPE == "GLOBAL"
+    assert instance.ROBOT_LIBRARY_LISTENER is instance  # acts as its own listener

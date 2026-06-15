@@ -1,6 +1,6 @@
 *** Settings ***
 Library           Browser    timeout=3s
-Library           SelfHealing
+Library           Heal
 Suite Setup       New Browser    chromium    headless=True
 Suite Teardown    Close Browser    ALL
 Test Setup        New Context

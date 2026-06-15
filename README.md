@@ -28,7 +28,7 @@ pip install robotframework-heal[selenium]  # + SeleniumLibrary support
 ```robotframework
 *** Settings ***
 Library    Browser    timeout=3s
-Library    heal.rf.HealListener
+Library    Heal
 ```
 
 ```bash

@@ -3,7 +3,7 @@ Documentation     Timing-class healing (no LLM needed): keyword fails while the
 ...               page is still loading; the engine waits for ready and reruns.
 Library           Browser    timeout=2s
 Library           Process
-Library           SelfHealing
+Library           Heal
 Suite Setup       Start Slow Server
 Suite Teardown    Stop Slow Server
 Force Tags        heal-atest

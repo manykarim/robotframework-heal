@@ -56,6 +56,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/SelfHealing", "src/heal"]
+force-include = { "src/Heal.py" = "Heal.py" }
 
 [tool.hatch.build.targets.sdist]
 exclude = [

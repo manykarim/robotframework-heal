@@ -2,7 +2,7 @@
 Documentation     Keyword-argument flow: the broken literal lives at the CALL SITE;
 ...               the fix must land there, never inside the resource keyword body.
 Library           Browser    timeout=3s
-Library           SelfHealing
+Library           Heal
 Resource          resources/clicks.resource
 Suite Setup       New Browser    chromium    headless=True
 Suite Teardown    Close Browser    ALL
