@@ -77,3 +77,14 @@ HEAL_BASE_URL=https://openrouter.ai/api/v1
 HEAL_API_KEY=sk-...
 uv run invoke heal-atests --live-llm
 ```
+
+### MiniMax model sweep
+
+The `e2e.yml` `minimax` job runs the live heal suites across MiniMax-M2.5,
+-M2.7 and -M3 (matrix) on schedule and manual dispatch. It needs one secret:
+
+- `MINIMAX_API_KEY` (the base URL `https://api.minimax.io/v1` and model list are
+  set in the workflow).
+
+All three models heal the bundled suites (verified: each resolves and produces
+the correct element). Skips cleanly when the secret is absent.

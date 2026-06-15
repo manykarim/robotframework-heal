@@ -77,3 +77,54 @@ jobs:
           path: |
             results/**/*.html
             results/**/*.xml
+
+  minimax:
+    # MiniMax provider sweep across model versions. Schedule/manual only to
+    # control token cost (not on every push to main).
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        model: ["MiniMax-M2.5", "MiniMax-M2.7", "MiniMax-M3"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+          enable-cache: true
+      - name: Check secret
+        id: cfg
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+        run: |
+          if [ -z "$MINIMAX_API_KEY" ]; then
+            echo "::warning::MINIMAX_API_KEY secret not set — skipping MiniMax sweep."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install dependencies
+        if: steps.cfg.outputs.configured == 'true'
+        run: |
+          uv sync --all-extras
+          uv run rfbrowser init
+          npx playwright install-deps
+      - name: Live heal sweep (${{ matrix.model }})
+        if: steps.cfg.outputs.configured == 'true'
+        env:
+          HEAL_MODEL: ${{ matrix.model }}
+          HEAL_BASE_URL: https://api.minimax.io/v1
+          HEAL_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+        run: |
+          uv run heal doctor --role locator
+          uv run invoke heal-atests --live-llm
+      - name: Store artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-minimax-${{ matrix.model }}
+          path: |
+            results/**/*.html
+            results/**/*.xml
