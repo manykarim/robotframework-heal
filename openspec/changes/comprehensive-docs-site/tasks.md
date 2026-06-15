@@ -14,9 +14,9 @@
 
 ## 3. Content — Reference
 
-- [ ] 3.1 Failure-classes reference page (the 7 classes: detection signal, healing action, opt-in flags, surfaces) sourced from the deployed specs
-- [ ] 3.2 Drivers reference (Browser/Playwright, SeleniumLibrary, Appium): capabilities matrix, shadow-DOM/iframe support, install extras
-- [ ] 3.3 Report-artifacts reference (events.jsonl, dashboard, summary.json, diffs/healed_files, history.sqlite) + the 0.3→0.4 `HEAL_*` migration table
+- [x] 3.1 Failure-classes reference (7 classes: detection signal, action, opt-ins, surfaces) + detection-order mermaid
+- [x] 3.2 Drivers reference: Browser/Selenium/Appium capability matrix, shadow-DOM/iframe support, install extras, locator syntax
+- [x] 3.3 Report-artifacts reference (events.jsonl, dashboard, summary.json, diffs/healed_files, history.sqlite) + 0.3→0.4 migration page
 
 ## 4. Content — Tutorials and How-to
 
