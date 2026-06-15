@@ -27,8 +27,8 @@
 
 ## 5. Content — Explanation
 
-- [ ] 5.1 Failure taxonomy + deterministic-then-LLM triage; verification-in-the-loop
-- [ ] 5.2 Tiered locator pipeline (candidates → selection → generation) and capability-tiered models, with the benchmark matrices summarized from `experiments/*/FINDINGS.md` (attributed)
+- [x] 5.1 Failure-taxonomy explanation: deterministic-then-LLM triage, verification-in-the-loop, verified≠correct, why RCA is always produced
+- [x] 5.2 Tiered-locator explanation with the real benchmark matrices (per-call + 60-fixture corpus) attributed to the experiment
 - [ ] 5.3 Threading/marshalling model and root-cause analysis (incl. git test-change context); fix blast radius
 
 ## 6. Diagrams and images
