@@ -22,6 +22,11 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+    paths-ignore:          # docs-only PRs skip the (token-heavy) live sweep
+      - "**/*.md"
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
   schedule:
     - cron: "0 6 * * 1"   # Mondays 06:00 UTC
 
