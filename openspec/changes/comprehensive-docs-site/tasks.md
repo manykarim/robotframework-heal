@@ -7,7 +7,7 @@
 
 ## 2. Generated reference (from code)
 
-- [ ] 2.1 Add `description=` to the per-role/override `HealSettings` fields currently missing one, so the generated config reference is complete
+- [x] 2.1 Added `description=` to all 16 per-role override fields; every `HealSettings` field now has a description (verified)
 - [ ] 2.2 Implement `docs/gen_reference.py` (mkdocs-gen-files hook): render the config reference from `HealSettings.model_fields` (env var name, type/enum choices, default, constraints, description, grouped by concern) and the CLI reference from the Typer app (per-command usage/args/options/help)
 - [ ] 2.3 Completeness guard: the hook raises if any setting lacks a description or any registered CLI command is not rendered; CI build runs with `--strict`
 - [ ] 2.4 Unit test the generator against `HealSettings` and the Typer app (every field + every command rendered; enum choices present)

@@ -89,25 +89,25 @@ class HealSettings(BaseSettings):
     output_mode: OutputMode = Field(OutputMode.AUTO, description="Default structured-output mode.")
 
     # --- per-role overrides (fall back to the defaults above) ---
-    triage_model: str | None = None
-    triage_base_url: str | None = None
-    triage_api_key: str | None = None
-    triage_output_mode: OutputMode | None = None
+    triage_model: str | None = Field(None, description="Model for the triage agent (falls back to HEAL_MODEL).")
+    triage_base_url: str | None = Field(None, description="Endpoint for the triage agent (falls back to HEAL_BASE_URL).")
+    triage_api_key: str | None = Field(None, description="API key for the triage agent (falls back to HEAL_API_KEY).")
+    triage_output_mode: OutputMode | None = Field(None, description="Output mode for the triage agent (falls back to HEAL_OUTPUT_MODE).")
 
-    locator_model: str | None = None
-    locator_base_url: str | None = None
-    locator_api_key: str | None = None
-    locator_output_mode: OutputMode | None = None
+    locator_model: str | None = Field(None, description="Model for the locator agent (falls back to HEAL_MODEL).")
+    locator_base_url: str | None = Field(None, description="Endpoint for the locator agent (falls back to HEAL_BASE_URL).")
+    locator_api_key: str | None = Field(None, description="API key for the locator agent (falls back to HEAL_API_KEY).")
+    locator_output_mode: OutputMode | None = Field(None, description="Output mode for the locator agent (falls back to HEAL_OUTPUT_MODE).")
 
-    vision_model: str | None = None
-    vision_base_url: str | None = None
-    vision_api_key: str | None = None
-    vision_output_mode: OutputMode | None = None
+    vision_model: str | None = Field(None, description="Vision model for screenshot analysis (falls back to HEAL_MODEL).")
+    vision_base_url: str | None = Field(None, description="Endpoint for the vision agent (falls back to HEAL_BASE_URL).")
+    vision_api_key: str | None = Field(None, description="API key for the vision agent (falls back to HEAL_API_KEY).")
+    vision_output_mode: OutputMode | None = Field(None, description="Output mode for the vision agent (falls back to HEAL_OUTPUT_MODE).")
 
-    rca_model: str | None = None
-    rca_base_url: str | None = None
-    rca_api_key: str | None = None
-    rca_output_mode: OutputMode | None = None
+    rca_model: str | None = Field(None, description="Model for the root-cause-analysis agent (falls back to HEAL_MODEL).")
+    rca_base_url: str | None = Field(None, description="Endpoint for the RCA agent (falls back to HEAL_BASE_URL).")
+    rca_api_key: str | None = Field(None, description="API key for the RCA agent (falls back to HEAL_API_KEY).")
+    rca_output_mode: OutputMode | None = Field(None, description="Output mode for the RCA agent (falls back to HEAL_OUTPUT_MODE).")
 
     # --- budgets ---
     max_failure_seconds: float = Field(60.0, gt=0, description="Wall-clock cap per healing transaction.")
