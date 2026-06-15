@@ -2,7 +2,7 @@
 
 ## 1. Toolchain and scaffolding
 
-- [ ] 1.1 Add docs dependencies to the dev/docs group: `mkdocs-material`, `mkdocs-gen-files`, `mike`; expand `mkdocs.yml` (theme features: navigation tabs/sections, content.code.copy/annotate, search, social cards; mermaid already present; `mike` version provider)
+- [x] 1.1 Added docs group (mkdocs-material, mkdocs-gen-files, mike); expanded mkdocs.yml (light/dark palette, nav tabs/sections, code copy/annotate, search, mermaid, mike version provider)
 - [ ] 1.2 Declare the Diátaxis nav skeleton in `mkdocs.yml` (Home, Tutorials, How-to, Reference, Explanation) with placeholder pages so `mkdocs build --strict` passes
 
 ## 2. Generated reference (from code)

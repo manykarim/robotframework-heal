@@ -44,6 +44,11 @@ dev = [
     "mkdocs-material",
     "robotframework-seleniumlibrary>=6.9.0",
 ]
+docs = [
+    "mike>=2.2.0",
+    "mkdocs-gen-files>=0.6.1",
+    "mkdocs-material>=9.7.6",
+]
 
 [build-system]
 requires = ["hatchling"]
