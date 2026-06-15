@@ -9,3 +9,8 @@ results/*.html
 .vscode/
 site/
 dist/
+# local agent tooling (was untracked)
+.claude/
+# generated run artifacts (any depth, results / results2 / etc.)
+**/results*/
+/T/
