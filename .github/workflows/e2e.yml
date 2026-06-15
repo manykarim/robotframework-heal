@@ -20,11 +20,17 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   schedule:
     - cron: "0 6 * * 1"   # Mondays 06:00 UTC
 
 jobs:
+  # Optional custom-model run — only when a HEAL_MODEL repository variable is set
+  # (so it never fails on an unconfigured/stale default). Set HEAL_MODEL +
+  # HEAL_BASE_URL vars and a HEAL_API_KEY secret to point at any backend.
   live-heal:
+    if: ${{ vars.HEAL_MODEL != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -79,9 +85,10 @@ jobs:
             results/**/*.xml
 
   minimax:
-    # MiniMax provider sweep across model versions. Schedule/manual only to
-    # control token cost (not on every push to main).
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    # Full live e2e: MiniMax provider sweep across model versions. Runs on PRs,
+    # push to main, schedule and manual dispatch. Skips automatically on fork
+    # PRs (no MINIMAX_API_KEY secret). To dial back token cost, trim the matrix
+    # or gate behind a label.
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
