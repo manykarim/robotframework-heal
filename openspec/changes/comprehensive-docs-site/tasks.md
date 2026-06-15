@@ -33,9 +33,9 @@
 
 ## 6. Diagrams and images
 
-- [ ] 6.1 Mermaid diagrams: heal pipeline, tiered-locator ladder, fix-origin-resolution decision tree, threading model
-- [ ] 6.2 Capture real-output screenshots (dashboard, diff page, `heal doctor`) from an actual run into `docs/images/`; document the capture recipe; add a "What you get" page
-- [ ] 6.3 Landing page: value proposition + "what you get" gallery + prominent Get-started CTA
+- [x] 6.1 Mermaid diagrams across pages: heal pipeline, detection order, tiered-locator ladder, fix-origin decision tree, threading sequence
+- [x] 6.2 Captured real dashboard (expanded, showing the fix-proposal inline diff) and side-by-side diff screenshots into docs/images/; documented capture recipe; "What you get" page with real heal doctor output
+- [x] 6.3 Landing page: value proposition, Get-started/What-you-get CTAs, pipeline diagram, documentation map
 
 ## 7. Versioning and deployment
 

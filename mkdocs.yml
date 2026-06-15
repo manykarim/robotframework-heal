@@ -36,6 +36,9 @@ theme:
   icon:
     repo: fontawesome/brands/github
 
+exclude_docs: |
+  images/README.md
+
 plugins:
   - search
   - gen-files:

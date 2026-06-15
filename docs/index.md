@@ -1,60 +1,69 @@
-# Overview
+# Robot Framework Heal
 
-A Robot Framework listener for **failure triage, self-healing and root-cause analysis** of UI tests (Browser/Playwright and Appium).
+**Failure triage, self-healing and root-cause analysis for Robot Framework UI tests** —
+Browser/Playwright, SeleniumLibrary and Appium.
 
-Every failed keyword is classified into a failure class, healed when possible — and always turned into a clean, enriched error record with evidence, healing attempts and a suggested permanent fix.
+Every failed keyword is classified into a [failure class](reference/failure-classes.md),
+healed when possible, and **always** turned into a clean, enriched error record with
+evidence, the healing attempts, and a suggested permanent fix.
 
-## Installation
+[Get started in 5 minutes :material-arrow-right:](tutorials/getting-started.md){ .md-button .md-button--primary }
+[What you get :material-arrow-right:](what-you-get.md){ .md-button }
 
-```bash
-pip install robotframework-heal
-```
+---
 
-## Usage
+## Why heal
+
+- **Heals more than locators** — timing, viewport, overlays, missing form fields,
+  assertion drift, and locator drift, each with its own strategy.
+- **Verified, never guessed** — every proposed fix is checked against the live page
+  before the keyword reruns.
+- **Runs on any model** — any OpenAI-compatible endpoint (vLLM, Ollama, LiteLLM,
+  MiniMax, OpenRouter) or a pydantic-ai provider string. Capability is
+  [probed, not assumed](explanation/model-tiers.md); small models work via a
+  prompted-JSON floor.
+- **Never edits your suite by surprise** — fixes are read-only copies + diffs by
+  default; applying them to source is opt-in and [blast-radius aware](explanation/rca-and-fixes.md#fix-blast-radius).
+- **Explains every failure** — even unhealable ones get a root-cause record.
+
+## Quickstart
 
 ```robotframework
 *** Settings ***
-Library    Browser    timeout=5s
+Library    Browser    timeout=3s
 Library    heal.rf.HealListener
-Suite Setup    New Browser    browser=chromium    headless=True
 ```
-
-Configure one model for all agent roles (any OpenAI-compatible endpoint — vLLM, Ollama, LiteLLM proxy, MiniMax, OpenRouter — or a pydantic-ai provider string such as `openai:gpt-4.1-mini`):
 
 ```bash
-HEAL_MODEL=MiniMax-M2.5
-HEAL_BASE_URL=https://api.minimax.io/v1
-HEAL_API_KEY=your-key
+# .env (auto-loaded)
+HEAL_MODEL=openai/gpt-4.1-nano
+HEAL_BASE_URL=https://openrouter.ai/api/v1
+HEAL_API_KEY=sk-...
 ```
-
-Verify the endpoint before a run:
 
 ```bash
-heal doctor --role all
+heal doctor --role locator   # verify the endpoint
+robot -d results suites/     # heal during the run
 ```
 
-The legacy `Library    SelfHealing` import keeps working as a deprecated shim; see the README migration table.
+See the [getting-started tutorial](tutorials/getting-started.md) for the full walkthrough.
 
-## Configuration
+## How it heals
 
-All settings are `HEAL_*` environment variables. The nearest `.env` file
-(searched from the working directory upwards) is loaded automatically and
-**overrides already-set environment variables**, so the project's `.env` is
-the single source of truth; non-`HEAL_` keys (provider API keys) are exported
-to the process environment too.
+```mermaid
+flowchart LR
+    F[keyword fails] --> D[deterministic detectors]
+    D -->|match| H[heal by class]
+    D -->|silent| T[triage agent] --> H
+    H -->|verified + rerun| P[PASS + fix proposal]
+    H -->|can't heal| R[root-cause record]
+    P --> E[report]
+    R --> E
+```
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `HEAL_MODEL` / `HEAL_BASE_URL` / `HEAL_API_KEY` | – | default model for all roles |
-| `HEAL_TRIAGE_MODEL`, `HEAL_LOCATOR_MODEL`, `HEAL_VISION_MODEL`, `HEAL_RCA_MODEL` | default model | per-role overrides (+ `_BASE_URL`/`_API_KEY`/`_OUTPUT_MODE`) |
-| `HEAL_OUTPUT_MODE` | `auto` | structured-output transport: `tool` / `native` / `prompted` |
-| `HEAL_MAX_FAILURE_SECONDS` | `60` | wall-clock cap per healing transaction |
-| `HEAL_MAX_FAILURE_TOKENS` | `50000` | token cap per transaction |
-| `HEAL_MAX_RUN_TOKENS` | `2000000` | run-wide cap; breach degrades to RCA-only |
-| `HEAL_READY_TIMEOUT_SECONDS` | `20` | max wait in timing recovery |
-| `HEAL_FIX_TIER` | `report` | `report` / `patch` / `in-place` |
-| `HEAL_HEAL_ASSERTIONS` | `false` | opt-in assertion-drift healing |
-| `HEAL_FORM_FILL` | `false` | opt-in form auto-fill (invents test data) |
-| `HEAL_REPORT_DIR` | `<outputdir>/heal` | report/store location |
-| `HEAL_HISTORY_DB` | `<report dir>/history.sqlite` | cross-run healing history |
-| `HEAL_ENABLED` | `true` | master switch |
+## Documentation map
+
+- **[Tutorials](tutorials/getting-started.md)** — learn by doing
+- **[How-to guides](how-to/model-providers.md)** — provider setups, Selenium/Appium, CI, fixing files, MCP
+- **[Reference](reference/configuration.md)** — every `HEAL_*` setting, the CLI, failure classes, drivers
+- **[Explanation](explanation/failure-taxonomy.md)** — the design and the benchmarks behind it
