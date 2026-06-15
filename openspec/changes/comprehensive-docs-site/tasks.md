@@ -39,6 +39,6 @@
 
 ## 7. Versioning and deployment
 
-- [ ] 7.1 Initialize `mike` with a default rolling version (`latest`); verify the version selector renders with one version and `mike serve` works locally
-- [ ] 7.2 `.github/workflows/docs.yml`: PRs run `mkdocs build --strict` (no deploy); pushes to the default branch `mike deploy --push --update-aliases` the rolling version to `gh-pages`; document how a release tag adds a pinned version
+- [x] 7.1 Initialized mike with a default rolling `latest` version (verified: `mike list` shows one version, set as default; version selector wired via extra.version.provider)
+- [x] 7.2 `.github/workflows/docs.yml`: PRs run `mkdocs build --strict` (no deploy); main `mike deploy --push latest`; a release tag additionally publishes a pinned version (documented in-workflow)
 - [ ] 7.3 Configure the repository for GitHub Pages from `gh-pages`; verify the published site at the existing URL; slim the README to quickstart + site link

@@ -1,0 +1,53 @@
+name: docs
+
+on:
+  push:
+    branches: ["main"]
+    paths: ["docs/**", "mkdocs.yml", "src/heal/core/settings.py", "src/heal/cli/**", ".github/workflows/docs.yml"]
+  pull_request:
+    paths: ["docs/**", "mkdocs.yml", "src/heal/core/settings.py", "src/heal/cli/**"]
+  release:
+    types: [published]
+
+permissions:
+  contents: write   # mike pushes the built site to the gh-pages branch
+
+env:
+  DISABLE_MKDOCS_2_WARNING: "true"
+
+jobs:
+  # PRs only validate — strict build catches broken links and undocumented settings.
+  build:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+      - run: uv sync --group docs
+      - run: uv run --group docs mkdocs build --strict
+
+  # main updates the rolling 'latest'; a release tag publishes a pinned version too.
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # mike needs the gh-pages history
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+      - run: uv sync --group docs
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Deploy rolling latest
+        run: uv run --group docs mike deploy --push --update-aliases latest
+      - name: Set default version
+        run: uv run --group docs mike set-default --push latest
+      - name: Publish pinned release version
+        if: github.event_name == 'release'
+        run: uv run --group docs mike deploy --push --update-aliases "${{ github.event.release.tag_name }}"
