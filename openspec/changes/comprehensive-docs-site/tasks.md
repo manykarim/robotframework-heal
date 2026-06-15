@@ -29,7 +29,7 @@
 
 - [x] 5.1 Failure-taxonomy explanation: deterministic-then-LLM triage, verification-in-the-loop, verified≠correct, why RCA is always produced
 - [x] 5.2 Tiered-locator explanation with the real benchmark matrices (per-call + 60-fixture corpus) attributed to the experiment
-- [ ] 5.3 Threading/marshalling model and root-cause analysis (incl. git test-change context); fix blast radius
+- [x] 5.3 Capability-tiered models page (output-mode ladder, probe results) + threading/execution model (actor diagram, abandonment, spike result) + RCA - [ ] 5.3 Threading/marshalling model and root-cause analysis (incl. git test-change context); fix blast radius fix blast radius
 
 ## 6. Diagrams and images
 
