@@ -1,5 +1,8 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# This workflow installs dependencies and runs the heal test suite.
+# PR CI runs only what is deterministic without an LLM or external sites:
+# unit tests (no LLM, no browser) and the timing acceptance test (no LLM).
+# Live-LLM acceptance suites (tagged live-llm) need HEAL_* secrets and are
+# not run here; see docs/CONTRIBUTING for running them locally.
 
 name: ci
 
@@ -11,11 +14,6 @@ on:
 
 jobs:
   test:
-    env:
-      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-      LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
-      LLM_TEXT_MODEL: ${{ vars.LLM_TEXT_MODEL }}
-      LLM_LOCATOR_MODEL: ${{ vars.LLM_LOCATOR_MODEL }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -31,32 +29,27 @@ jobs:
         enable-cache: true
     - name: Install dependencies
       run: |
-        uv sync
+        uv sync --all-extras
         uv run rfbrowser init
         npx playwright install-deps
     - name: Run heal unit tests
       run: |
         uv run invoke heal-utests
-    - name: Run heal acceptance tests (deterministic)
+    - name: Run heal acceptance tests (deterministic, no LLM)
       run: |
         uv run invoke heal-atests
-    - name: Run tests
-      run: |
-        uv run invoke tests
     - name: Store Artifact
       uses: actions/upload-artifact@v4
       if: success() || failure()
       with:
-        name: test-results ${{ matrix.python-version }} # Choose a descriptive name for your artifact
+        name: test-results ${{ matrix.python-version }}
         path: |
-          results/*.html
-          results/*.xml
-          results/*.prof
-          results/*.txt
+          results/**/*.html
+          results/**/*.xml
     - name: Test Report
       uses: dorny/test-reporter@main
-      if: success() || failure()    # run this step even if previous step failed
+      if: success() || failure()
       with:
-        name: xUnit Tests ${{ matrix.python-version }}            # Name of the check run which will be created
-        path: results/pytest.xml,results/xunit.xml    # Path to test results
-        reporter: java-junit        # Format of test results
+        name: unit tests ${{ matrix.python-version }}
+        path: results/pytest.xml
+        reporter: java-junit

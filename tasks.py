@@ -71,7 +71,11 @@ def heal_atests(context, live_llm=False):
 
 @task
 def heal_utests(context):
-    rc = subprocess.run(f"pytest -q {ROOT}/tests/unit", shell=True, check=False).returncode
+    pathlib.Path(f"{ROOT}/results").mkdir(parents=True, exist_ok=True)
+    rc = subprocess.run(
+        f"pytest -q --junitxml={ROOT}/results/pytest.xml {ROOT}/tests/unit",
+        shell=True, check=False,
+    ).returncode
     if rc != 0:
         raise Exception("heal unit tests failed")
 
