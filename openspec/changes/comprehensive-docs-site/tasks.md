@@ -10,7 +10,7 @@
 - [x] 2.1 Added `description=` to all 16 per-role override fields; every `HealSettings` field now has a description (verified)
 - [x] 2.2 `docs/gen_reference.py`: config reference from `HealSettings.model_fields` (env var, type/enum choices, default, constraints, description, grouped by concern) and CLI reference from the Typer app
 - [x] 2.3 Completeness guard inline: raises `SystemExit` if any setting lacks a description or any registered CLI command is unrendered; CI builds with `--strict`
-- [ ] 2.4 Unit test the generator against `HealSettings` and the Typer app (every field + every command rendered; enum choices present)
+- [x] 2.4 Unit tests: every setting + every CLI command rendered, enum choices/constraints/defaults present, and the completeness guard fires on a missing description (5 tests); refactored pure logic into `docs/_refgen.py`
 
 ## 3. Content — Reference
 
