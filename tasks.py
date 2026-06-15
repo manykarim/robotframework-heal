@@ -46,27 +46,31 @@ def atests(context):
 
 @task
 def heal_atests(context, live_llm=False):
-    """Acceptance tests for the heal engine.
+    """Acceptance tests for the heal engine (bundled demo pages only).
 
-    The timing suite is deterministic (no LLM). The locator-drift suite
-    (tag live-llm) needs HEAL_MODEL/HEAL_BASE_URL/HEAL_API_KEY and runs
-    only with --live-llm.
+    Deterministic suites (tag ``heal-atest``: timing recoveries) need no LLM
+    and run always. Live suites (tag ``live-llm``: locator drift, keyword-arg
+    fixing, Selenium, shadow DOM / iframes) need HEAL_MODEL/HEAL_BASE_URL/
+    HEAL_API_KEY and run only with ``--live-llm`` (used by the e2e workflow).
+
+    The external-site demo suites under ``tests/atest/`` are exploratory and
+    are not run here.
     """
-    cmd = [
-        "robot",
-        "--outputdir results/heal-atest",
-        f"{ROOT}/tests/atest/heal/heal_timing.robot",
-    ]
-    timing = subprocess.run(" ".join(cmd), shell=True, check=False)
-    drift_rc = 0
+    pathlib.Path(f"{ROOT}/results").mkdir(parents=True, exist_ok=True)
+    deterministic = subprocess.run(
+        f"robot --outputdir {ROOT}/results/heal-atest --include heal-atest "
+        f"{ROOT}/tests/atest/heal",
+        shell=True, check=False,
+    )
+    live_rc = 0
     if live_llm:
-        cmd = [
-            "robot",
-            "--outputdir results/heal-atest-llm",
-            f"{ROOT}/tests/atest/heal/heal_locator_drift.robot",
-        ]
-        drift_rc = subprocess.run(" ".join(cmd), shell=True, check=False).returncode
-    if timing.returncode != 0 or drift_rc != 0:
+        live = subprocess.run(
+            f"robot --outputdir {ROOT}/results/heal-atest-llm --include live-llm "
+            f"{ROOT}/tests/atest/heal",
+            shell=True, check=False,
+        )
+        live_rc = live.returncode
+    if deterministic.returncode != 0 or live_rc != 0:
         raise Exception("heal atests failed")
 
 @task

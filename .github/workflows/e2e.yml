@@ -1,0 +1,79 @@
+# Live end-to-end healing tests — real LLM, real browser, bundled demo pages.
+#
+# These exercise the actual value of the project: an LLM healing broken
+# locators on a live page. They need model credentials, so they do NOT run on
+# pull requests (secrets are unavailable to fork PRs and cost tokens). They run
+# on push to main, on a weekly schedule, and on manual dispatch.
+#
+# Configuration (repository Settings -> Secrets and variables -> Actions):
+#   Preferred (new):  secret HEAL_API_KEY, variable HEAL_BASE_URL, variable HEAL_MODEL
+#   Fallback (reuses existing 0.3 secrets):
+#       HEAL_API_KEY  <- secret LLM_API_KEY
+#       HEAL_BASE_URL <- secret LLM_API_BASE
+#       HEAL_MODEL    <- variable LLM_LOCATOR_MODEL with any leading "openai/" stripped
+#   NOTE: the 0.3 model id "openai/x-ai/grok-4-fast:free" may be stale (404 on
+#   OpenRouter). Set a current `HEAL_MODEL` variable for reliable runs.
+
+name: e2e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+
+jobs:
+  live-heal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+          enable-cache: true
+      - name: Resolve model configuration
+        id: cfg
+        env:
+          HEAL_API_KEY: ${{ secrets.HEAL_API_KEY }}
+          HEAL_BASE_URL: ${{ vars.HEAL_BASE_URL }}
+          HEAL_MODEL: ${{ vars.HEAL_MODEL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_API_BASE: ${{ secrets.LLM_API_BASE }}
+          LLM_LOCATOR_MODEL: ${{ vars.LLM_LOCATOR_MODEL }}
+        run: |
+          KEY="${HEAL_API_KEY:-$LLM_API_KEY}"
+          BASE="${HEAL_BASE_URL:-$LLM_API_BASE}"
+          MODEL="${HEAL_MODEL:-${LLM_LOCATOR_MODEL#openai/}}"
+          if [ -z "$KEY" ]; then
+            echo "::warning::No HEAL_API_KEY/LLM_API_KEY secret configured — skipping live E2E."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "HEAL_BASE_URL=$BASE" >> "$GITHUB_ENV"
+            echo "HEAL_MODEL=$MODEL" >> "$GITHUB_ENV"
+            echo "::add-mask::$KEY"
+            echo "HEAL_API_KEY=$KEY" >> "$GITHUB_ENV"
+            echo "Resolved model: $MODEL  (base: $BASE)"
+          fi
+      - name: Install dependencies
+        if: steps.cfg.outputs.configured == 'true'
+        run: |
+          uv sync --all-extras
+          uv run rfbrowser init
+          npx playwright install-deps
+      - name: Verify endpoint
+        if: steps.cfg.outputs.configured == 'true'
+        run: uv run heal doctor --role locator
+      - name: Live heal acceptance tests
+        if: steps.cfg.outputs.configured == 'true'
+        run: uv run invoke heal-atests --live-llm
+      - name: Store artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: |
+            results/**/*.html
+            results/**/*.xml
