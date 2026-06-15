@@ -71,3 +71,30 @@ extra:
   version:
     provider: mike
     default: latest
+
+nav:
+  - Home: index.md
+  - What you get: what-you-get.md
+  - Tutorials:
+      - tutorials/getting-started.md
+  - How-to guides:
+      - Configure a model provider: how-to/model-providers.md
+      - Use SeleniumLibrary: how-to/selenium.md
+      - Use AppiumLibrary: how-to/appium.md
+      - Gate CI on results: how-to/ci-gating.md
+      - Fix test files: how-to/fixing-files.md
+      - Reuse fixes across runs: how-to/warm-start.md
+      - Drive from a coding agent: how-to/mcp-coding-agents.md
+  - Reference:
+      - Configuration: reference/configuration.md
+      - CLI: reference/cli.md
+      - Failure classes: reference/failure-classes.md
+      - Drivers: reference/drivers.md
+      - Report artifacts: reference/reports.md
+      - Migrating from 0.3: reference/migration.md
+  - Explanation:
+      - Failure taxonomy and triage: explanation/failure-taxonomy.md
+      - Tiered locator healing: explanation/tiered-locators.md
+      - Capability-tiered models: explanation/model-tiers.md
+      - Threading and execution: explanation/threading.md
+      - Root-cause analysis and fixes: explanation/rca-and-fixes.md

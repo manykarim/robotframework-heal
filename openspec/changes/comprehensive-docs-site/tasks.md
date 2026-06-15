@@ -3,7 +3,7 @@
 ## 1. Toolchain and scaffolding
 
 - [x] 1.1 Added docs group (mkdocs-material, mkdocs-gen-files, mike); expanded mkdocs.yml (light/dark palette, nav tabs/sections, code copy/annotate, search, mermaid, mike version provider)
-- [ ] 1.2 Declare the Diátaxis nav skeleton in `mkdocs.yml` (Home, Tutorials, How-to, Reference, Explanation) with placeholder pages so `mkdocs build --strict` passes
+- [x] 1.2 Declared the Diátaxis nav (Home, What you get, Tutorials, How-to, Reference, Explanation); placeholder pages created; `mkdocs build --strict` passes (generated reference pages emitted as placeholders by the gen hook)
 
 ## 2. Generated reference (from code)
 
