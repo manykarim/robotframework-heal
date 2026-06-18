@@ -23,5 +23,5 @@ Experiments-first: the sweep (phase 2) runs before fixes (phase 3); fixes are dr
 ## 4. Re-measure and report
 
 - [x] 4.1 Post-fix check: gemma3 80% via the explicit Ollama preset (consistent with baseline; no regression). Reference backends (MiniMax/OpenRouter) unaffected — 175 unit tests pass
-- [ ] 4.2 Finalise `FINDINGS.md`: before/after deltas, recommended small-model settings, and any remaining model-limit caveats
-- [ ] 4.3 Docs: add an Ollama setup entry to the model-providers how-to (`HEAL_BASE_URL=http://host:11434/v1`) and the small-model compatibility matrix to the docs benchmarks; note `heal doctor` as the way to resolve per-model capability
+- [x] 4.2 FINDINGS.md finalized: 9-model matrix, engine-correct headline, classified issues, invalidated hypotheses, before/after post-fix check + recommendations
+- [x] 4.3 Docs: enriched Ollama setup in model-providers how-to + small-model compatibility matrix in the model-tiers explanation

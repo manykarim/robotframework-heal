@@ -75,6 +75,21 @@ would be a bottleneck. The data contradicts both:
   justified by evidence** and is recommended for de-scoping (see the change's
   spec update).
 
+## After the fixes (post-fix check)
+
+Both engine fixes (#1 Ollama preset, #2 usage-on-unhealed) landed and were
+re-checked against the same host:
+
+- **No accuracy change** — the preset resolves to the same prompted floor the
+  unknown-backend default already used, so behaviour is identical by design.
+  `gemma3:latest` re-ran at **80%** on a 5-fixture spot-check (vs 83% on the
+  12-fixture baseline — same model, same path), `engine=prompted`, 0 errors.
+- **Ollama now resolves explicitly** — `find_preset(...)` returns `ollama`
+  rather than falling through to the generic default; the endpoint has a named
+  home for any future quirk overrides.
+- **Reference backends unaffected** — the full unit suite (175 tests, incl. the
+  MiniMax/OpenRouter preset tests) stays green.
+
 ## Recommendations (for docs)
 
 - For self-hosted healing on modest hardware, **`gemma3` (4.3B)** is the

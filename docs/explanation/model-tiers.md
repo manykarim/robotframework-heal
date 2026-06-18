@@ -51,3 +51,32 @@ From the experiment matrix (`experiments/minimax-probe/FINDINGS.md`):
 The load-bearing finding: **`ModelRetry` verification works on every reachable
 model**, including 8B-class ones — which is what makes the universal floor real
 rather than aspirational.
+
+## Ollama small-model compatibility
+
+A dedicated sweep replayed the locator-healing corpus across the Ollama fleet
+(`experiments/ollama-small-models/FINDINGS.md`, element-identity grading,
+selection tier, prompted floor):
+
+| Model | Size | Accuracy | Median latency | Notes |
+|---|---|---|---|---|
+| `granite3.2:8b` | 8.2B | **92%** | 12s | highest accuracy |
+| `gemma3:12b` | 12.2B | **92%** | 22s | highest accuracy, slower |
+| `gemma3` | 4.3B | **83%** | 8s | **best quality/speed** |
+| `qwen3:8b` | 8.2B | 83% | 48s | reasoning model — slow |
+| `phi3` | 3.8B | 67% | 7s | solid small option |
+| `llama3.1` | 8.0B | 58% | 11s | triage quality limited |
+| `llama3.2` | 3.2B | 33% | 9s | too weak to recommend |
+| `phi4-mini` | 3.8B | 8% | 32s | proposals fail verification |
+| `qwen3:14b` | 14.8B | 0% | 32s | timeouts dominate; avoid |
+
+Two things this matrix demonstrates:
+
+- **The differentiator is model quality, not engine behaviour.** No model ever
+  healed to the *wrong* element via a successful heal — weak models fail with
+  "no proposal survived live verification", exactly as designed. Verification
+  integrity holds all the way down.
+- **The prompted floor is correct for Ollama.** `heal doctor` shows 8 of 9
+  models expose no reliable tool endpoint; prompted JSON + validator
+  verification is what makes the capable ones viable. Always run
+  `heal doctor --role locator` — capability is per-model, not per-backend.
