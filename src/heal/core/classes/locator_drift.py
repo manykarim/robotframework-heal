@@ -123,9 +123,10 @@ class LocatorDriftPlugin(FailureClassPlugin):
             return None
         verified = deps.verified[-1] if deps.verified else deps.candidates[result.output.index]
         outcome = await self._rerun_with(ctx, session, diagnosis, [verified], attempts)
+        # record token usage regardless of outcome (cost of a failed heal is real)
+        outcome.usage.requests = result.usage.requests or 0
+        outcome.usage.total_tokens = result.usage.total_tokens or 0
         if outcome.status is OutcomeStatus.HEALED:
-            outcome.usage.requests = result.usage.requests or 0
-            outcome.usage.total_tokens = result.usage.total_tokens or 0
             return outcome
         return None  # selected element didn't survive rerun -> generation fallback
 
@@ -158,9 +159,9 @@ class LocatorDriftPlugin(FailureClassPlugin):
                 + (f" Rejected: {deps.rejected}" if deps.rejected else ""),
             )
         outcome = await self._rerun_with(ctx, session, diagnosis, result.output.locators, attempts)
-        if outcome.status is OutcomeStatus.HEALED:
-            outcome.usage.requests = result.usage.requests or 0
-            outcome.usage.total_tokens = result.usage.total_tokens or 0
+        # record token usage regardless of outcome (cost of a failed heal is real)
+        outcome.usage.requests = result.usage.requests or 0
+        outcome.usage.total_tokens = result.usage.total_tokens or 0
         return outcome
 
     async def _rerun_with(

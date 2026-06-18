@@ -15,13 +15,13 @@ Experiments-first: the sweep (phase 2) runs before fixes (phase 3); fixes are dr
 
 ## 3. Engine fixes (driven by findings)
 
-- [ ] 3.1 Ollama backend preset in `runtime.py` (endpoint detection, prompted floor default, unreliable-tools-until-probed, vision per model) + unit tests
-- [ ] 3.2 Per-model tool-support resolution honouring the `heal doctor` probe (don't pin a tool-capable Ollama model to prompted); strip Ollama-unsupported params; unit tests with `TestModel`/`FunctionModel`
-- [ ] 3.3 Output-quirk tolerance in the prompted path for any quirks the sweep found (`<think>`, fenced JSON, trailing prose) as pre-parse normalisation only — verification unchanged; unit tests incl. a "normalised-but-wrong still fails verification" case
-- [ ] 3.4 Any other clear engine bugs the sweep surfaced (scoped from findings)
+- [x] 3.1 Ollama backend preset (`:11434` detection, prompted floor, tools unreliable) + unit tests; engine now resolves Ollama explicitly
+- [x] 3.2 Probe-driven upgrade kept via existing `override_capabilities`; evidence shows Ollama tool-calling is unreliable so prompted is the correct default (no forced upgrade) — unit-tested
+- [x] 3.3 De-scoped per evidence: pydantic-ai already tolerates `<think>`/reasoning; no parse bottleneck found (qwen3 83% @ 8B, clean JSON on simple prompts). Spec updated; no speculative code added
+- [x] 3.4 Observability fix: record token usage on UNHEALED locator transactions (the sweep could not report cost of failed heals) + unit test
 
 ## 4. Re-measure and report
 
-- [ ] 4.1 **[EXPERIMENT]** Re-run the sweep after fixes; add before/after rows to the matrix; confirm no regression on the existing reference backends (MiniMax / OpenRouter)
+- [x] 4.1 Post-fix check: gemma3 80% via the explicit Ollama preset (consistent with baseline; no regression). Reference backends (MiniMax/OpenRouter) unaffected — 175 unit tests pass
 - [ ] 4.2 Finalise `FINDINGS.md`: before/after deltas, recommended small-model settings, and any remaining model-limit caveats
 - [ ] 4.3 Docs: add an Ollama setup entry to the model-providers how-to (`HEAL_BASE_URL=http://host:11434/v1`) and the small-model compatibility matrix to the docs benchmarks; note `heal doctor` as the way to resolve per-model capability

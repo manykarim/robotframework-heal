@@ -1,0 +1,29 @@
+{
+ "base_url": "http://192.168.1.15:11434/v1",
+ "fixtures": 5,
+ "models": [
+  {
+   "model": "gemma3:latest",
+   "bucket": "tiny/no-tools",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 5,
+   "accuracy_pct": 80.0,
+   "errors": 0,
+   "median_seconds": 8.9,
+   "median_tokens": 656,
+   "failure_modes": {
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 1
+   }
+  }
+ ]
+}

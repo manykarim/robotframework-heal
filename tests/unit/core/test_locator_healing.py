@@ -300,3 +300,15 @@ def test_selection_falls_back_to_generation_when_no_candidates():
     assert event.outcome.status is OutcomeStatus.HEALED  # via generation fallback
     assert session.reruns == ["css=#signin-btn"]
     assert any("tier 1" in a.action.description for a in event.outcome.attempts)
+
+
+def test_usage_recorded_even_when_unhealed():
+    """Cost of a failed heal must be visible (observability fix from the Ollama sweep)."""
+    # proposal verifies, but every rerun fails -> unhealed via _rerun_with;
+    # the tokens the agent spent must still be recorded on the outcome.
+    driver = FakeDriver()
+    model = proposals_model([{"locators": ["css=#signin-btn"], "rationale": "valid"}])
+    session = FakeSession(driver, fail_first_rerun=True)  # and only one candidate -> stays unhealed
+    event, session = heal(make_engine(), model, driver=driver, session=session)
+    assert event.outcome.status is OutcomeStatus.UNHEALED
+    assert event.outcome.usage.requests >= 1

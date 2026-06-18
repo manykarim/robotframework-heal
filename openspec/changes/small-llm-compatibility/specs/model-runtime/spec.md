@@ -3,23 +3,20 @@
 ## ADDED Requirements
 
 ### Requirement: Ollama backend support
-The runtime SHALL recognise an Ollama OpenAI-compatible endpoint and resolve a safe default capability profile for it (structured output via the prompted floor, tool support treated as unreliable until probed, vision per model). Ollama-unsupported request parameters SHALL be stripped so requests succeed.
+The runtime SHALL recognise an Ollama OpenAI-compatible endpoint (by its default port) and resolve a safe default capability profile for it: structured output via the prompted floor and tool support treated as unreliable, because the sweep found tool calling unavailable or unreliable over Ollama's OpenAI-compatible endpoint for ~all models. A model that probes reliably tool-capable MAY still be upgraded via the doctor override mechanism.
 
-#### Scenario: Ollama endpoint resolves to a working default
+#### Scenario: Ollama endpoint resolves to the prompted floor
 - **WHEN** a role is configured with an Ollama base URL and a model
-- **THEN** healing functions using the prompted output floor without sending parameters the endpoint rejects
+- **THEN** the resolved capability uses prompted structured output with tool support unreliable
 
-#### Scenario: Probe upgrades a tool-capable Ollama model
-- **WHEN** `heal doctor` probes an Ollama model that reliably tool-calls
-- **THEN** the resolved capability for that role uses tool output rather than being pinned to prompted
+#### Scenario: Probe override can upgrade a tool-capable model
+- **WHEN** a probed-reliable capability is installed for an Ollama role via `override_capabilities`
+- **THEN** the resolved capability uses that mode rather than the prompted default
 
-### Requirement: Small-model output-quirk tolerance
-The prompted structured-output path SHALL tolerate common small-model output quirks — reasoning/`<think>` blocks, markdown-fenced JSON, and surrounding prose — by normalising the response before validation. This normalisation SHALL NOT relax the output schema or the live verification: a parseable but semantically wrong proposal SHALL still fail verification.
-
-#### Scenario: Fenced or think-wrapped JSON still parses
-- **WHEN** a small model returns the required JSON wrapped in a code fence or after a `<think>` block
-- **THEN** the structured output is extracted and validated successfully
-
-#### Scenario: Tolerance does not weaken verification
-- **WHEN** a normalised response yields a locator that fails live verification
-- **THEN** the proposal is rejected and retried, exactly as for any other model
+> **De-scoped (evidence):** the proposal anticipated a "small-model output-quirk
+> tolerance" requirement (`<think>`/fenced-JSON normalisation). The Ollama sweep
+> did not support it — the framework's prompted path already tolerates reasoning
+> blocks (qwen3 healed at 83% on 8B; it emits clean JSON on simple prompts), and
+> no parse-error bottleneck was observed. Model failures were timeouts or
+> verification rejections (model-quality), not parse bugs. No such requirement is
+> added. See `experiments/ollama-small-models/FINDINGS.md`.

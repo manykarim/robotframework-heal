@@ -91,6 +91,19 @@ BACKEND_PRESETS: tuple[BackendPreset, ...] = (
             structured_output=OutputMode.PROMPTED,
         ),
     ),
+    BackendPreset(
+        name="ollama",
+        url_marker=":11434",  # Ollama's default port
+        # Sweep (experiments/ollama-small-models): tool calling is unavailable or
+        # unreliable over Ollama's OpenAI-compatible endpoint for ~all models, so
+        # the prompted floor is the correct default. `heal doctor` can still probe
+        # and `override_capabilities` if a given model proves reliably tool-capable.
+        # Capable models heal well in prompted mode (granite3.2:8b/gemma3 ~83-92%).
+        capabilities=ModelCapabilities(
+            tools=ToolSupport.UNRELIABLE,
+            structured_output=OutputMode.PROMPTED,
+        ),
+    ),
 )
 
 #: Capabilities for native pydantic-ai provider strings ("openai:gpt-4o", ...).
