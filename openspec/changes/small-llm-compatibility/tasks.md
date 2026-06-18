@@ -4,7 +4,7 @@ Experiments-first: the sweep (phase 2) runs before fixes (phase 3); fixes are dr
 
 ## 1. Sweep harness
 
-- [ ] 1.1 Probe the Ollama host (`/api/tags`) and pin the curated model selection (tiny/no-tools, 8B/tool-capable, larger-small, vision) in the runner config; record the full model inventory
+- [x] 1.1 Probed the host (18 models in inventory.json) and pinned the curated selection (models.py): 10 models across tiny/no-tools, 8B/tool-capable, larger-small, vision; 3 smoke models
 - [ ] 1.2 Implement `experiments/ollama-small-models/sweep.py`: for each model, build `HealSettings(model, base_url, api_key="ollama")`, run `heal doctor` (capabilities), then replay the eval corpus grading element identity; collect reachability, resolved output mode, accuracy %, median latency, median tokens, and per-fixture failure modes; host-configurable; skip unreachable models; write `results.json`
 - [ ] 1.3 Add a small live-browser smoke step (bundled `heal_locator_drift` page) for 2–3 representative models to confirm the full listener path
 
