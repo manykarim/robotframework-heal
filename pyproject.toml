@@ -1,6 +1,6 @@
 [project]
 name = "robotframework-heal"
-version = "0.4.0.dev1"
+version = "0.4.0"
 description = "A Robot Framework Listener for library agnostic self-healing, failure triage and root cause analysis of tests"
 authors = [
     { name = "Many Kasiriha", email = "many.kasiriha@dbschenker.com" },
