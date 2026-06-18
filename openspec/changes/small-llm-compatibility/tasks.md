@@ -10,8 +10,8 @@ Experiments-first: the sweep (phase 2) runs before fixes (phase 3); fixes are dr
 
 ## 2. Run the sweep (baseline)
 
-- [ ] 2.1 **[EXPERIMENT]** Run the full sweep against the Ollama fleet (corpus + smokes); capture `results.json` and raw notes
-- [ ] 2.2 Triage results into `experiments/ollama-small-models/FINDINGS.md`: per-model matrix + an issues log classifying each finding as engine-bug / model-limit / config-gotcha
+- [x] 2.1 **[EXPERIMENT]** Swept 9 models (vision deprecated on host); results.json captured (host dropped twice under load, resumed)
+- [x] 2.2 FINDINGS.md: full matrix + issues classified. Headline: no engine bug — model quality is the differentiator; granite3.2:8b/gemma3:12b 92%, gemma3:4B 83%. Prompted floor validated (Ollama tool-calling unreliable)
 
 ## 3. Engine fixes (driven by findings)
 

@@ -1,0 +1,22 @@
+{
+ "base_url": "http://192.168.1.15:11434/v1",
+ "fixtures": 8,
+ "models": [
+  {
+   "model": "llama3.2-vision:latest",
+   "bucket": "vision",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelHTTPError: status_code: 500, model_name: llama3.2-vision:latest, body: {'message': \"'llama3.2-vision' is no long"
+  }
+ ]
+}
