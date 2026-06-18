@@ -75,14 +75,17 @@ async def sweep_model(model: str, bucket: str, base_url: str, fixtures) -> dict:
     rec: dict = {"model": model, "bucket": bucket}
     settings = _settings(model, base_url)
     runtime = AgentRuntime(settings)
-    # capabilities probe
+    # what the ENGINE actually uses to heal (preset/default resolution)
+    rec["engine_output"] = runtime.capabilities("locator").structured_output.value
+    rec["engine_tools"] = runtime.capabilities("locator").tools.value
+    # what the model COULD support, per the doctor probe (informs the fix)
     try:
         report = await run_doctor(runtime.model("locator"), model_name=model, include_vision=False)
-        caps = report.capabilities()
+        probed = report.capabilities()
         rec["reachable"] = report.reachable
         rec["doctor"] = {r.name: ("PASS" if r.ok else "FAIL") for r in report.results}
-        rec["resolved_output"] = caps.structured_output.value
-        rec["resolved_tools"] = caps.tools.value
+        rec["doctor_output"] = probed.structured_output.value
+        rec["doctor_tools"] = probed.tools.value
     except Exception as exc:
         rec["reachable"] = False
         rec["error"] = f"doctor: {type(exc).__name__}: {exc}"[:140]
@@ -139,20 +142,20 @@ async def main():
         rec = await sweep_model(model, bucket, base_url, fixtures)
         records.append(rec)
         if rec.get("reachable") and "accuracy_pct" in rec:
-            print(f"   out={rec['resolved_output']} acc={rec['accuracy_pct']}% "
-                  f"err={rec['errors']} med={rec['median_seconds']}s {rec['median_tokens']}tok "
-                  f"fails={rec.get('failure_modes')}", flush=True)
+            print(f"   engine={rec['engine_output']} doctor={rec.get('doctor_output')}/{rec.get('doctor_tools')} "
+                  f"acc={rec['accuracy_pct']}% err={rec['errors']} med={rec['median_seconds']}s "
+                  f"{rec['median_tokens']}tok fails={rec.get('failure_modes')}", flush=True)
         else:
             print(f"   UNREACHABLE/ERROR: {rec.get('error', rec.get('doctor'))}", flush=True)
 
     out = {"base_url": base_url, "fixtures": len(fixtures), "models": records}
     Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"\nwrote {args.out}", flush=True)
-    print(f"\n{'model':24} {'out':9} {'acc%':>5} {'err':>4} {'med_s':>6} {'tok':>6}  fails", flush=True)
+    print(f"\n{'model':24} {'engine':8} {'doctor':8} {'acc%':>5} {'err':>4} {'med_s':>6} {'tok':>6}  fails", flush=True)
     for r in records:
         if r.get("reachable") and "accuracy_pct" in r:
-            print(f"{r['model']:24} {r['resolved_output']:9} {r['accuracy_pct']:5} {r['errors']:4} "
-                  f"{r['median_seconds']:6} {r['median_tokens']:6}  {r.get('failure_modes')}", flush=True)
+            print(f"{r['model']:24} {r['engine_output']:8} {str(r.get('doctor_output')):8} {r['accuracy_pct']:5} "
+                  f"{r['errors']:4} {r['median_seconds']:6} {r['median_tokens']:6}  {r.get('failure_modes')}", flush=True)
         else:
             print(f"{r['model']:24} {'—':9} unreachable/error", flush=True)
 
