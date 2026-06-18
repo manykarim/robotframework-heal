@@ -1,0 +1,195 @@
+{
+ "base_url": "http://192.168.1.15:11434/v1",
+ "fixtures": 12,
+ "models": [
+  {
+   "model": "llama3.2:latest",
+   "bucket": "tiny/no-tools",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 12,
+   "accuracy_pct": 33.3,
+   "errors": 0,
+   "median_seconds": 9.0,
+   "median_tokens": 606,
+   "failure_modes": {
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 2,
+    "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).": 2,
+    "No locator proposal survived live verification.": 1,
+    "Replaced broken locator 'id=i_do_nothing' with verified 'css": 1,
+    "Replaced broken locator 'id=first_name' with verified 'css=i": 1
+   }
+  },
+  {
+   "model": "phi3:latest",
+   "bucket": "tiny/no-tools",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 12,
+   "accuracy_pct": 66.7,
+   "errors": 0,
+   "median_seconds": 6.8,
+   "median_tokens": 644,
+   "failure_modes": {
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 2,
+    "Replaced broken locator 'id=i_do_nothing' with verified 'css": 1,
+    "Replaced broken locator 'id=first_name' with verified 'css=i": 1
+   }
+  },
+  {
+   "model": "phi4-mini:latest",
+   "bucket": "tiny/no-tools",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 12,
+   "accuracy_pct": 8.3,
+   "errors": 0,
+   "median_seconds": 31.9,
+   "median_tokens": 460,
+   "failure_modes": {
+    "No locator proposal survived live verification.": 7,
+    "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).": 3,
+    "Replaced broken locator 'id=last_name' with verified 'css=te": 1
+   }
+  },
+  {
+   "model": "gemma3:latest",
+   "bucket": "tiny/no-tools",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  },
+  {
+   "model": "llama3.1:latest",
+   "bucket": "8B/tool-capable",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  },
+  {
+   "model": "qwen3:8b",
+   "bucket": "8B/tool-capable",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  },
+  {
+   "model": "granite3.2:8b",
+   "bucket": "8B/tool-capable",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  },
+  {
+   "model": "gemma3:12b",
+   "bucket": "larger-small",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  },
+  {
+   "model": "qwen3:14b",
+   "bucket": "larger-small",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  },
+  {
+   "model": "llama3.2-vision:latest",
+   "bucket": "vision",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  }
+ ]
+}
