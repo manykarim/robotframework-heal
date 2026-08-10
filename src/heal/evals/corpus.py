@@ -99,6 +99,75 @@ def _fixture_key(fixture: Fixture) -> str:
     return hashlib.sha1(raw.encode()).hexdigest()[:16]
 
 
+def _suite_slug(suite_name: str | None) -> str:
+    """Leaf suite name — the same normalisation harvest uses for filenames.
+
+    The full dotted name carries the run root ("Robotframework-Heal.Tests.Atest.Ait Llm"
+    vs "Atest.Ait Llm"), so only the leaf is stable across recordings.
+    """
+    return (suite_name or "case").split(".")[-1].lower().replace(" ", "-")
+
+
+def truth_scope(fixture: Fixture) -> tuple[str, str, tuple[str, ...], str]:
+    """The action a fixture grades. Two fixtures sharing a scope must agree."""
+    kw = fixture.context.keyword
+    return (
+        _suite_slug(fixture.context.suite_name),
+        kw.name,
+        tuple(kw.args or []),
+        fixture.context.failed_locator or "",
+    )
+
+
+def _soup(fixture: Fixture) -> BeautifulSoup | None:
+    dom = fixture.context.evidence_of(EvidenceKind.DOM_EXCERPT)
+    if dom is None or not dom.excerpt:
+        return None
+    try:
+        return BeautifulSoup(dom.excerpt, "html.parser")
+    except Exception:
+        return None
+
+
+def truths_conflict(a: Fixture, b: Fixture) -> bool:
+    """Do two same-scope fixtures name incompatible ground-truth elements?
+
+    Grading is element identity, so two fixtures for the same action must not
+    point at different elements — otherwise one of them is unwinnable and the
+    accuracy ceiling silently drops below 100%. Selector *form* is irrelevant
+    (``#firstname`` and ``input#firstname`` are the same node), and a nested
+    target is not a conflict either: clicking ``button > i`` clicks the button.
+    """
+    for fixture in (a, b):
+        soup = _soup(fixture)
+        if soup is None:
+            continue
+        try:
+            hits_a, hits_b = soup.select(a.truth_css), soup.select(b.truth_css)
+        except Exception:
+            continue
+        if len(hits_a) != 1 or len(hits_b) != 1:
+            continue
+        x, y = hits_a[0], hits_b[0]
+        if x is y or y in x.parents or x in y.parents:
+            return False  # same node, or one contains the other
+    return True
+
+
+def find_truth_conflicts(corpus: list[tuple[Path, Fixture]]) -> list[tuple[Path, Path]]:
+    """Pairs of fixtures that grade the same action against different elements."""
+    by_scope: dict[tuple, list[tuple[Path, Fixture]]] = {}
+    for path, fixture in corpus:
+        by_scope.setdefault(truth_scope(fixture), []).append((path, fixture))
+    conflicts: list[tuple[Path, Path]] = []
+    for entries in by_scope.values():
+        for i, (path_a, fix_a) in enumerate(entries):
+            for path_b, fix_b in entries[i + 1 :]:
+                if truths_conflict(fix_a, fix_b):
+                    conflicts.append((path_a, path_b))
+    return conflicts
+
+
 def find_stores(paths: list[str | Path]) -> list[Path]:
     stores: list[Path] = []
     for path in map(Path, paths):
@@ -110,13 +179,21 @@ def find_stores(paths: list[str | Path]) -> list[Path]:
 
 
 def harvest(paths: list[str | Path], out_dir: str | Path) -> tuple[int, int]:
-    """Extract fixtures from run stores into out_dir. Returns (added, skipped)."""
+    """Extract fixtures from run stores into out_dir. Returns (added, skipped).
+
+    A candidate that contradicts an already-harvested fixture for the same
+    action is skipped: ground truth comes from heals this engine performed, so
+    one wrong-but-verified heal would otherwise become an unwinnable fixture.
+    """
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     existing = {
         p.name[: -len(FIXTURE_SUFFIX)].split("-")[-1]
         for p in out_dir.glob(f"*{FIXTURE_SUFFIX}")
     }
+    by_scope: dict[tuple, list[Fixture]] = {}
+    for _path, known in load_corpus(out_dir):
+        by_scope.setdefault(truth_scope(known), []).append(known)
     added = skipped = 0
     for store in find_stores(paths):
         for event in load_events(store):
@@ -127,8 +204,13 @@ def harvest(paths: list[str | Path], out_dir: str | Path) -> tuple[int, int]:
             if key in existing:
                 skipped += 1
                 continue
+            scope = truth_scope(fixture)
+            if any(truths_conflict(fixture, known) for known in by_scope.get(scope, ())):
+                skipped += 1
+                continue
             existing.add(key)
-            suite = (fixture.context.suite_name or "case").split(".")[-1].lower().replace(" ", "-")
+            by_scope.setdefault(scope, []).append(fixture)
+            suite = _suite_slug(fixture.context.suite_name)
             (out_dir / f"{suite}-{key}{FIXTURE_SUFFIX}").write_text(fixture.dump(), encoding="utf-8")
             added += 1
     return added, skipped
