@@ -1,0 +1,4158 @@
+{
+ "base_url": "https://openrouter.ai/api/v1",
+ "fixtures": 20,
+ "fixture_names": [
+  "ait-llm-04a8e56aa8b788eb.fixture.json",
+  "car-kw-driven-0c4df5ffc195f59d.fixture.json",
+  "edge-cases-b8a1c8f4c3f42ce2.fixture.json",
+  "heal-locator-drift-0a50dc52065ceb29.fixture.json",
+  "insurance-broken-llm-1d075fa244ccbe4e.fixture.json",
+  "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json",
+  "sauce-web-llm-34547dd0ca31590f.fixture.json",
+  "sauce-web-parser-07ddc4581f3beced.fixture.json",
+  "the-internet-login-llm-13bb4607b0e7a83e.fixture.json",
+  "todo-broken-llm-72ea152a3f01da73.fixture.json",
+  "todo-broken-parser-a9a15554c01d31ee.fixture.json",
+  "ait-llm-47de5a381d48ce54.fixture.json",
+  "car-kw-driven-40d4bd784a207167.fixture.json",
+  "insurance-broken-llm-2c3a4ee5b7777244.fixture.json",
+  "insurance-broken-parser-29abb6cfb887cadb.fixture.json",
+  "sauce-web-llm-401f31fba4240693.fixture.json",
+  "sauce-web-parser-552d8966806ff287.fixture.json",
+  "the-internet-login-llm-2da25a7bb284fb62.fixture.json",
+  "todo-broken-llm-922615d5c37e3150.fixture.json",
+  "ait-llm-502cff377664b18a.fixture.json"
+ ],
+ "suites": [
+  "ait-llm",
+  "car-kw-driven",
+  "edge-cases",
+  "heal-locator-drift",
+  "insurance-broken-llm",
+  "insurance-broken-parser",
+  "sauce-web-llm",
+  "sauce-web-parser",
+  "the-internet-login-llm",
+  "todo-broken-llm",
+  "todo-broken-parser"
+ ],
+ "modes": [
+  "prompted",
+  "native"
+ ],
+ "cells": [
+  {
+   "model": "google/gemma-3-4b-it",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.53,
+     "tokens": 410,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.56,
+     "tokens": 468,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.27,
+     "tokens": 428,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=submit-button' with verified 'css=label:-soup-contains-own(\"Email\")'.",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.34,
+     "tokens": 524,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.52,
+     "tokens": 490,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.41,
+     "tokens": 511,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Fuel Type' with verified 'css=select#make'.",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.79,
+     "tokens": 508,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.04,
+     "tokens": 1065,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.4,
+     "tokens": 405,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 3.27,
+     "tokens": 700,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=li:-soup-contains(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.25,
+     "tokens": 413,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.02,
+     "tokens": 684,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 35.96,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.27,
+     "tokens": 645,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.95,
+     "tokens": 644,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.24,
+     "tokens": 520,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.01,
+     "tokens": 1002,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.99,
+     "tokens": 605,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.7,
+     "tokens": 410,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.49,
+     "tokens": 655,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 75.0,
+   "wrong_element": 4,
+   "errors": 0,
+   "median_seconds": 2.5,
+   "median_seconds_all": 2.6,
+   "median_tokens": 520,
+   "failure_modes": {
+    "Replaced broken locator 'id=submit-button' with verified 'cs": 1,
+    "Replaced broken locator 'Fuel Type' with verified 'css=selec": 1,
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1,
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1,
+    "No locator proposal survived live verification.": 1
+   }
+  },
+  {
+   "model": "google/gemma-3-4b-it",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.79,
+     "tokens": 244,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.06,
+     "tokens": 307,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.93,
+     "tokens": 268,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=submit-button' with verified 'css=label:-soup-contains-own(\"Email\")'.",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.78,
+     "tokens": 383,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.7,
+     "tokens": 339,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.86,
+     "tokens": 341,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Fuel Type' with verified 'css=select#make'.",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 6.12,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 12.85,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 6.7,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 7.31,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 11.16,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification. Rejected: {\"xpath=//input[@placeholder='What needs to be done?']\": 'matched 0 elements', 'css=#new-todo': 'match",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 8.77,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 6.27,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 6.41,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 12.19,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 7.14,
+     "tokens": 710,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 14.38,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 8.02,
+     "tokens": 697,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.16,
+     "tokens": 252,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 6.63,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 35.0,
+   "wrong_element": 2,
+   "errors": 0,
+   "median_seconds": 1.2,
+   "median_seconds_all": 6.5,
+   "median_tokens": 339,
+   "failure_modes": {
+    "No locator proposal survived live verification.": 10,
+    "Replaced broken locator 'id=submit-button' with verified 'cs": 1,
+    "Replaced broken locator 'Fuel Type' with verified 'css=selec": 1,
+    "No locator proposal survived live verification. Rejected": 1
+   }
+  },
+  {
+   "model": "google/gemma-3-12b-it",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "PASS"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "reliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.6,
+     "tokens": 421,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.57,
+     "tokens": 471,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.64,
+     "tokens": 462,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.22,
+     "tokens": 572,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.5,
+     "tokens": 499,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.53,
+     "tokens": 499,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.27,
+     "tokens": 508,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.22,
+     "tokens": 1050,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.84,
+     "tokens": 409,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 3.18,
+     "tokens": 692,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=li:-soup-contains(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.49,
+     "tokens": 393,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.95,
+     "tokens": 681,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.06,
+     "tokens": 463,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.79,
+     "tokens": 648,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.91,
+     "tokens": 636,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.96,
+     "tokens": 512,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.39,
+     "tokens": 1001,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.76,
+     "tokens": 598,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.88,
+     "tokens": 405,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.32,
+     "tokens": 646,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 90.0,
+   "wrong_element": 2,
+   "errors": 0,
+   "median_seconds": 2.5,
+   "median_seconds_all": 2.5,
+   "median_tokens": 510,
+   "failure_modes": {
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1,
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1
+   }
+  },
+  {
+   "model": "google/gemma-3-12b-it",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "PASS"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "reliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.96,
+     "tokens": 355,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.66,
+     "tokens": 310,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.84,
+     "tokens": 358,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.33,
+     "tokens": 435,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.78,
+     "tokens": 342,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.21,
+     "tokens": 341,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.17,
+     "tokens": 405,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.88,
+     "tokens": 968,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.22,
+     "tokens": 330,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.45,
+     "tokens": 529,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=li:-soup-contains(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.92,
+     "tokens": 254,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.87,
+     "tokens": 527,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.81,
+     "tokens": 308,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.99,
+     "tokens": 493,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.05,
+     "tokens": 486,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.08,
+     "tokens": 342,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.7,
+     "tokens": 843,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.25,
+     "tokens": 508,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.57,
+     "tokens": 318,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.57,
+     "tokens": 487,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 90.0,
+   "wrong_element": 2,
+   "errors": 0,
+   "median_seconds": 1.1,
+   "median_seconds_all": 1.1,
+   "median_tokens": 381,
+   "failure_modes": {
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1,
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1
+   }
+  },
+  {
+   "model": "meta-llama/llama-3.1-8b-instruct",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "unreliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.09,
+     "tokens": 405,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.97,
+     "tokens": 434,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.8,
+     "tokens": 372,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 3.23,
+     "tokens": 713,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=login-button' with verified 'css=label:-soup-contains-own(\"Email\")'.",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.34,
+     "tokens": 500,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.85,
+     "tokens": 574,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Fuel Type' with verified 'css=select#make'.",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.31,
+     "tokens": 482,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.33,
+     "tokens": 950,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.93,
+     "tokens": 379,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.14,
+     "tokens": 652,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=li:-soup-contains(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.95,
+     "tokens": 409,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.26,
+     "tokens": 662,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.93,
+     "tokens": 442,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Password' with verified 'css=input#input_username'.",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.86,
+     "tokens": 620,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.32,
+     "tokens": 655,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Annual Mileage' with verified 'css=input#listprice'.",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.53,
+     "tokens": 447,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=pass' with verified 'css=input#user-name'.",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.25,
+     "tokens": 888,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.72,
+     "tokens": 539,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.76,
+     "tokens": 384,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 3.29,
+     "tokens": 605,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=last_name' with verified 'css=input#red'.",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 60.0,
+   "wrong_element": 8,
+   "errors": 0,
+   "median_seconds": 1.3,
+   "median_seconds_all": 1.3,
+   "median_tokens": 519,
+   "failure_modes": {
+    "Replaced broken locator 'id=login-button' with verified 'css": 1,
+    "Replaced broken locator 'Fuel Type' with verified 'css=selec": 1,
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1,
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1,
+    "Replaced broken locator 'Password' with verified 'css=input#": 1
+   }
+  },
+  {
+   "model": "meta-llama/llama-3.1-8b-instruct",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "unreliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.49,
+     "tokens": 259,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.39,
+     "tokens": 303,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.46,
+     "tokens": 275,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.41,
+     "tokens": 383,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.47,
+     "tokens": 346,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.42,
+     "tokens": 348,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Fuel Type' with verified 'css=select#make'.",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.39,
+     "tokens": 335,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.49,
+     "tokens": 816,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.36,
+     "tokens": 246,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.43,
+     "tokens": 509,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.36,
+     "tokens": 259,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.05,
+     "tokens": 1096,
+     "requests": 2,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.4,
+     "tokens": 302,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.41,
+     "tokens": 495,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.41,
+     "tokens": 489,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.41,
+     "tokens": 338,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.45,
+     "tokens": 769,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.37,
+     "tokens": 448,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.99,
+     "tokens": 286,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.39,
+     "tokens": 494,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 90.0,
+   "wrong_element": 2,
+   "errors": 0,
+   "median_seconds": 0.4,
+   "median_seconds_all": 0.4,
+   "median_tokens": 347,
+   "failure_modes": {
+    "Replaced broken locator 'Fuel Type' with verified 'css=selec": 1,
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1
+   }
+  },
+  {
+   "model": "meta-llama/llama-3.2-3b-instruct",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.68,
+     "tokens": 391,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.6,
+     "tokens": 417,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.27,
+     "tokens": 394,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=submit-button' with verified 'css=label:-soup-contains-own(\"Email\")'.",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.28,
+     "tokens": 499,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=login-button' with verified 'css=input#user-pass'.",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.85,
+     "tokens": 482,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.55,
+     "tokens": 495,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Fuel Type' with verified 'css=select#make'.",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.39,
+     "tokens": 450,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=user' with verified 'css=input#password'.",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.78,
+     "tokens": 933,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.95,
+     "tokens": 814,
+     "requests": 2,
+     "detail": "Replaced broken locator 'id=user' with verified 'css=input#password'.",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 4.74,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.5,
+     "tokens": 1475,
+     "requests": 3,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.34,
+     "tokens": 652,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=i_do_nothing' with verified 'css=li:-soup-contains(\"Public Training\")'.",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.52,
+     "tokens": 414,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.74,
+     "tokens": 617,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Date of Manufacture' with verified 'css=input#engineperformance'.",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 11.65,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.94,
+     "tokens": 467,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=pass' with verified 'css=input#user-name'.",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 13.68,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification. Rejected: {'css=#shopping_cart_container >>> button[name=add-to-cart-sauce-labs-onesie]': 'matched 0 elements', ",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.33,
+     "tokens": 563,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=loginbutton' with verified 'css=input#username'.",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.62,
+     "tokens": 381,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.13,
+     "tokens": 624,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 35.0,
+   "wrong_element": 10,
+   "errors": 0,
+   "median_seconds": 0.7,
+   "median_seconds_all": 0.8,
+   "median_tokens": 495,
+   "failure_modes": {
+    "Replaced broken locator 'id=user' with verified 'css=input#p": 2,
+    "No locator proposal survived live verification.": 2,
+    "Replaced broken locator 'id=submit-button' with verified 'cs": 1,
+    "Replaced broken locator 'id=login-button' with verified 'css": 1,
+    "Replaced broken locator 'Fuel Type' with verified 'css=selec": 1
+   }
+  },
+  {
+   "model": "meta-llama/llama-3.2-3b-instruct",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.23,
+     "tokens": 302,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.77,
+     "tokens": 347,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.9,
+     "tokens": 337,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=submit-button' with verified 'css=label:-soup-contains-own(\"Email\")'.",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.8,
+     "tokens": 428,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=login-button' with verified 'css=input#user-email'.",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.91,
+     "tokens": 387,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.63,
+     "tokens": 368,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.97,
+     "tokens": 405,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.72,
+     "tokens": 822,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.8,
+     "tokens": 281,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=user' with verified 'css=input#password'.",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.18,
+     "tokens": 602,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.59,
+     "tokens": 267,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.74,
+     "tokens": 603,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=i_do_nothing' with verified 'css=li:-soup-contains(\"Public Training\")'.",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.36,
+     "tokens": 350,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.92,
+     "tokens": 516,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Date of Manufacture' with verified 'css=input#listprice'.",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.49,
+     "tokens": 518,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Annual Mileage' with verified 'css=input#engineperformance'.",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.74,
+     "tokens": 379,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=pass' with verified 'css=input#user-name'.",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.99,
+     "tokens": 841,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Sauce Labs Onesie >> Add To Cart' with verified 'css=a#item_2_title_link'.",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.75,
+     "tokens": 486,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=loginbutton' with verified 'css=input#username'.",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.49,
+     "tokens": 271,
+     "requests": 1,
+     "detail": "Replaced broken locator '.todo' with verified 'css=input#toggle-all'.",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.75,
+     "tokens": 536,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 50.0,
+   "wrong_element": 10,
+   "errors": 0,
+   "median_seconds": 0.9,
+   "median_seconds_all": 0.9,
+   "median_tokens": 396,
+   "failure_modes": {
+    "Replaced broken locator 'id=submit-button' with verified 'cs": 1,
+    "Replaced broken locator 'id=login-button' with verified 'css": 1,
+    "Replaced broken locator 'id=user' with verified 'css=input#p": 1,
+    "Replaced broken locator 'id=i_do_nothing' with verified 'css": 1,
+    "Replaced broken locator 'Date of Manufacture' with verified ": 1
+   }
+  },
+  {
+   "model": "qwen/qwen3-8b",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.02,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.0,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.0,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.0,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.0,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "No locator proposal survived live verification.",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.0,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.02,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.02,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.0,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.01,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "unhealed",
+     "wrong_element": false,
+     "seconds": 60.02,
+     "tokens": 0,
+     "requests": 0,
+     "detail": "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 0.0,
+   "wrong_element": 0,
+   "errors": 0,
+   "median_seconds": null,
+   "median_seconds_all": 60.0,
+   "median_tokens": 0,
+   "failure_modes": {
+    "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).": 19,
+    "No locator proposal survived live verification.": 1
+   }
+  },
+  {
+   "model": "qwen/qwen3-8b",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 8.09,
+     "tokens": 691,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.25,
+     "tokens": 611,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.95,
+     "tokens": 590,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.26,
+     "tokens": 698,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 12.23,
+     "tokens": 673,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.54,
+     "tokens": 702,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.38,
+     "tokens": 585,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 10.9,
+     "tokens": 1338,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.32,
+     "tokens": 515,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 29.16,
+     "tokens": 2559,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=label:-soup-contains-own(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.49,
+     "tokens": 645,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 11.58,
+     "tokens": 1188,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.73,
+     "tokens": 693,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.07,
+     "tokens": 790,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.6,
+     "tokens": 757,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.27,
+     "tokens": 655,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.65,
+     "tokens": 1177,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.07,
+     "tokens": 669,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.26,
+     "tokens": 564,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.57,
+     "tokens": 818,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 95.0,
+   "wrong_element": 1,
+   "errors": 0,
+   "median_seconds": 4.8,
+   "median_seconds_all": 4.8,
+   "median_tokens": 692,
+   "failure_modes": {
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1
+   }
+  },
+  {
+   "model": "qwen/qwen3-14b",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "PASS"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "reliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.37,
+     "tokens": 584,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.44,
+     "tokens": 617,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 16.81,
+     "tokens": 723,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 25.96,
+     "tokens": 727,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 8.7,
+     "tokens": 748,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 16.32,
+     "tokens": 756,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 25.8,
+     "tokens": 675,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 29.34,
+     "tokens": 1269,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.98,
+     "tokens": 401,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 18.69,
+     "tokens": 1675,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=label:-soup-contains-own(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 17.68,
+     "tokens": 689,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 31.94,
+     "tokens": 939,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.57,
+     "tokens": 436,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.28,
+     "tokens": 895,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 6.88,
+     "tokens": 927,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 7.35,
+     "tokens": 806,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 37.07,
+     "tokens": 1245,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.27,
+     "tokens": 774,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 7.61,
+     "tokens": 731,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 24.72,
+     "tokens": 841,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 95.0,
+   "wrong_element": 1,
+   "errors": 0,
+   "median_seconds": 12.5,
+   "median_seconds_all": 12.5,
+   "median_tokens": 752,
+   "failure_modes": {
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1
+   }
+  },
+  {
+   "model": "qwen/qwen3-14b",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "PASS"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "reliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 38.18,
+     "tokens": 652,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.06,
+     "tokens": 502,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 6.47,
+     "tokens": 610,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.63,
+     "tokens": 702,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 7.66,
+     "tokens": 679,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 7.99,
+     "tokens": 774,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.48,
+     "tokens": 559,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 17.52,
+     "tokens": 1914,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 13.14,
+     "tokens": 379,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 19.74,
+     "tokens": 1699,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=label:-soup-contains-own(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 25.57,
+     "tokens": 526,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 9.73,
+     "tokens": 1027,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.16,
+     "tokens": 509,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 7.44,
+     "tokens": 907,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 15.52,
+     "tokens": 747,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 6.02,
+     "tokens": 675,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 6.86,
+     "tokens": 1150,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 33.8,
+     "tokens": 781,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 16.12,
+     "tokens": 585,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 5.03,
+     "tokens": 775,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 95.0,
+   "wrong_element": 1,
+   "errors": 0,
+   "median_seconds": 7.8,
+   "median_seconds_all": 7.8,
+   "median_tokens": 690,
+   "failure_modes": {
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1
+   }
+  },
+  {
+   "model": "microsoft/phi-4",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.19,
+     "tokens": 388,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.14,
+     "tokens": 433,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.71,
+     "tokens": 393,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.93,
+     "tokens": 493,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.59,
+     "tokens": 420,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.12,
+     "tokens": 472,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.89,
+     "tokens": 445,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.79,
+     "tokens": 959,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.44,
+     "tokens": 388,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.96,
+     "tokens": 695,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=li:-soup-contains(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.97,
+     "tokens": 380,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.51,
+     "tokens": 631,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.89,
+     "tokens": 418,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.12,
+     "tokens": 621,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.02,
+     "tokens": 607,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.16,
+     "tokens": 473,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.47,
+     "tokens": 843,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Sauce Labs Onesie >> Add To Cart' with verified 'css=a#item_2_title_link'.",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.29,
+     "tokens": 589,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.43,
+     "tokens": 392,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.42,
+     "tokens": 640,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 85.0,
+   "wrong_element": 3,
+   "errors": 0,
+   "median_seconds": 1.1,
+   "median_seconds_all": 1.1,
+   "median_tokens": 472,
+   "failure_modes": {
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1,
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1,
+    "Replaced broken locator 'Sauce Labs Onesie >> Add To Cart' w": 1
+   }
+  },
+  {
+   "model": "microsoft/phi-4",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.44,
+     "tokens": 305,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.46,
+     "tokens": 278,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.09,
+     "tokens": 371,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.5,
+     "tokens": 358,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.0,
+     "tokens": 399,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.71,
+     "tokens": 323,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.49,
+     "tokens": 383,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.58,
+     "tokens": 791,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.44,
+     "tokens": 221,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.86,
+     "tokens": 484,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=li:-soup-contains(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.61,
+     "tokens": 238,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.81,
+     "tokens": 491,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.24,
+     "tokens": 347,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.57,
+     "tokens": 474,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.47,
+     "tokens": 464,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.65,
+     "tokens": 393,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.5,
+     "tokens": 744,
+     "requests": 1,
+     "detail": "Replaced broken locator 'Sauce Labs Onesie >> Add To Cart' with verified 'css=a#item_2_title_link'.",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.36,
+     "tokens": 502,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.95,
+     "tokens": 341,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.6,
+     "tokens": 555,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 85.0,
+   "wrong_element": 3,
+   "errors": 0,
+   "median_seconds": 0.8,
+   "median_seconds_all": 0.8,
+   "median_tokens": 388,
+   "failure_modes": {
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1,
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1,
+    "Replaced broken locator 'Sauce Labs Onesie >> Add To Cart' w": 1
+   }
+  },
+  {
+   "model": "ibm-granite/granite-4.1-8b",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "PASS"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "reliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.22,
+     "tokens": 424,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.24,
+     "tokens": 463,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.01,
+     "tokens": 441,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.83,
+     "tokens": 541,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.49,
+     "tokens": 517,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.37,
+     "tokens": 500,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.9,
+     "tokens": 501,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.03,
+     "tokens": 1068,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.59,
+     "tokens": 377,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.47,
+     "tokens": 718,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.93,
+     "tokens": 416,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.5,
+     "tokens": 677,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.82,
+     "tokens": 448,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.22,
+     "tokens": 667,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.83,
+     "tokens": 632,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.03,
+     "tokens": 509,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.11,
+     "tokens": 1022,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.8,
+     "tokens": 611,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.71,
+     "tokens": 409,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.75,
+     "tokens": 647,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 95.0,
+   "wrong_element": 1,
+   "errors": 0,
+   "median_seconds": 1.0,
+   "median_seconds_all": 1.0,
+   "median_tokens": 513,
+   "failure_modes": {
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1
+   }
+  },
+  {
+   "model": "ibm-granite/granite-4.1-8b",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "unreliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.39,
+     "tokens": 248,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.37,
+     "tokens": 306,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.29,
+     "tokens": 266,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.42,
+     "tokens": 384,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.38,
+     "tokens": 329,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.36,
+     "tokens": 331,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.34,
+     "tokens": 339,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 0.48,
+     "tokens": 900,
+     "requests": 1,
+     "detail": "Replaced broken locator 'shopping_cart' with verified 'css=div#shopping_cart_container'.",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.32,
+     "tokens": 233,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.37,
+     "tokens": 511,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.37,
+     "tokens": 252,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.54,
+     "tokens": 507,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.34,
+     "tokens": 307,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.38,
+     "tokens": 488,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.43,
+     "tokens": 486,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.36,
+     "tokens": 340,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.43,
+     "tokens": 845,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.37,
+     "tokens": 442,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.34,
+     "tokens": 249,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 0.44,
+     "tokens": 489,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 95.0,
+   "wrong_element": 1,
+   "errors": 0,
+   "median_seconds": 0.4,
+   "median_seconds_all": 0.4,
+   "median_tokens": 339,
+   "failure_modes": {
+    "Replaced broken locator 'shopping_cart' with verified 'css=d": 1
+   }
+  },
+  {
+   "model": "openai/gpt-4.1-nano",
+   "requested_mode": "prompted",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "unreliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.79,
+     "tokens": 371,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.32,
+     "tokens": 405,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.38,
+     "tokens": 381,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.53,
+     "tokens": 507,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.66,
+     "tokens": 460,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.28,
+     "tokens": 463,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.57,
+     "tokens": 455,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.49,
+     "tokens": 918,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.26,
+     "tokens": 347,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.68,
+     "tokens": 627,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.17,
+     "tokens": 375,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 7.34,
+     "tokens": 651,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.55,
+     "tokens": 414,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.47,
+     "tokens": 615,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.53,
+     "tokens": 598,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 2.55,
+     "tokens": 545,
+     "requests": 1,
+     "detail": "Replaced broken locator 'id=pass' with verified 'css=input#login-button'.",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.32,
+     "tokens": 882,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 3.43,
+     "tokens": 563,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.45,
+     "tokens": 361,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.89,
+     "tokens": 604,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 95.0,
+   "wrong_element": 1,
+   "errors": 0,
+   "median_seconds": 1.6,
+   "median_seconds_all": 1.6,
+   "median_tokens": 485,
+   "failure_modes": {
+    "Replaced broken locator 'id=pass' with verified 'css=input#l": 1
+   }
+  },
+  {
+   "model": "openai/gpt-4.1-nano",
+   "requested_mode": "native",
+   "engine_output": "native",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "PASS"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "reliable",
+   "per_fixture": [
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.85,
+     "tokens": 338,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-04a8e56aa8b788eb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.25,
+     "tokens": 360,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-0c4df5ffc195f59d.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.5,
+     "tokens": 337,
+     "requests": 1,
+     "detail": "",
+     "fixture": "edge-cases-b8a1c8f4c3f42ce2.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.25,
+     "tokens": 445,
+     "requests": 1,
+     "detail": "",
+     "fixture": "heal-locator-drift-0a50dc52065ceb29.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 6.33,
+     "tokens": 404,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-1d075fa244ccbe4e.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.66,
+     "tokens": 412,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-0ec2302cd47dd4cc.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.96,
+     "tokens": 407,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-34547dd0ca31590f.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.13,
+     "tokens": 871,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-07ddc4581f3beced.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.22,
+     "tokens": 297,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-13bb4607b0e7a83e.fixture.json"
+    },
+    {
+     "ok": false,
+     "status": "healed",
+     "wrong_element": true,
+     "seconds": 1.5,
+     "tokens": 568,
+     "requests": 1,
+     "detail": "Replaced broken locator 'input.toggle >> \"Learn Robot Framework\"' with verified 'css=label:-soup-contains-own(\"Learn Robot Framework\")'.",
+     "fixture": "todo-broken-llm-72ea152a3f01da73.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.95,
+     "tokens": 345,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-parser-a9a15554c01d31ee.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.06,
+     "tokens": 583,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-47de5a381d48ce54.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.97,
+     "tokens": 353,
+     "requests": 1,
+     "detail": "",
+     "fixture": "car-kw-driven-40d4bd784a207167.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.75,
+     "tokens": 551,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-llm-2c3a4ee5b7777244.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.04,
+     "tokens": 541,
+     "requests": 1,
+     "detail": "",
+     "fixture": "insurance-broken-parser-29abb6cfb887cadb.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 4.39,
+     "tokens": 404,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-llm-401f31fba4240693.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.71,
+     "tokens": 833,
+     "requests": 1,
+     "detail": "",
+     "fixture": "sauce-web-parser-552d8966806ff287.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.23,
+     "tokens": 524,
+     "requests": 1,
+     "detail": "",
+     "fixture": "the-internet-login-llm-2da25a7bb284fb62.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 2.73,
+     "tokens": 321,
+     "requests": 1,
+     "detail": "",
+     "fixture": "todo-broken-llm-922615d5c37e3150.fixture.json"
+    },
+    {
+     "ok": true,
+     "status": "healed",
+     "wrong_element": false,
+     "seconds": 1.86,
+     "tokens": 554,
+     "requests": 1,
+     "detail": "",
+     "fixture": "ait-llm-502cff377664b18a.fixture.json"
+    }
+   ],
+   "fixtures": 20,
+   "accuracy_pct": 95.0,
+   "wrong_element": 1,
+   "errors": 0,
+   "median_seconds": 2.0,
+   "median_seconds_all": 2.0,
+   "median_tokens": 409,
+   "failure_modes": {
+    "Replaced broken locator 'input.toggle >> \"Learn Robot Framew": 1
+   }
+  }
+ ]
+}
