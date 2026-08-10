@@ -106,6 +106,78 @@ class DoctorReport:
         return recs
 
 
+#: probe that establishes whether an output mode can be produced at all.
+MODE_PROBES: dict[OutputMode, str] = {
+    OutputMode.TOOL: "tool_output",
+    OutputMode.NATIVE: "native_output",
+    OutputMode.PROMPTED: "prompted_output",
+}
+
+#: preference when the configured mode is broken and a fallback is needed.
+_FALLBACK_ORDER = (OutputMode.TOOL, OutputMode.NATIVE, OutputMode.PROMPTED)
+
+
+def safe_output_mode(working: dict[OutputMode, bool], preferred: OutputMode) -> OutputMode:
+    """The preferred mode if the endpoint can produce it, else one that works.
+
+    This is deliberately a *safety* rule, not a ranking rule. Probes establish
+    whether a transport works, not whether it heals better: in the OpenRouter
+    sweep `gemma-3-4b` passed both the native and prompted probes yet scored 75%
+    prompted against 35% native, so a passing preference is never second-guessed.
+    It is only overridden when it demonstrably cannot produce output at all --
+    `qwen3-8b` fails the prompted probe and scored 0% (19 of 20 fixtures timed
+    out) where native scored 95%.
+
+    See `experiments/small-model-sweep/FINDINGS.md`.
+    """
+    if working.get(preferred, True):
+        return preferred  # works, or was never probed -- leave the choice alone
+    for mode in _FALLBACK_ORDER:
+        if working.get(mode):
+            return mode
+    return preferred  # nothing works; the caller's choice is as good as any
+
+
+async def probe_output_modes(
+    model: Model | str, preferred: OutputMode, *, timeout: float | None = None
+) -> dict[OutputMode, bool]:
+    """Cheapest probe that can enforce the safety rule.
+
+    Tests ``preferred`` first and stops there when it works -- one tiny call in
+    the common case. Only a failure costs the extra probes needed to find a
+    working fallback.
+    """
+    probe_fns = {
+        OutputMode.TOOL: _probe_tool_output,
+        OutputMode.NATIVE: _probe_native_output,
+        OutputMode.PROMPTED: _probe_prompted_output,
+    }
+    if preferred not in probe_fns:
+        return {}
+    working: dict[OutputMode, bool] = {}
+
+    async def check(mode: OutputMode) -> bool:
+        coro = probe_fns[mode](model)
+        if timeout is None:
+            result = await _run_probe(MODE_PROBES[mode], coro)
+        else:
+            result = await asyncio.wait_for(_run_probe(MODE_PROBES[mode], coro), timeout=timeout)
+        working[mode] = result.ok
+        return result.ok
+
+    try:
+        if await check(preferred):
+            return working
+        for mode in _FALLBACK_ORDER:
+            if mode is not preferred and await check(mode):
+                break
+    except Exception:
+        # a probe that cannot even run must not break healing; an empty/partial
+        # map leaves safe_output_mode with the configured choice
+        pass
+    return working
+
+
 async def _run_probe(name: str, coro) -> ProbeResult:
     start = time.monotonic()
     try:

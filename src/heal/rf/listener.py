@@ -85,6 +85,7 @@ class HealListener:
         self.engine = HealingEngine(self.agent_runtime, self.ledger)
         self.txn_runtime = TransactionRuntime()
         self.events: list[HealEvent] = []
+        self._reported_notes: list[str] = []
         self.fixed_locators: dict[str, str] = {}
         #: (source file, broken locator) -> healed locator, loaded from history
         self.warm_fixes: dict[tuple[str, str], str] = {}
@@ -119,10 +120,20 @@ class HealListener:
         finally:
             self._in_transaction = False
 
+        self._report_capability_notes()
         self._enrich_fix_proposal(event)
         self.events.append(event)
         self._store_event(event)
         self._apply_outcome(event, session, result)
+
+    def _report_capability_notes(self) -> None:
+        """Surface an output-mode correction once — silently healing in a mode
+        the user did not configure would be worse than the failure it avoids."""
+        runtime = getattr(self.engine, "runtime", None)
+        notes = list(getattr(runtime, "capability_notes", ()) or ())
+        for note in notes[len(self._reported_notes) :]:
+            logger.warn(f"heal: {note}")
+            self._reported_notes.append(note)
 
     def close(self):
         try:

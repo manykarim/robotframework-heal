@@ -151,7 +151,7 @@ def doctor(
     vision: bool = typer.Option(False, help="Include the vision probe"),
 ):
     """Probe the configured model endpoints and resolve capabilities."""
-    from ..core.doctor import run_doctor
+    from ..core.doctor import MODE_PROBES, run_doctor, safe_output_mode
     from ..core.runtime import AgentRuntime
 
     settings = HealSettings()
@@ -170,7 +170,24 @@ def doctor(
         for res in report.results:
             typer.echo(f"  {res.name:18} {'PASS' if res.ok else 'FAIL':4} {res.latency_seconds:5.1f}s  {res.error[:70]}")
         caps = report.capabilities()
-        typer.echo(f"  resolved: output={caps.structured_output.value} tools={caps.tools.value} vision={caps.vision}")
+        typer.echo(f"  probed:   output={caps.structured_output.value} tools={caps.tools.value} vision={caps.vision}")
+
+        # what a real run would use, after the safety rule -- the probe alone
+        # cannot rank two working modes, so this is what actually matters
+        configured = runtime.capabilities(r)
+        working = {
+            mode: report.passed(probe)
+            for mode, probe in MODE_PROBES.items()
+            if report.result(probe) is not None
+        }
+        effective = safe_output_mode(working, configured.structured_output)
+        if effective is configured.structured_output:
+            typer.echo(f"  healing:  output={effective.value} tools={configured.tools.value}")
+        else:
+            typer.echo(
+                f"  healing:  output={effective.value} tools={configured.tools.value}"
+                f"  <- corrected: {configured.structured_output.value!r} FAILED its probe"
+            )
         for rec in report.recommendations():
             typer.echo(f"  - {rec}")
         failed = failed or not report.reachable
@@ -196,7 +213,10 @@ def corpus(
     from ..evals.corpus import harvest
 
     added, skipped = harvest([str(p) for p in paths], out)
-    typer.echo(f"harvested {added} new fixture(s), {skipped} already present, into {out}")
+    typer.echo(
+        f"harvested {added} new fixture(s), {skipped} skipped "
+        f"(already present, or contradicting an existing ground truth), into {out}"
+    )
 
 
 @app.command()
