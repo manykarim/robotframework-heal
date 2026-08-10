@@ -81,6 +81,13 @@ class HealSettings(BaseSettings):
     warm_start: bool = Field(
         True, description="Preload known broken->healed locator mappings from the healing history."
     )
+    probe_capabilities: bool = Field(
+        True,
+        description=(
+            "Verify the resolved output mode works before healing with it, and fall "
+            "back to a mode that does. One tiny call per endpoint, cached for the run."
+        ),
+    )
 
     # --- default model (fallback for all roles) ---
     model: str = Field("", description="Default model name (e.g. 'MiniMax-M2.5' or 'openai:gpt-4.1-mini').")

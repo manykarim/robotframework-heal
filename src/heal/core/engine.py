@@ -75,6 +75,11 @@ class HealingEngine:
             outcome = self._suppressed("Run token budget exhausted; healing disabled for the rest of the run.")
         else:
             try:
+                # Verify the resolved output mode can actually be produced before
+                # spending the budget healing in it. Deliberately outside the
+                # wait_for below: a probe is not part of the failure budget, and
+                # it is cached per endpoint so only the first transaction pays.
+                await self.runtime.ensure_safe_output_mode("locator")
                 outcome = await asyncio.wait_for(
                     self._process(builder, session, budget),
                     timeout=budget.remaining_seconds(),

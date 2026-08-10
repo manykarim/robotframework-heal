@@ -91,6 +91,19 @@ BACKEND_PRESETS: tuple[BackendPreset, ...] = (
             structured_output=OutputMode.PROMPTED,
         ),
     ),
+    BackendPreset(
+        name="ollama",
+        url_marker=":11434",  # Ollama's default port
+        # Sweep (experiments/ollama-small-models): tool calling is unavailable or
+        # unreliable over Ollama's OpenAI-compatible endpoint for ~all models, so
+        # the prompted floor is the correct default. `heal doctor` can still probe
+        # and `override_capabilities` if a given model proves reliably tool-capable.
+        # Capable models heal well in prompted mode (granite3.2:8b/gemma3 ~83-92%).
+        capabilities=ModelCapabilities(
+            tools=ToolSupport.UNRELIABLE,
+            structured_output=OutputMode.PROMPTED,
+        ),
+    ),
 )
 
 #: Capabilities for native pydantic-ai provider strings ("openai:gpt-4o", ...).
@@ -120,6 +133,11 @@ class AgentRuntime:
         self._models: dict[str, Model | str] = {}
         self._capabilities: dict[str, ModelCapabilities] = {}
         self._agents: dict[Any, Agent] = {}
+        #: probe verdicts keyed by endpoint identity, so roles sharing a model
+        #: (the common case -- one HEAL_MODEL) are probed once for the whole run
+        self._probed_modes: dict[tuple[str, str | None], dict[OutputMode, bool]] = {}
+        #: human-readable record of any mode the safety rule corrected
+        self.capability_notes: list[str] = []
 
     @property
     def settings(self) -> HealSettings:
@@ -135,6 +153,61 @@ class AgentRuntime:
     def override_capabilities(self, role: str, capabilities: ModelCapabilities) -> None:
         """Install probed capabilities (from `heal doctor`) for a role."""
         self._capabilities[role] = capabilities
+
+    async def ensure_safe_output_mode(self, role: str) -> ModelCapabilities:
+        """Never heal in an output mode the endpoint cannot actually produce.
+
+        Backend presets resolve a mode per *endpoint*, but capability is
+        per-model: a reasoning model behind a preset pinned to prompted output
+        can fail every single heal while a mode it does support sits unused
+        (`qwen3-8b`: 0% prompted, 95% native). This verifies the resolved mode
+        with one tiny call and switches only when it is demonstrably broken --
+        a passing mode is never second-guessed, because probes measure
+        transport, not healing quality.
+
+        Disable with ``HEAL_PROBE_CAPABILITIES=false``.
+        """
+        caps = self.capabilities(role)
+        if not self._settings.probe_capabilities:
+            return caps
+        cfg = self._settings.role_config(role)
+        if not cfg.model:
+            return caps
+        key = (cfg.model, cfg.base_url)
+        if key not in self._probed_modes:
+            from .doctor import probe_output_modes
+
+            self._probed_modes[key] = await probe_output_modes(
+                self.model(role),
+                caps.structured_output,
+                # bound each probe so an unresponsive endpoint cannot stall the
+                # run; a mode that cannot answer a one-word question inside the
+                # per-failure budget cannot heal inside it either
+                timeout=self._settings.max_failure_seconds,
+            )
+        return self._apply_safe_mode(role, caps, self._probed_modes[key])
+
+    def _apply_safe_mode(
+        self, role: str, caps: ModelCapabilities, working: dict[OutputMode, bool]
+    ) -> ModelCapabilities:
+        from .doctor import safe_output_mode
+
+        safe = safe_output_mode(working, caps.structured_output)
+        if safe is caps.structured_output:
+            return caps
+        corrected = ModelCapabilities(
+            tools=caps.tools, structured_output=safe, vision=caps.vision
+        )
+        self._capabilities[role] = corrected
+        # agents cached under the old mode would keep using it
+        self._agents = {k: v for k, v in self._agents.items() if k[0] != role}
+        note = (
+            f"{role}: {caps.structured_output.value!r} output failed its probe on "
+            f"{self._settings.role_config(role).model!r}; using {safe.value!r} instead"
+        )
+        if note not in self.capability_notes:
+            self.capability_notes.append(note)
+        return corrected
 
     def _resolve_capabilities(self, cfg: ResolvedModelConfig) -> ModelCapabilities:
         preset = find_preset(cfg.base_url)

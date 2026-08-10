@@ -1,0 +1,165 @@
+{
+ "base_url": "http://192.168.1.15:11434/v1",
+ "fixtures": 12,
+ "models": [
+  {
+   "model": "gemma3:latest",
+   "bucket": "tiny/no-tools",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 12,
+   "accuracy_pct": 83.3,
+   "errors": 0,
+   "median_seconds": 7.9,
+   "median_tokens": 546,
+   "failure_modes": {
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 1,
+    "Replaced broken locator 'id=user_continent' with verified 'c": 1
+   }
+  },
+  {
+   "model": "llama3.1:latest",
+   "bucket": "8B/tool-capable",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 12,
+   "accuracy_pct": 58.3,
+   "errors": 0,
+   "median_seconds": 10.8,
+   "median_tokens": 504,
+   "failure_modes": {
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 2,
+    "Replaced broken locator 'id=user_continent' with verified 'c": 2,
+    "Replaced broken locator 'id=tell_me_more' with verified 'css": 1
+   }
+  },
+  {
+   "model": "qwen3:8b",
+   "bucket": "8B/tool-capable",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "unreliable",
+   "fixtures": 12,
+   "accuracy_pct": 83.3,
+   "errors": 0,
+   "median_seconds": 47.5,
+   "median_tokens": 749,
+   "failure_modes": {
+    "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).": 1,
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 1
+   }
+  },
+  {
+   "model": "granite3.2:8b",
+   "bucket": "8B/tool-capable",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 12,
+   "accuracy_pct": 91.7,
+   "errors": 0,
+   "median_seconds": 12.4,
+   "median_tokens": 514,
+   "failure_modes": {
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 1
+   }
+  },
+  {
+   "model": "gemma3:12b",
+   "bucket": "larger-small",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "native",
+   "doctor_tools": "none",
+   "fixtures": 12,
+   "accuracy_pct": 91.7,
+   "errors": 0,
+   "median_seconds": 22.2,
+   "median_tokens": 559,
+   "failure_modes": {
+    "Replaced broken locator 'id=last_name' with verified 'css=in": 1
+   }
+  },
+  {
+   "model": "qwen3:14b",
+   "bucket": "larger-small",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": true,
+   "doctor": {
+    "tool_output": "PASS",
+    "native_output": "PASS",
+    "prompted_output": "PASS",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "tool",
+   "doctor_tools": "unreliable",
+   "fixtures": 12,
+   "accuracy_pct": 0.0,
+   "errors": 0,
+   "median_seconds": 31.8,
+   "median_tokens": 0,
+   "failure_modes": {
+    "No locator proposal survived live verification.": 8,
+    "Aborted after 60s (HEAL_MAX_FAILURE_SECONDS).": 4
+   }
+  },
+  {
+   "model": "llama3.2-vision:latest",
+   "bucket": "vision",
+   "engine_output": "prompted",
+   "engine_tools": "unreliable",
+   "reachable": false,
+   "doctor": {
+    "tool_output": "FAIL",
+    "native_output": "FAIL",
+    "prompted_output": "FAIL",
+    "exploration_tool": "FAIL"
+   },
+   "doctor_output": "prompted",
+   "doctor_tools": "none",
+   "error": "Endpoint unreachable or model unavailable: ModelAPIError: Connection error.. Check model name, base URL (no trailing /chat/completions) and API key."
+  }
+ ]
+}

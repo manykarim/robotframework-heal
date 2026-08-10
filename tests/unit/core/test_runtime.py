@@ -142,3 +142,19 @@ def test_probed_capability_override():
         "locator", ModelCapabilities(tools=ToolSupport.RELIABLE, structured_output=OutputMode.TOOL)
     )
     assert len(run_with_test_model(rt, "locator")) == 1
+
+
+def test_ollama_preset_resolves_prompted_floor():
+    # Ollama (detected by the :11434 port) -> prompted floor, tools unreliable
+    rt = AgentRuntime(settings(model="gemma3:latest", base_url="http://192.168.1.15:11434/v1", api_key="ollama"))
+    caps = rt.capabilities("locator")
+    assert caps.structured_output is OutputMode.PROMPTED
+    assert caps.tools is ToolSupport.UNRELIABLE
+    assert find_preset("http://192.168.1.15:11434/v1").name == "ollama"
+
+
+def test_ollama_doctor_override_can_upgrade():
+    # a probed-reliable model still upgrades via override_capabilities
+    rt = AgentRuntime(settings(model="m", base_url="http://host:11434/v1", api_key="ollama"))
+    rt.override_capabilities("locator", ModelCapabilities(tools=ToolSupport.RELIABLE, structured_output=OutputMode.TOOL))
+    assert rt.capabilities("locator").structured_output is OutputMode.TOOL

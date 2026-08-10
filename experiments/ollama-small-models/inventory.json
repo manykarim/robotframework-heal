@@ -1,0 +1,132 @@
+{
+ "host": "192.168.1.15:11434",
+ "ollama_version": "0.15.4",
+ "models": [
+  {
+   "name": "llama3.2:latest",
+   "size_gb": 2.0,
+   "params": "3.2B",
+   "family": "llama",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "phi3:latest",
+   "size_gb": 2.2,
+   "params": "3.8B",
+   "family": "phi3",
+   "quant": "Q4_0"
+  },
+  {
+   "name": "phi4-mini:latest",
+   "size_gb": 2.5,
+   "params": "3.8B",
+   "family": "phi3",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "gemma3:latest",
+   "size_gb": 3.3,
+   "params": "4.3B",
+   "family": "gemma3",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "starcoder2:7b",
+   "size_gb": 4.0,
+   "params": "7B",
+   "family": "starcoder2",
+   "quant": "Q4_0"
+  },
+  {
+   "name": "llama3:latest",
+   "size_gb": 4.7,
+   "params": "8B",
+   "family": "llama",
+   "quant": "Q4_0"
+  },
+  {
+   "name": "llama3-gradient:latest",
+   "size_gb": 4.7,
+   "params": "8B",
+   "family": "llama",
+   "quant": "Q4_0"
+  },
+  {
+   "name": "locutus:latest",
+   "size_gb": 4.7,
+   "params": "8B",
+   "family": "llama",
+   "quant": "Q4_0"
+  },
+  {
+   "name": "dolphin-llama3:latest",
+   "size_gb": 4.7,
+   "params": "8B",
+   "family": "llama",
+   "quant": "Q4_0"
+  },
+  {
+   "name": "dolphin-llama3:8b",
+   "size_gb": 4.7,
+   "params": "8B",
+   "family": "llama",
+   "quant": "Q4_0"
+  },
+  {
+   "name": "llama3.1:latest",
+   "size_gb": 4.9,
+   "params": "8.0B",
+   "family": "llama",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "granite3.2:8b",
+   "size_gb": 4.9,
+   "params": "8.2B",
+   "family": "granite",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "qwen3:8b",
+   "size_gb": 5.2,
+   "params": "8.2B",
+   "family": "qwen3",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "qwen3:latest",
+   "size_gb": 5.2,
+   "params": "8.2B",
+   "family": "qwen3",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "llama3.2-vision:latest",
+   "size_gb": 7.9,
+   "params": "9.8B",
+   "family": "mllama",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "gemma3:12b",
+   "size_gb": 8.1,
+   "params": "12.2B",
+   "family": "gemma3",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "qwen3:14b",
+   "size_gb": 9.3,
+   "params": "14.8B",
+   "family": "qwen3",
+   "quant": "Q4_K_M"
+  },
+  {
+   "name": "devstral:latest",
+   "size_gb": 14.3,
+   "params": "23.6B",
+   "family": "llama",
+   "quant": "Q4_K_M"
+  }
+ ]
+}
