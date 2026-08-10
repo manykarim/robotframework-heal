@@ -1277,6 +1277,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ollama-small-model-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ollama small-model compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-mode-is-per-model-not-per-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output mode is per model, not per backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification-is-not-semantic-check-what-healed-means" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification is not semantic — check what "healed" means
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1408,6 +1441,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ollama-small-model-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ollama small-model compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-mode-is-per-model-not-per-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output mode is per model, not per backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification-is-not-semantic-check-what-healed-means" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification is not semantic — check what "healed" means
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1494,6 +1560,198 @@ profile. This caught real backend quirks:</p>
 <p>The load-bearing finding: <strong><code>ModelRetry</code> verification works on every reachable
 model</strong>, including 8B-class ones — which is what makes the universal floor real
 rather than aspirational.</p>
+<h2 id="ollama-small-model-compatibility">Ollama small-model compatibility<a class="headerlink" href="#ollama-small-model-compatibility" title="Permanent link">&para;</a></h2>
+<p>A dedicated sweep replayed the locator-healing corpus across the Ollama fleet
+(<code>experiments/ollama-small-models/FINDINGS.md</code>, element-identity grading,
+selection tier, prompted floor).</p>
+<p><strong>Read the scope before the numbers.</strong> These are <strong>locator-drift</strong> heals only,
+graded on <strong>12 fixtures drawn from a single test suite</strong>, on one Ollama host.
+Triage, vision and fix-synthesis were never exercised, and one graded fixture
+carried a bad ground truth (since removed), capping the achievable score at
+11/12 — so the two 92% rows were in fact perfect runs. Treat the ordering as a
+useful signal and the absolute percentages as provisional; they will move when
+the sweep is re-run on a corpus-wide sample.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Size</th>
+<th>Accuracy</th>
+<th>Median latency</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>granite3.2:8b</code></td>
+<td>8.2B</td>
+<td><strong>92%</strong></td>
+<td>12s</td>
+<td>highest accuracy</td>
+</tr>
+<tr>
+<td><code>gemma3:12b</code></td>
+<td>12.2B</td>
+<td><strong>92%</strong></td>
+<td>22s</td>
+<td>highest accuracy, slower</td>
+</tr>
+<tr>
+<td><code>gemma3</code></td>
+<td>4.3B</td>
+<td><strong>83%</strong></td>
+<td>8s</td>
+<td><strong>best quality/speed</strong></td>
+</tr>
+<tr>
+<td><code>qwen3:8b</code></td>
+<td>8.2B</td>
+<td>83%</td>
+<td>48s</td>
+<td>reasoning model — slow</td>
+</tr>
+<tr>
+<td><code>phi3</code></td>
+<td>3.8B</td>
+<td>67%</td>
+<td>7s</td>
+<td>solid small option</td>
+</tr>
+<tr>
+<td><code>llama3.1</code></td>
+<td>8.0B</td>
+<td>58%</td>
+<td>11s</td>
+<td>locator quality limited</td>
+</tr>
+<tr>
+<td><code>llama3.2</code></td>
+<td>3.2B</td>
+<td>33%</td>
+<td>9s</td>
+<td>too weak to recommend</td>
+</tr>
+<tr>
+<td><code>phi4-mini</code></td>
+<td>3.8B</td>
+<td>8%</td>
+<td>32s</td>
+<td>proposals fail verification</td>
+</tr>
+<tr>
+<td><code>qwen3:14b</code></td>
+<td>14.8B</td>
+<td>0%</td>
+<td>32s</td>
+<td>timeouts dominate; avoid</td>
+</tr>
+</tbody>
+</table>
+<p>Latency for weak models also carries a root-cause-analysis round-trip, which
+fires on every unhealed keyword — so the slow rows are not directly comparable
+with the fast ones.</p>
+<p>What this matrix shows: no model on the sweep exposed a working exploration-tool
+loop — 7 of 9 fail the tool probe outright, and the two that pass it (both
+<code>qwen3</code> builds) are flagged unreliable. Prompted JSON plus validator
+verification is what makes the capable ones viable at all.</p>
+<h2 id="output-mode-is-per-model-not-per-backend">Output mode is per model, not per backend<a class="headerlink" href="#output-mode-is-per-model-not-per-backend" title="Permanent link">&para;</a></h2>
+<p>A follow-up sweep added the axis the Ollama run never tested — <strong>output mode</strong> —
+across 9 models on OpenRouter, 20 fixtures stratified over 11 suites
+(<code>experiments/small-model-sweep/FINDINGS.md</code>). Native averaged 81% against
+prompted's 70%, at ~17% fewer tokens. But the averages hide the real finding:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>prompted</th>
+<th>native</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>qwen3-8b</code></td>
+<td><strong>0%</strong></td>
+<td><strong>95%</strong></td>
+</tr>
+<tr>
+<td><code>llama-3.1-8b</code></td>
+<td>60%</td>
+<td><strong>90%</strong></td>
+</tr>
+<tr>
+<td><code>gemma-3-4b</code></td>
+<td><strong>75%</strong></td>
+<td>35%</td>
+</tr>
+<tr>
+<td><code>granite-4.1-8b</code>, <code>qwen3-14b</code>, <code>gpt-4.1-nano</code></td>
+<td>95%</td>
+<td>95%</td>
+</tr>
+</tbody>
+</table>
+<p><code>qwen3-8b</code> is a reasoning model: in prompted mode it never emits parseable JSON
+inside the time budget, and 19 of 20 fixtures hit the cap. <code>gemma-3-4b</code> moves
+the opposite way — schema-constrained decoding costs a 4B model more proposal
+quality than it gains in structure.</p>
+<p><strong>Neither mode is a safe universal default</strong>, and backend presets resolve a mode
+per <em>endpoint</em>. So heal verifies the resolved mode before healing with it:</p>
+<blockquote>
+<p><strong>The safety rule.</strong> If the configured output mode cannot be produced by the
+model, fall back to one that can. If it works, never second-guess it.</p>
+</blockquote>
+<p>That is one tiny probe call per endpoint, cached for the run
+(<code>HEAL_PROBE_CAPABILITIES=false</code> disables it). It takes <code>qwen3-8b</code> from 0% to
+100% on the corpus and leaves every other model's mode untouched — measured in
+<code>experiments/small-model-sweep/FINDINGS.md</code>. When it fires, it says so:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[ WARN ] heal: locator: &#39;prompted&#39; output failed its probe on &#39;qwen/qwen3-8b&#39;; using &#39;native&#39; instead
+</span></code></pre></div>
+<p>The rule is deliberately narrow, because a probe measures whether a transport
+<em>works</em>, not whether it <em>heals better</em>. <code>gemma-3-4b</code> passes both probes yet
+scores 75% prompted against 35% native, so no probe could have chosen for it.
+For that case — a mode that works but works worse — pin it yourself:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">HEAL_LOCATOR_OUTPUT_MODE</span><span class="o">=</span>prompted
+</span></code></pre></div>
+<p><code>heal doctor --role locator</code> shows both: <code>probed:</code> is what the endpoint supports,
+<code>healing:</code> is what a run would actually use after the safety rule.</p>
+<h2 id="verification-is-not-semantic-check-what-healed-means">Verification is not semantic — check what "healed" means<a class="headerlink" href="#verification-is-not-semantic-check-what-healed-means" title="Permanent link">&para;</a></h2>
+<p>A heal counts when the proposed locator resolves to exactly one element, that
+element is visible, and the keyword reruns successfully. <strong>None of those
+properties is semantic</strong>, and weak models exploit the gap: across the sweep, 30
+of 180 prompted cells healed to the <em>wrong element</em> and were reported as
+successes. For <code>llama-3.2-3b</code> it was 10 of 20.</p>
+<p>These are not near-misses:</p>
+<table>
+<thead>
+<tr>
+<th>Keyword</th>
+<th>Ground truth</th>
+<th>Healed to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Fill Text  id=pass  secret_sauce</code></td>
+<td><code>#password</code></td>
+<td><code>input#user-name</code></td>
+</tr>
+<tr>
+<td><code>Fill Text  id=user  standard_user</code></td>
+<td><code>#user-name</code></td>
+<td><code>input#password</code></td>
+</tr>
+<tr>
+<td><code>Select Options By  Fuel Type  Petrol</code></td>
+<td><code>select#fuel</code></td>
+<td><code>select#make</code></td>
+</tr>
+</tbody>
+</table>
+<p>The first types a secret into a visible username field — and the test passes.</p>
+<p>The practical consequence: <strong>a low-accuracy model that refuses is safer than one
+that guesses.</strong> Prefer the models at the top of the matrix, review healed
+locators before accepting them, and treat <code>HEAL_FIX_TIER</code> escalation as a
+decision, not a default.</p>
 
 
 

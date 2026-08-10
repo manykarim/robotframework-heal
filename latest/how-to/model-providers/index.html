@@ -1408,38 +1408,64 @@ See the <a href="../../reference/configuration/">configuration reference</a>.</p
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>https://openrouter.ai/api/v1
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>sk-or-...
 </span></code></pre></div>
+<p>Capability varies per model behind the one endpoint, so heal resolves the
+<strong>prompted</strong> floor by default, then verifies that mode works before healing
+with it and falls back if it does not — so a reasoning model like <code>qwen3-8b</code>,
+which cannot produce prompted JSON in time, is corrected to native
+automatically (0% → 100% on the corpus).</p>
+<p>Best measured picks: <code>ibm-granite/granite-4.1-8b</code> and <code>qwen/qwen3-14b</code> (95%
+in either mode). Avoid <code>meta-llama/llama-3.2-3b-instruct</code>, which healed to
+the <em>wrong</em> element in half its fixtures. One model needs a manual pin:
+<code>gemma-3-4b</code> scores <strong>75% prompted against 35% native</strong> while passing both
+probes, so nothing can detect it for you:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">HEAL_LOCATOR_OUTPUT_MODE</span><span class="o">=</span>prompted<span class="w">   </span><span class="c1"># only for gemma-3-4b-style outliers</span>
+</span></code></pre></div>
+<p>Full matrix: <code>experiments/small-model-sweep/FINDINGS.md</code>.</p>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>MiniMax-M2.5
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>https://api.minimax.io/v1
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>...
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>MiniMax-M2.5
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>https://api.minimax.io/v1
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>...
 </span></code></pre></div>
 <p>MiniMax's quirks (forced <code>tool_choice</code>) are handled by a built-in profile —
 heal resolves it to prompted output automatically.</p>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>your-served-model
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>http://your-vllm-host:8000/v1
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>token-abc<span class="w">          </span><span class="c1"># if your gateway requires one</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>your-served-model
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>http://your-vllm-host:8000/v1
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>token-abc<span class="w">          </span><span class="c1"># if your gateway requires one</span>
 </span></code></pre></div>
 <p>Strict tool schemas (which vLLM rejects) are stripped automatically.</p>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>qwen2.5
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>http://localhost:11434/v1
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>ollama
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>gemma3<span class="w">                       </span><span class="c1"># 4.3B — best quality/speed</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>http://localhost:11434/v1<span class="w"> </span><span class="c1"># or http://&lt;host&gt;:11434/v1</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>ollama<span class="w">                     </span><span class="c1"># any placeholder; Ollama ignores it</span>
 </span></code></pre></div>
+<p>Ollama runs on the <strong>prompted</strong> floor — the same default every unknown
+OpenAI-compatible backend gets; the <code>:11434</code> preset makes it explicit
+rather than incidental. A sweep found Ollama's OpenAI-compatible endpoint
+does not reliably expose tool calling, and prompted JSON + validator-based
+verification heals well without it.</p>
+<p><strong>Recommended models:</strong> <code>gemma3</code> (4.3B) for the best quality/speed,
+<code>granite3.2:8b</code> or <code>gemma3:12b</code> for the highest accuracy. Avoid heavy
+reasoning models (e.g. <code>qwen3:14b</code>) and very small ones (<code>phi4-mini</code>,
+<code>llama3.2</code>). These rankings come from locator-drift healing only — set
+<code>HEAL_TRIAGE_MODEL</code> / <code>HEAL_RCA_MODEL</code> separately if you want a different
+model for the other roles, since <code>HEAL_MODEL</code> configures all of them.
+Slow hardware may need a higher <code>HEAL_MAX_FAILURE_SECONDS</code>. See the
+<a href="../../explanation/model-tiers/#ollama-small-model-compatibility">small-model matrix</a>.</p>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>your-alias
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>http://your-litellm-proxy:4000
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>sk-...
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">HEAL_MODEL</span><span class="o">=</span>your-alias
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">HEAL_BASE_URL</span><span class="o">=</span>http://your-litellm-proxy:4000
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">HEAL_API_KEY</span><span class="o">=</span>sk-...
 </span></code></pre></div>
 </div>
 </div>
 </div>
 <h2 id="verify-the-endpoint">Verify the endpoint<a class="headerlink" href="#verify-the-endpoint" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>heal<span class="w"> </span>doctor<span class="w"> </span>--role<span class="w"> </span>all
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>heal<span class="w"> </span>doctor<span class="w"> </span>--role<span class="w"> </span>all
 </span></code></pre></div>
 <p><code>doctor</code> probes tool calling, JSON-schema output, prompted output, and vision,
 then prints the resolved capabilities and the output mode it will use. If a
