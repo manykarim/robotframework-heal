@@ -1,5 +1,61 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- **Output-mode safety rule** (`HEAL_PROBE_CAPABILITIES`, default on): heal now
+  verifies that the resolved structured-output mode can actually be produced by
+  the configured model, and falls back to a mode that can. Backend presets
+  resolve a mode per *endpoint*, but capability is per *model* — a reasoning
+  model behind a preset pinned to prompted output failed **every** heal while a
+  mode it supported sat unused (`qwen3-8b`: 0% → 100% on the eval corpus; live
+  browser suites 0/2 → 8/8). Costs one tiny probe call per endpoint, cached for
+  the run and shared across roles. The rule only overrides a mode that
+  demonstrably *fails* — a working mode is never second-guessed, because probes
+  measure transport, not healing quality. Corrections are logged as a warning
+  and exposed via `AgentRuntime.capability_notes`; `heal doctor` now prints both
+  what the endpoint supports (`probed:`) and what a run would use (`healing:`).
+  Evidence: `experiments/small-model-sweep/FINDINGS.md`.
+- **Packaged cross-model sweep harness** (`heal.evals.sweep`): replays a
+  stratified corpus sample against any OpenAI-compatible backend across models
+  and output modes, grading element identity. Samples are spread across suites
+  with duplicate actions removed (the previous first-N slice drew 11 of 12
+  fixtures from one suite), per-fixture records are retained so aggregates can
+  be recomputed without re-running, headline latency excludes unhealed fixtures
+  (root-cause analysis fires only there, inflating weak models), ambient
+  `HEAL_*` variables are isolated, and wrong-element heals are counted
+  explicitly. Report: `experiments/small-model-sweep/FINDINGS.md`.
+- **Ollama backend preset**: an Ollama endpoint (detected by the default
+  `:11434` port) now resolves an explicit capability profile — prompted
+  structured output, tool support treated as unreliable. This is the same floor
+  every unknown OpenAI-compatible backend already resolved, so **no healing
+  behaviour changes**; the preset makes the default intentional, testable, and
+  documented, and gives Ollama-specific quirks a home. Evidence and the
+  small-model compatibility matrix: `experiments/ollama-small-models/FINDINGS.md`.
+- **Ground-truth conflict detection in the eval corpus**: `heal corpus` now
+  rejects a candidate fixture whose truth contradicts an existing fixture for
+  the same suite/keyword/args/locator. Fixtures are harvested from heals the
+  engine itself performed, so one wrong-but-verified heal could become an
+  unwinnable fixture and silently cap corpus accuracy. Selector *form*
+  (`#id` vs `tag#id`) and nested targets (`button > i`) are not conflicts.
+
+### Changed
+- **Token usage is recorded on unhealed locator transactions, and accumulates
+  across tiers.** Previously only a successful heal reported its cost, and a
+  selection-tier pick that failed to rerun was never charged at all. Failed
+  heals now count toward `HEAL_MAX_RUN_TOKENS`, so a run dominated by failures
+  reaches the run budget — and degrades to RCA-only — sooner than in 0.4.0.
+  Raise `HEAL_MAX_RUN_TOKENS` if you relied on the previous accounting.
+
+### Fixed
+- Removed eval fixture `ait-llm-4bdcdc82db6f7d1d`, which recorded
+  `input#firstname` as ground truth for `Fill Text  id=last_name` — an
+  artifact of a wrong heal that passed live verification. It capped the
+  12-fixture sweep subset at 11/12.
+- Corrected the Ollama tool-probe count in the docs (7 of 9 models report no
+  tool endpoint, not 8) and scoped the small-model matrix to what was actually
+  measured: locator-drift healing on 12 fixtures from a single suite.
+
 ## 0.4.0 — 2026-06-18
 
 Ground-up rewrite as a failure-triage and root-cause-analysis engine built on

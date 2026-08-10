@@ -26,6 +26,24 @@ inherits them and can be overridden individually. Always confirm with
     HEAL_API_KEY=sk-or-...
     ```
 
+    Capability varies per model behind the one endpoint, so heal resolves the
+    **prompted** floor by default, then verifies that mode works before healing
+    with it and falls back if it does not — so a reasoning model like `qwen3-8b`,
+    which cannot produce prompted JSON in time, is corrected to native
+    automatically (0% → 100% on the corpus).
+
+    Best measured picks: `ibm-granite/granite-4.1-8b` and `qwen/qwen3-14b` (95%
+    in either mode). Avoid `meta-llama/llama-3.2-3b-instruct`, which healed to
+    the *wrong* element in half its fixtures. One model needs a manual pin:
+    `gemma-3-4b` scores **75% prompted against 35% native** while passing both
+    probes, so nothing can detect it for you:
+
+    ```bash
+    HEAL_LOCATOR_OUTPUT_MODE=prompted   # only for gemma-3-4b-style outliers
+    ```
+
+    Full matrix: `experiments/small-model-sweep/FINDINGS.md`.
+
 === "MiniMax"
 
     ```bash
@@ -55,14 +73,20 @@ inherits them and can be overridden individually. Always confirm with
     HEAL_API_KEY=ollama                     # any placeholder; Ollama ignores it
     ```
 
-    heal detects the `:11434` endpoint and resolves the **prompted** floor:
-    a sweep found Ollama's OpenAI-compatible endpoint does not reliably expose
-    tool calling, and prompted JSON + validator-based verification heals well
-    without it. **Recommended models:** `gemma3` (4.3B) for the best
-    quality/speed, `granite3.2:8b` or `gemma3:12b` for the highest accuracy.
-    Avoid heavy reasoning models (e.g. `qwen3:14b`) and very small ones
-    (`phi4-mini`, `llama3.2`). Slow hardware may need a higher
-    `HEAL_MAX_FAILURE_SECONDS`. See the [small-model matrix](../explanation/model-tiers.md#ollama-small-model-compatibility).
+    Ollama runs on the **prompted** floor — the same default every unknown
+    OpenAI-compatible backend gets; the `:11434` preset makes it explicit
+    rather than incidental. A sweep found Ollama's OpenAI-compatible endpoint
+    does not reliably expose tool calling, and prompted JSON + validator-based
+    verification heals well without it.
+
+    **Recommended models:** `gemma3` (4.3B) for the best quality/speed,
+    `granite3.2:8b` or `gemma3:12b` for the highest accuracy. Avoid heavy
+    reasoning models (e.g. `qwen3:14b`) and very small ones (`phi4-mini`,
+    `llama3.2`). These rankings come from locator-drift healing only — set
+    `HEAL_TRIAGE_MODEL` / `HEAL_RCA_MODEL` separately if you want a different
+    model for the other roles, since `HEAL_MODEL` configures all of them.
+    Slow hardware may need a higher `HEAL_MAX_FAILURE_SECONDS`. See the
+    [small-model matrix](../explanation/model-tiers.md#ollama-small-model-compatibility).
 
 === "LiteLLM proxy"
 

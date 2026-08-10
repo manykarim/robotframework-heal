@@ -9,6 +9,32 @@ Ollama — HTTP 500 "no longer supported"). The host became unstable under load 
 dropped twice mid-run; results were gathered across resumes (the harness skips
 unreachable models and continues).
 
+## Sample caveats — read before the matrix
+
+These qualify every number below. They were identified in a post-hoc audit; the
+matrix has **not** been re-measured, so the figures are provisional.
+
+1. **The 12 fixtures are not a representative sample.** `--limit 12` takes the
+   first 12 of 60 in alphabetical order, so **11 of 12 come from one suite**
+   (`ait-llm`) with heavy duplication — 3× `usergender`, 2× `user_continent`,
+   2× `first_name`, 2× `last_name`. Roughly 6 distinct scenarios on one page.
+2. **One graded fixture was unwinnable.** `ait-llm-4bdcdc82db6f7d1d` (position 3)
+   carried a wrong ground truth, so the real ceiling was **11/12 = 91.7%** — the
+   two "92%" rows (`granite3.2:8b`, `gemma3:12b`) were perfect runs, and every
+   other row is understated by up to one fixture. That fixture has since been
+   removed from the corpus, which also shifts which 12 `--limit 12` selects.
+3. **Latency is not comparable across rows.** RCA runs on every unhealed
+   keyword, so weak models pay an extra LLM round-trip inside the measured
+   wall-clock — but RCA usage is discarded, so it never shows in the token
+   column. Rows with many failures are locator+RCA; strong rows are locator only.
+4. **Only locator drift was measured.** Triage never runs (the deterministic
+   detector short-circuits it on a drifted locator), vision was skipped
+   (`include_vision=False`, and the replay driver returns no screenshot), and
+   fix synthesis is not graded. Any per-role recommendation is an extrapolation.
+5. **`native` output mode was never healing-tested**, though `native_output`
+   passed the probe on 9 of 9 reachable models. The prompted floor is the
+   *safe* default here, not a measured winner.
+
 ## Compatibility matrix
 
 | Model | Size | engine mode | doctor probe | accuracy | median latency | median tokens |
@@ -33,21 +59,29 @@ slower. `phi3` is a solid 3.8B option (67% @ 7s).
 The primary result is reassuring — **no engine bug was found.** The differentiator
 across models is *model quality*, not engine behaviour:
 
-- **Verification integrity held.** No model ever healed to the wrong element via a
-  successful heal — weak models (`phi4-mini`, `qwen3:14b`) fail with "no proposal
-  survived live verification", exactly as designed. The wrong-element cases the
-  identity grading caught are heals the model picked that are valid/unique/visible
-  but not the recorded ground-truth element — a model-quality miss, not an engine
-  fault.
+- **Verification integrity held in this sweep.** Weak models (`phi4-mini`,
+  `qwen3:14b`) fail with "no proposal survived live verification", exactly as
+  designed. The wrong-element cases the identity grading caught are heals the
+  model picked that are valid/unique/visible but not the recorded ground-truth
+  element — a model-quality miss, not an engine fault.
+
+  **This is not a guarantee, and the corpus proves it.** Fixture
+  `ait-llm-4bdcdc82db6f7d1d` recorded `input#firstname` as ground truth for
+  `Fill Text  id=last_name  smith` — it exists only because an earlier heal
+  picked the first-name field and *passed* live verification. Uniqueness and
+  visibility do not imply semantic correctness. That fixture has been removed
+  and `heal corpus` now rejects ground truth that contradicts an existing
+  fixture for the same action (`find_truth_conflicts`).
 - **Graceful degradation held.** Both host drops and the deprecated vision model
   were reported as unreachable/error; the sweep skipped and continued, never
   crashing or hanging.
 - **The prompted floor is the right Ollama default.** `heal doctor` shows that
   **Ollama's OpenAI-compatible endpoint does not reliably expose tool calling** —
-  8 of 9 models probe `no-tools`, and the one that probes `tool` (qwen3) is
-  flagged `unreliable`. So the engine's choice to heal via prompted JSON is
-  correct, and verification-in-validators (which works in prompted mode) is what
-  makes these models viable at all.
+  7 of 9 models probe `no-tools`, and the two that probe `tool` (`qwen3:8b` and
+  `qwen3:14b`) are flagged `unreliable`. Decisively, `exploration_tool` FAILS on
+  **9 of 9**: no model has a working tool loop. So the engine's choice to heal
+  via prompted JSON is correct, and verification-in-validators (which works in
+  prompted mode) is what makes these models viable at all.
 
 ## Issues (classified)
 
