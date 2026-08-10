@@ -32,10 +32,21 @@ from ..schemas import (
     FixProposal,
     HealAction,
     HealOutcome,
+    ModelUsage,
     OutcomeStatus,
 )
 from ..session import HealSession, RerunNotSupported
 from .base import FailureClassPlugin
+
+
+def _bank(usage: ModelUsage, result) -> None:
+    """Accumulate one agent run's cost onto the transaction.
+
+    Tiers add up: a selection pick that fails to rerun still cost tokens, and
+    the generation fallback that follows is a second, additional cost.
+    """
+    usage.requests += result.usage.requests or 0
+    usage.total_tokens += result.usage.total_tokens or 0
 
 
 class LocatorDriftPlugin(FailureClassPlugin):
@@ -62,15 +73,22 @@ class LocatorDriftPlugin(FailureClassPlugin):
 
     async def heal(self, ctx, session, runtime, budget, diagnosis) -> HealOutcome:
         attempts: list[Attempt] = []
+        # accumulated across tiers so a selection pick that failed to rerun is
+        # still charged to the transaction when generation takes over
+        usage = ModelUsage()
         if runtime.settings.locator_tiers == "selection":
-            outcome = await self._heal_by_selection(ctx, session, runtime, budget, diagnosis, attempts)
+            outcome = await self._heal_by_selection(
+                ctx, session, runtime, budget, diagnosis, attempts, usage
+            )
             if outcome is not None:
                 return outcome
             # selection had nothing / exhausted -> fall through to generation
-        return await self._heal_by_generation(ctx, session, runtime, budget, diagnosis, attempts)
+        return await self._heal_by_generation(
+            ctx, session, runtime, budget, diagnosis, attempts, usage
+        )
 
     async def _heal_by_selection(
-        self, ctx, session, runtime, budget, diagnosis, attempts: list[Attempt]
+        self, ctx, session, runtime, budget, diagnosis, attempts: list[Attempt], usage: ModelUsage
     ) -> HealOutcome | None:
         """Tiers 1+2: rank deterministic candidates, agent picks an index.
 
@@ -122,16 +140,15 @@ class LocatorDriftPlugin(FailureClassPlugin):
             )
             return None
         verified = deps.verified[-1] if deps.verified else deps.candidates[result.output.index]
+        _bank(usage, result)  # charged whether or not the pick survives rerun
         outcome = await self._rerun_with(ctx, session, diagnosis, [verified], attempts)
-        # record token usage regardless of outcome (cost of a failed heal is real)
-        outcome.usage.requests = result.usage.requests or 0
-        outcome.usage.total_tokens = result.usage.total_tokens or 0
+        outcome.usage = usage
         if outcome.status is OutcomeStatus.HEALED:
             return outcome
         return None  # selected element didn't survive rerun -> generation fallback
 
     async def _heal_by_generation(
-        self, ctx, session, runtime, budget, diagnosis, attempts: list[Attempt]
+        self, ctx, session, runtime, budget, diagnosis, attempts: list[Attempt], usage: ModelUsage
     ) -> HealOutcome:
         agent = get_locator_agent(runtime)
         deps = LocatorDeps(
@@ -155,13 +172,14 @@ class LocatorDriftPlugin(FailureClassPlugin):
                         detail=f"{type(exc).__name__}: {exc}"[:300],
                     )
                 ],
+                # whatever earlier tiers already spent is still owed
+                usage=usage,
                 detail="No locator proposal survived live verification."
                 + (f" Rejected: {deps.rejected}" if deps.rejected else ""),
             )
+        _bank(usage, result)  # charged whether or not a proposal survives rerun
         outcome = await self._rerun_with(ctx, session, diagnosis, result.output.locators, attempts)
-        # record token usage regardless of outcome (cost of a failed heal is real)
-        outcome.usage.requests = result.usage.requests or 0
-        outcome.usage.total_tokens = result.usage.total_tokens or 0
+        outcome.usage = usage
         return outcome
 
     async def _rerun_with(

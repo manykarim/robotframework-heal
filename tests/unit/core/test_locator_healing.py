@@ -312,3 +312,21 @@ def test_usage_recorded_even_when_unhealed():
     event, session = heal(make_engine(), model, driver=driver, session=session)
     assert event.outcome.status is OutcomeStatus.UNHEALED
     assert event.outcome.usage.requests >= 1
+
+
+def test_usage_accumulates_across_tiers():
+    """A selection pick that fails to rerun is still charged when generation takes over.
+
+    The selection tier returns None on failure, so its cost used to be dropped
+    on the floor and the transaction reported generation tokens only.
+    """
+    driver = FakeDriver()
+    driver.counts.setdefault("css=button#signin-btn", 1)
+    session = FakeSession(driver, fail_first_rerun=True)  # tier-2 pick dies on rerun
+    gen = proposals_model([{"locators": ["css=#signin-btn"], "rationale": "from generation"}])
+    event, session = heal_selection([{"index": 0}], driver=driver, session=session, gen_model=gen)
+
+    assert event.outcome.status is OutcomeStatus.HEALED  # generation rescued it
+    assert session.reruns == ["css=button#signin-btn", "css=#signin-btn"]
+    # one selection run + one generation run, not just the winning tier
+    assert event.outcome.usage.requests == 2
